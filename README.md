@@ -1,1 +1,1 @@
-# Mywiki
+# Mywiki Obsidian
