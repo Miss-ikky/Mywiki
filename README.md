@@ -1,1 +1,1 @@
-# Mywiki2
+# Mywiki
