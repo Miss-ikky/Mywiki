@@ -65,3 +65,6 @@ Text manipulation and navigation
 | >>                             | if the file exist it will apped to the file and if it doesnt exist it will create the file |
 | echo                           | takes input from the keyboard and returns to the screen                                    |
 
+| cat < peauts.xt > banana.txt | redirect output of cat peanuts to another file <br> the standard input is de peanuts file and wat de uitkomst is wordt ogpeslagen in banana file |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| <                            | standard in                                                                                                                                      |
