@@ -59,7 +59,14 @@
 
 Text manipulation and navigation 
 
-| echo Hello World > peanuts.txt | send output to a file                                                                      |
+- In de basis heb je the standard input (stdin) wat vaak een keyboard is die zorgt voor de input en deze kan dan standard output en/of standard error generegeren. In linux hoeft de standard input niet alleen te komen van andere devices het kan ook een andere file zijn
+![[Pasted image 20230324152304.png]]
+standard input = 0  
+standard output = 1 
+standerd error = 2 
+
+
+|echo Hello World > peanuts.txt | send output to a file                                                                      |
 | ------------------------------ | ------------------------------------------------------------------------------------------ |
 | >                              | change where the standard output goes                                                      |
 | >>                             | if the file exist it will apped to the file and if it doesnt exist it will create the file |
