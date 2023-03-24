@@ -55,3 +55,13 @@
 | whatis  | whatis 'command'                                                                                                                                                        | discription of what a command does                                                                                                                                                                                                                                                                                                 |
 | alias   | voorbeeld: alias foobar='ls -la' (met dit voorbeeld hoef je allen maar foobar in te typen ipv ls -la)                                                                   | the alias command will not save after reboot. For permenant alias you need to ad it to ~/. bashrc <br> unwanted alias can be removed with: unalias 'alias you want to remove'                                                                                                                                                      |
 | exit    | exit or logout                                                                                                                                                          | exit the shell                                                                                                                                                                                                                                                                                                                                    |
+
+
+Text manipulation and navigation 
+
+| echo Hello World > peanuts.txt | send output to a file                                                                      |
+| ------------------------------ | ------------------------------------------------------------------------------------------ |
+| >                              | change where the standard output goes                                                      |
+| >>                             | if the file exist it will apped to the file and if it doesnt exist it will create the file |
+| echo                           | takes input from the keyboard and returns to the screen                                    |
+

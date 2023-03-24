@@ -1,12 +1,4 @@
 
-| command | uitleg |
-| ------- | ------ |
-| sudo    | Hiermee kunt u een commando uitvoeren als superuser of als een andere gebruiker met speciale rechten. Bijvoorbeeld, `sudo apt-get update` zou u toestaan om uw pakketlijsten bij te werken als een superuser. |
-| dds     |  |
-| dds     |  |
-
-
-
     
 -   `cd`: Hiermee kunt u naar een andere directory verplaatsen. Bijvoorbeeld, `cd /home/user` zou u naar de map "user" in de map "home" brengen.
     
