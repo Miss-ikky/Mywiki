@@ -6,9 +6,7 @@
 | dds     |  |
 
 
--   `sudo`: 
-    
--   `ls`: 
+
     
 -   `cd`: Hiermee kunt u naar een andere directory verplaatsen. Bijvoorbeeld, `cd /home/user` zou u naar de map "user" in de map "home" brengen.
     
