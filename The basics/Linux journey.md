@@ -59,6 +59,7 @@
 | exit    | exit or logout                                                                                                                                                          | exit the shell                                                                                                                                                                                                                                                                                                                     |
 | env     |                                                                                                                                                                         | output information about the environment variables you currently have set                                                                                                                                                                                                                                                          |
 | cut     |                                                                                                                                                                         |                                                                                                                                                                                                                                                                                                                                    |
+|         |                                                                                                                                                                         |                                                                                                                                                                                                                                                                                                                                    |
 
 
 Text manipulation and navigation 
@@ -95,5 +96,3 @@ standerd error = 2
 	- Allows to get the standard outpu of a command and make the standard input of another process 
 	- voorbeeld: ls | tree peanut.txt 
 
-
--
