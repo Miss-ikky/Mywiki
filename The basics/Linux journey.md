@@ -31,11 +31,13 @@
 -   if you copy a file over to a directory that has the same filename, the file will be overwritten with whatever you are copying over!!!
     
 -   when files are deleted with RM you can get it back - when directory is write-protected it will be protected
+  
+- About echo $PATH: Let's say you manually download and install a package from the internet and put it in to a non standard directory and want to run that command, you type $ [coolcommand] and the prompt says command not found. Well that's silly you are looking at the binary in a folder and know it exists. What is happening is that $PATH variable doesn't check that directory for this binary so it's throwing an error.Let's say you had tons of binaries you wanted to run out of that directory, you can just modify the PATH variable to include that directory in your PATH environment variable.
 
 
 | Command | use                                                                                                                                                                     | Uitleg                                                                                                                                                                                                                                                                                                                             |
 | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| echo    | echo                                                                                                                                                                    | prints out the text arguments to the display                                                                                                                                                                                                                                                                                       |
+| echo    | echo                                                                                                                                                                    | prints out the text arguments to the display     <br> echo $HOME (shows path to home directory)<br> echo $USER shows your usernaem <br> echo $PATH (shows list of paths that the system searches when it runs a command )                                                                                                          |
 | pwd     | pwd                                                                                                                                                                     | if you want to know which directory you are in                                                                                                                                                                                                                                                                                     |
 | cd      | cd  'folder' or cd 'path'                                                                                                                                               | move around in directories                                                                                                                                                                                                                                                                                                         |
 | ls      | ls   ls 'path'  ls -a    ls -l   ls -la                                                                                                                                 | List directory contents; will list directories and files in the current directory by default Files that start with . are hidden but shown with -a flag. the -l flag shows detailed list of files (file permissions, number of links, owner name, owner group, file size, timestamp of last modification, and file/directory name.) |
@@ -54,12 +56,15 @@
 | man     | man 'command'                                                                                                                                                           | the manual of a command                                                                                                                                                                                                                                                                                                            |
 | whatis  | whatis 'command'                                                                                                                                                        | discription of what a command does                                                                                                                                                                                                                                                                                                 |
 | alias   | voorbeeld: alias foobar='ls -la' (met dit voorbeeld hoef je allen maar foobar in te typen ipv ls -la)                                                                   | the alias command will not save after reboot. For permenant alias you need to ad it to ~/. bashrc <br> unwanted alias can be removed with: unalias 'alias you want to remove'                                                                                                                                                      |
-| exit    | exit or logout                                                                                                                                                          | exit the shell                                                                                                                                                                                                                                                                                                                                    |
+| exit    | exit or logout                                                                                                                                                          | exit the shell                                                                                                                                                                                                                                                                                                                     |
+| env     |                                                                                                                                                                         | output information about the environment variables you currently have set                                                                                                                                                                                                                                                          |
+| cut     |                                                                                                                                                                         |                                                                                                                                                                                                                                                                                                                                    |
 
 
 Text manipulation and navigation 
 
 - In de basis heb je the standard input (stdin) wat vaak een keyboard is die zorgt voor de input en deze kan dan standard output en/of standard error generegeren. In linux hoeft de standard input niet alleen te komen van andere devices het kan ook een andere file zijn
+- I?O stream that is called standard error, by defayly stder send its output to the screen aswell. (different stream than stdout) 
 ![[Pasted image 20230324152304.png]]
 standard input = 0  
 standard output = 1 
@@ -77,3 +82,18 @@ standerd error = 2
 | <                            | standard in                                                                                                                                      |
 
 
+| ls /fake/directory > peanuts.txt 2>&1 | send results of the comand to the file and the nit redirects stderr to the stout via 2>&1                                                            |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2>                                    | send standard error to file                                                                                                                          |
+| 2>&1                                  | will send standard error to whatever the standerd outpout is pointing to. <br> if it is pointing to file than it will send standard error to a file. |
+| &>                                    | short way to redirect both stdout and stderr to file                                                                                                                                                      |
+
+{command} 2> /dev/null  ---> redirect output to dev/null which wil ldiscard any input  
+
+- Pipe and tee 
+	-  The pipe operator | 
+	- Allows to get the standard outpu of a command and make the standard input of another process 
+	- voorbeeld: ls | tree peanut.txt 
+
+
+-
