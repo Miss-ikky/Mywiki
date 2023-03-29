@@ -50,7 +50,27 @@
 	-  Advanced Package Tool (apt) package management sytem to handle software updates and security patches 
 	-  Package management system helps keep the system up-to-date and secure by automatically downloading and installing security updates as soon as they are available
 
-note
+- Introduction to Shell 
+	- Linux terminal is a shell or command line,
+	- Shell provides text-basde input/ouput interface between users and the krenel for a computer system. 
+	- Most commonly used shell in Linux is the Bourne-Again Shell (BASH) (Zsh, FIsh, Ksh)
+	
+
+- Terminal Emulators
+	- Software that emulates the function of a terminal. It allows the use of text-based programs within a graphical user interface (GUI) 
+	- Command-line interfaces (CLI) that run as additional terminals in one terminal 
+	- Terminal serves as an interface to the shell interpreter 
+
+
+- Prompt Description 
+	- Home directory for a user is tilde: ~ this is the default folder when you log in 
+	- The dollar sign stands for user $ -> When you log in as *root*, the character changes to hash *#* 
+	- 
+
+
+
+
+
 
 
 
