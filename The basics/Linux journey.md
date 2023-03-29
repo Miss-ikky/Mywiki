@@ -1,12 +1,12 @@
 
-**Getting started:**
+Getting started 
 -   Kernel: allows hardware to talk to software
 -   Linux system has 3 parts:
     -   Hardware
     -   Linux kernel (core of OS, manages hardware and tells how to interact with the system)
     -   User space (users interact directly with system)
 
-- Linux 
+- Linux basics
 	- Everything is a file 
 	- Configuration data stored in a text file 
 	- *Bootloader*: A piece of code that runs to guide the booting process to start the operating system. Parrot Linux uses the GRUB Bootloader. 
@@ -29,7 +29,7 @@
 
 ![[Pasted image 20230329120031.png]]
 
-- */*    Top-level directory is the root filsystem and contains all of the files required to boot the operating system before other filesystems are monuted as well as th efiles required to boot the other filesystems. After boot, all of the other filesystems are mounted at standard mount points as subdirectories of the root 
+- */*     Top-level directory is the root filsystem and contains all of the files required to boot the operating system before other filesystems are monuted as well as th efiles required to boot the other filesystems. After boot, all of the other filesystems are mounted at standard mount points as subdirectories of the root 
 - */bin* Contains essential command binaries 
 - */boot* Contists of the static bootloader, kernel executable, and files required to boot the Linux OS
 - */dev* Contains device files to facilitate access to every hardware device attached to the system 
@@ -65,11 +65,55 @@
 - Prompt Description 
 	- Home directory for a user is tilde: ~ this is the default folder when you log in 
 	- The dollar sign stands for user $ -> When you log in as *root*, the character changes to hash *#* 
-	- 
+	- The prompt can be customized using special characters and variables in the shell configuration file .bashrc for the Bash shell 
+	- de character 
+		-  *\\u*     current username  
+		- *\\h*     hostname 
+		- *\\w*  current working directory 
+		- *\\d*   Date 
+		- *\\D{%Y-%m-%d}*  Date 
+		- *\\H* Full hostname 
+		- *\\j* Number of jobs managed by the shell 
+		- *\\n* Newline 
+		- *\\r* Carriage return 
+		- *\\s* Name of the shell 
+		- *\\t* Current time 
+		- *\\T* Current time 
+		- *\\@* current time 
+
+- Help 
+	- man  {tool} 
+	- man  {tool} --help
+	- man {tool} -h 
+	- apropos {keyword}
 
 
+- System information 
+	- *whoami*     Displays current username
+	- *id*               Returns users identify / prints our effective group member ship IDs 
+	- *hostname*  Sets or prints the name of current host system 
+	- *host*           print the name of the computer that we are logged into 
+	- *uname*       Prints basic information about the operating sytem name and system hardware
+		- *uname -a* print all information about the machine in specifiek order: Kernel Name, Hostname, Kernel Release, Kernel Version, Machine hardware, Operating system 
+		- *uname -r*  print kernel release (to find exploits)
+	- *pwd*           Returns working directory name 
+	- *ifconfig*      The ifconfig utility is used to assign or to view an address to a network interface or configure network interface parameters  
+	- *ip*              IP is a utility to show or manipulate routing, netwokring device, interfaces and tunnels 
+	- *netstat*   shows network status 
+	- *ss*           Another utility to investigate sockets 
+	- *ps*          Shows process status 
+	- *who*       Display who is logged in 
+	- *env*         Prints environment or sets and executes command 
+	- *lsblk*       Lists block devices 
+	- *lsusb*      Lists USB devices 
+	- *lsof*       Lists opened files 
+	- *lspci*      List PCI devices 
 
+ Voorbeeld: 
+	 adm group; means that users can read log files in /var/log and can potentially get access to sensitive information, membership and sudo group. 
 
+Logging in via SSH 
+	- Secure Shel (SSH) refers to a protocol that allows clients to access  and excute commands or actions on remote computers 
 
 
 
