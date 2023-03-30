@@ -129,6 +129,7 @@ Logging in via SSH
 		- Zesde column shows the date and time 
 		- Zevende column shows the Directory name 
 	- Soms kan je niet alles zien wat opgeslagen is in een Directory want een Directory kan hidden files hebben, deze beginnen met een . aan het begin of van de file naam bijv .bashrc or .bash_histroy. Om alle bestanden te zien (ook de hidden files) gebruik je de volgende command: *ls -la* of *list all*
+	- 
 
 
 -   Alles in Linux is een file → hierarchical directory free.
