@@ -29,3 +29,13 @@ The basics
 			3. Root DNS SServer (DNS Backbone of internet) redirect you to correct Top Level Domain Server. If you want to visit example.com then TLD is .com > refer you to TLD server that deals with .com addresses 
 			4. TDL server stores records about authoritative server to answer DNS request, is also known as name server e.g. [uma.ns.cloudflare.com](http://uma.ns.cloudflare.com).  
 			5. Authorative DNS server is the server that is responsible for storing the DNS records for particular domain naem and where updates to your domain anem DNS records would be made. >  Authorative DNS Server sends back DNS record to Recursive DNS Server. DNS records come with a TTL (= number represented in seconds that the response should be saved for locally until you have to look it up again )
+
+- Usefull commands 
+
+| command                         | uitleg |
+| ------------------------------- | ------ |
+| nsloopup *website*              |        |
+| nsloopup --type=CNAME *website* |        |
+| nsloopup --type= TXT  *website*           |        |
+| nsloopup --type=MX     *website*         |        |
+| nsloopup --type=A     *website*                           |        |
