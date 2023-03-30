@@ -1,4 +1,4 @@
-
+[[cheatsheet-18]]
 Getting started 
 -   Kernel: allows hardware to talk to software
 -   Linux system has 3 parts:
@@ -81,14 +81,14 @@ Getting started
 		- *\\T* Current time 
 		- *\\@* current time 
 
-- Help 
+- **Help** 
 	- man  {tool} 
 	- man  {tool} --help
 	- man {tool} -h 
 	- apropos {keyword}
 
 
-- System information 
+**- System information** 
 	- *whoami*     Displays current username
 	- *id*               Returns users identify / prints our effective group member ship IDs 
 	- *hostname*  Sets or prints the name of current host system 
@@ -116,6 +116,19 @@ Logging in via SSH
 	- Secure Shel (SSH) refers to a protocol that allows clients to access  and excute commands or actions on remote computers 
 
 
+**Navigation**
+-  *pwd* shows where we currently are 
+- *ls* lists all the content inside a directory, when you use *ls -l* you see more information on the directories and files 
+	- ![[Pasted image 20230330115602.png]]
+		- Total 32 iis the total amount of blocks (each block is 512 byte in size), which indicates the total size used -> 32* 512-byte = 16384 bytes of disk space 
+		- Eerste column shows type and permissions 
+		- getal in tweede column shows number of hard links to the file/directory 
+		- derde column shows owner of the file/directory 
+		- Vierde column shows the group owner of the file/directory 
+		- vijfde column shwos the size of the file or the number of blocks used to store the directory information 
+		- Zesde column shows the date and time 
+		- Zevende column shows the Directory name 
+	- Soms kan je niet alles zien wat opgeslagen is in een Directory want een Directory kan hidden files hebben, deze beginnen met een . aan het begin of van de file naam bijv .bashrc or .bash_histroy. Om alle bestanden te zien (ook de hidden files) gebruik je de volgende command: *ls -la* of *list all*
 
 
 -   Alles in Linux is een file → hierarchical directory free.
@@ -203,5 +216,4 @@ standerd error = 2
 - Pipe and tee 
 	-  The pipe operator | 
 	- Allows to get the standard outpu of a command and make the standard input of another process 
-	- voorbeeld: ls | tree peanut.txt 
 
