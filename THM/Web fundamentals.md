@@ -89,4 +89,12 @@ Basics: How websites work
 - ![[Pasted image 20230331115056.png]]
 	- Front End  (Client-Side) > the way your browser renders a website  
 	- Back End (Server side) > a server that processses your request and returns a response 
-	
+Javascript
+	- without JavaScript, a page would not have interactive elements and would always be static. JS can dynamically update the page in real-time, giving functionality to change the style of a button when a particular event on the page occurs (such as when a user clicks a button) or to display moving animations.
+	![[Pasted image 20230331122302.png]]
+	- Sensitive Data Exposure occurs when a website doesn't properly protect (or remove) sensitive clear-text information to the end-user; usually found in a site's frontend source code.
+
+html injection 
+-  HTML Injection is a vulnerability that occurs when unfiltered user input is displayed on the page. If a website fails to sanitise user input (filter any "malicious" text that a user inputs into a website), and that input is used on the page, an attacker can inject HTML code into a vulnerable website.
+- ![[Pasted image 20230331123508.png]] 
+- The general rule is never to trust user input. To prevent malicious input, the website developer should sanitise everything the user enters before using it in the JavaScript function; in this case, the developer could remove any HTML tags.
