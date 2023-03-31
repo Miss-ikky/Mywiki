@@ -2,7 +2,7 @@
 
 The basics 
 
-- DNS 
+- **DNS** 
 	- Domain Name System 
 ![[Pasted image 20230330143832.png]]
 - Domain Hierarchy    --- example test.google.com 
@@ -39,3 +39,54 @@ The basics
 | nsloopup --type= TXT  *website*           |        |
 | nsloopup --type=MX     *website*         |        |
 | nsloopup --type=A     *website*                           |        |
+
+
+- **HTTP** 
+	- URL ![[Pasted image 20230331111106.png]] 
+		- **Scheme:** This instructs on what protocol to use for accessing the resource such as HTTP, HTTPS, FTP (File Transfer Protocol).  
+		- **User:** Some services require authentication to log in, you can put a username and password into the URL to log in.  
+		- **Host:** The domain name or IP address of the server you wish to access.  
+		- **Port:** The Port that you are going to connect to, usually 80 for HTTP and 443 for HTTPS, but this can be hosted on any port between 1 - 65535.  
+		- **Path:** The file name or location of the resource you are trying to access.  
+		- **Query String:** Extra bits of information that can be sent to the requested path. For example, /blog?**id=1** would tell the blog path that you wish to receive the blog article with the id of 1.  
+		- **Fragment:** This is a reference to a location on the actual page requested. This is commonly used for pages with long content and can have a certain part of the page directly linked to it, so it is viewable to the user as soon as they access the page.
+		  
+	- Making a request: 
+		- ![[Pasted image 20230331111651.png]]
+		- ![[Pasted image 20230331111821.png]]
+		
+	- Methods 
+		- GET request    > getting information from web server 
+		- POST request  > used for submitting data to the web server and potentially creating new records 
+		- PUT request   > submitting data to web server to update information 
+		- DELETE request     > used for deleting informaton/records from webserver 
+		  
+		  ![[Pasted image 20230331114923.png]]
+		  
+	- HTTP status code 
+		- ![[Pasted image 20230331112332.png]]
+
+	- Headers 
+		- Common headers are: 
+			- *host*  > specify which website you require 
+			- *User agent* > your browser software and version number, this helps with correct formatting 
+			- *content-length* > how much data to expect 
+			- *accept-Encoding* > what type of compression method the browser supports so the data can be made smaller when transmitting 
+			- *Cookie* > data sent to the server to help remember your information 
+		- Common response headers 
+			- *set-cookie*  > information to store which gets sent back to the web server on each request 
+			- *cache-control* > how long to store the content of the response in the browser cache before it requests it again 
+			-  *content-type*  > type of data returned 
+			- *content-encoding*  > what method is used to compress the data 
+			  
+			  
+	- Cookies 
+		- Cookies are saved when you receive Set-Cookie header from web server - vanaf dan -- every request you make, you will send back cooki data to the web server 
+		- HTTP is stateless (doest remember who you are)
+		- Example HTTP request![[Pasted image 20230331113657.png]]
+
+Basics: How websites work 
+- ![[Pasted image 20230331115056.png]]
+	- Front End  (Client-Side) > the way your browser renders a website  
+	- Back End (Server side) > a server that processses your request and returns a response 
+	
