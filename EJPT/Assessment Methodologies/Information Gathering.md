@@ -7,4 +7,8 @@
 
 # Passive information Gathering 
 
+
+#### Website recon & Footprinting 
+
 - 
+ 
