@@ -10,5 +10,34 @@
 
 #### Website recon & Footprinting 
 
+-  Look for the following information: 
+	-  Ip addresses 
+	- Directores hidden from search engine -> robot.txt 
+	- Names, Email address, phone number, fysieke address, web tech being used 
+- Demo 
+	- Producten site: IP address is often hidden behind proxy/fireall (e.g. cloudflare)
+		-  resolve domain name to ip address:  *host* {domain name}
+		 ![[Pasted image 20230425102124.png]]
+			 2 ips: 1 ervan is van proxy/firewall 
+	
+	-  Webcrawler scours website to index it to search engine. 
+		- Robot.txt allows you to specify what folders and files you  dont want search enginges to index. (Allow/Disallow)
+			- /wp-admin/ = wordpress 
+		
+	- Sitemap.xml - file that allows search engine an organized way of indexing 
+		- Interesting to look at if you are pentesting a Wordpress website, look into the **categories** that are hidden on the front-end
+		   
+	- Interesting resourcse: 
+		- Browser plugin: 
+			- mozilla add-on: *built with* tells you what technologies is running on that website
+			- mozilla add-on: *wappalyzer*  web technology profiler 
+			
+	- WhatWeb (built in Kali)
+		-  *whatweb* {domain}![[Pasted image 20230425104736.png]]
+		
+		- Download the entire website to analyze source code: httrack 
+			- sudo apt-get install webhttrack 
+
+#### Whois Enumeration 
+
 - 
- 
