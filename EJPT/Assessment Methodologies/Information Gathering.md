@@ -42,5 +42,7 @@
 
 -  *who is* {domain}  ![[Pasted image 20230425153648.png]]
 	- DNSSEC: Enabled - personal info is all redacted for privacy reasons  ![[Pasted image 20230425153911.png]]
-- who.is 
-- host 
+- who.is website for more info / can identify nameservers of particular domain 
+- *host* {domain}
+   ![[Pasted image 20230425154304.png]]
+   
