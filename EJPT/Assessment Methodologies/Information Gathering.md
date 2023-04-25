@@ -45,4 +45,6 @@
 - who.is website for more info / can identify nameservers of particular domain 
 - *host* {domain}
    ![[Pasted image 20230425154304.png]]
-   
+
+#### Website Footprinting With Netcraft 
+- Netcraft:  used to gather information about target domian (services menu - data mining) ![[Pasted image 20230425165716.png]]
