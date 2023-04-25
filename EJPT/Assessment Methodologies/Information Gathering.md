@@ -48,3 +48,22 @@
 
 #### Website Footprinting With Netcraft 
 - Netcraft:  used to gather information about target domian (services menu - data mining) ![[Pasted image 20230425165716.png]]
+
+####  DNS recon 
+-  *dnsrecon -d* {domain} ![[Pasted image 20230425171936.png]]  ![[Pasted image 20230425172033.png]]
+				MX: Mail server (not hidden very well !!!)
+				NS: Name server with mapped IP 
+				A: Ipv4 
+				TXT: to  track website analytics this is added
+				AAAA: ipv6 
+- dnsdumpster.com ![[Pasted image 20230425172357.png]]
+
+#### WAF With wafw00f 
+
+- Detect firewalls  (check github for manual)
+- *wafw00f* {domain}![[Pasted image 20230425174000.png]]
+
+#### Subdomain Enumeration With Sublist3e 
+
+- not preinstalled - sudo apt-get install sublist3r  ![[Pasted image 20230425174358.png]]
+- ![[Pasted image 20230425175250.png]]
