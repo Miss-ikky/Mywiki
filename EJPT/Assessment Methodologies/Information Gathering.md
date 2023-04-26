@@ -65,5 +65,17 @@
 
 #### Subdomain Enumeration With Sublist3e 
 
-- not preinstalled - sudo apt-get install sublist3r  ![[Pasted image 20230425174358.png]]
-- ![[Pasted image 20230425175250.png]]
+- not preinstalled - sudo apt-get install sublist3r  
+- Sublist3r can be used to perform a subdomain brute force.![[Pasted image 20230425174358.png]]
+- ![[Pasted image 20230426153452.png]]
+	-  sublist3r -e 
+	- sublist3r -d 
+
+#### Google Dorks 
+
+-  *SIte*:{domain}  -> limit results to given domain 
+	- subdomains:   *.*{domain.
+- *inurl:* e.g. *inurl*:admin
+- *filetype:*   e.g. filetype:zip 
+- 
+- 
