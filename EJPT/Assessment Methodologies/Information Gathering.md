@@ -74,8 +74,18 @@
 #### Google Dorks 
 
 -  *SIte*:{domain}  -> limit results to given domain 
-	- subdomains:   *.*{domain.
-- *inurl:* e.g. *inurl*:admin
+	- subdomains:   *.*{domain}.com   e.g.  site: *.ine.com 
+- *inurl:* e.g. *inurl*:admin  
+	- inurl:auth_user_file.txt 
+	- inurl:passwd.txt 
 - *filetype:*   e.g. filetype:zip 
+- *intitle:* e.g. intitle:index of   (to find directory listing - you do not want to run this on production sites)
+- *cache:* {domain}   
+- waybackmachine 
+- Google hacking database (exploit database) 
+	- Wordpress config file contains credentials to mysql database 
+
+#### Email Harvesting With theHarvester 
+
 - 
-- 
+
