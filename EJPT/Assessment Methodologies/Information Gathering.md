@@ -87,5 +87,6 @@
 
 #### Email Harvesting With theHarvester 
 
-- 
+- je hebt zowel passive als active information gathering in theHarvester ![[Pasted image 20230502125213.png]]
+- theHarvester -d hackersploit.org -b google, linkedin 
 
