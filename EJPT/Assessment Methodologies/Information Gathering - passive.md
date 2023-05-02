@@ -87,6 +87,21 @@
 
 #### Email Harvesting With theHarvester 
 
+- can be used as subdomain enumeration 
 - je hebt zowel passive als active information gathering in theHarvester ![[Pasted image 20230502125213.png]]
-- theHarvester -d hackersploit.org -b google, linkedin 
+- theHarvester -d {*domain or companyname*} -b google, linkedin,yahoo,dnsdumpster,crtsh,duckduckgo
+
+
+#### Leaked password database 
+
+- haveibeenpwned.com 
+- API 
+  
+  
+
+  
+
+
+
+
 
