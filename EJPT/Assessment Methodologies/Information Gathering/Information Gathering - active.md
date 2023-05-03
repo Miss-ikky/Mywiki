@@ -23,6 +23,41 @@
 ####  Host discovery with Nmap
 
 - sudo nmap *-sn* {ip} 
-- 
+- sudo apt-get install netdiscover -y 
+- sudo netdiscover -i eth0 -r {ip/x}   
+	- Netdiscover uses arp requests 
+
+
+#### Port scanning with Nmap
+
+TCP scan 
+- default nmap scan:  *nmap* {ip}    
+	-  Windows systems will block icmp pings, avoid ping (-Pn) 
+	- nmap -Pn {ip}  :   niet checken if host is online just check the port 
+- scan over all tcp port ranges met -p-, meer dan 60k ports : nmap -Pn -p- {ip} 
+	- specfieke range: nmap -Pn -p1-1000 {ip}   will scan port  1 to 1000 
+- scan specific defined port : nmap -Pn -p 80 {ip} 
+- scan most commonly used ports with -F: nmap -Pn -F {ip} 
+
+UDP 
+- default nmap is tcp scan ; enter to see status ; verbosity output  met -v 
+- nmap -Pn *-sU* {IP} 
+
+
+More
+![[Pasted image 20230503115859.png]]
+- *-sV* : service version detection scan on open ports 
+
+- default nmap script scan: *-sC*   will run list of nmap scripts that are open to enumerate more information about open ports -> ****nmap -Pn -F -sV -0 -sC {ip}
+- aggrassive scan combines -sV (service detection scan) and -sC default script scan 
+![[Pasted image 20230503121712.png]]
+
+nmap timing template: 
+- the lower the number the slower the scan ![[Pasted image 20230503121903.png]]![[Pasted image 20230503121957.png]]
+
+save ouput  
+- nmap gives you 3 output format options 
+- *-oN*  voor .txt file 
+- *-oX*  voor .xml file 
 
 
