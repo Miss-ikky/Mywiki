@@ -19,4 +19,10 @@
 	- *dig* ![[Pasted image 20230502152035.png]]
 	- *fierce* -h  
 	- *fierce* -dns  zonetransfer.me ![[Pasted image 20230502152403.png]]
-	- 
+
+####  Host discovery with Nmap
+
+- sudo nmap *-sn* {ip} 
+- 
+
+
