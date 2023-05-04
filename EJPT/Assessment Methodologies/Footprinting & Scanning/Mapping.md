@@ -88,6 +88,7 @@ Other tools:
 - 4.  run a udp scan: nmap {ip} -p 1-250 -sU 
 - 5. hone into the open udp ports: nmap {ip} -p {port1},{port2...} -sUV
 - 6. nmap {ip} -p {port} -sUV --script=discovery 
+- 
 
 
 
