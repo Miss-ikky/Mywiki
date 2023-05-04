@@ -50,4 +50,18 @@ Process
 		- Connection to TCP port that is closed: ![[Pasted image 20230504115558.png]]
 			- a reset indicates that the port is closed and its not possible to connect 
 		- Connect to TCP - Stealthy ![[Pasted image 20230504115657.png]]
-			- 
+			- does not finish the connection but it sends a reset to drop the connection 
+	- Service enumeration ![[Pasted image 20230504124923.png]]
+		- connection with a service - listen back for information from service (banner). 
+		  
+- Connection to UDP 
+	- nmap -iL {ips} (file is called ips and contains all the ips)
+	- nmap -iL {ips} -sV -0 ![[Pasted image 20230504130653.png]]
+	- nmap -iL {ips} -sV -0 -sC 
+
+Other tools: 
+- Nmap automator 
+- masscan 
+- rustscan 
+- autorecon 
+
