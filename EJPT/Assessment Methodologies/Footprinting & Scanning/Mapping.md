@@ -23,7 +23,24 @@ Process
 - Tools 
 	- Wireshark 
 	- ARP-SCAN 
-	- Ping 
-	- Fping 
-	- Nmap 
-	- ZenMap 
+		- level 2 so we need sudo 
+		- sudo arp-scan -i tap0 -g {ip/}
+		![[Pasted image 20230504104639.png]]
+
+	- Ping ![[Pasted image 20230504105749.png]]
+
+
+- Fping 
+  - fping -I tap0 -g {ip} -a (all the host that are alive)
+  - When to many errors: fping -I tap0 -g {ip} -a *2>/dev/null* 
+	  - Std in is 0 std out is 1 and std error is 2 , we willen de errors weghebben![[Pasted image 20230504110010.png]] 
+  
+  
+  
+- Nmap 
+  
+  
+  
+  
+  
+- ZenMap 
