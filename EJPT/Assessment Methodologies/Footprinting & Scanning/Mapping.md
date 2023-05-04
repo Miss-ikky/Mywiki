@@ -70,7 +70,32 @@ Other tools:
 - based on the above results: ![[Pasted image 20230504133319.png]] 
 	- scan services and operation systems 
 
-##### zenmap 
-- 
+
+
+-------- Labs ------------------
+
+##### Scan for server  1 
+
+- 1. run nmap {ip} -p- check all the ports 
+- 2. check what ports are open and use in following command with service enumeration: nmap {ip} -p {port1},{port2...} -sV 
+![[Pasted image 20230504165901.png]]
+
+##### Scan for server  2 
+
+- 1. check ip: ip a and ping 
+- 2. check ports 1 to 250:     nmap {ip} -p 1-250 
+- 3. run aggressive scan on port that is open: nmap {ip} -p {port} -A 
+- 4.  run a udp scan: nmap {ip} -p 1-250 -sU 
+- 5. hone into the open udp ports: nmap {ip} -p {port1},{port2...} -sUV
+- 6. nmap {ip} -p {port} -sUV --script=discovery 
+
+
+
+
+
+
+
+
+
 
 
