@@ -65,3 +65,12 @@ Other tools:
 - rustscan 
 - autorecon 
 
+#### NMAP host discovery 
+![[Pasted image 20230504133208.png]]
+- based on the above results: ![[Pasted image 20230504133319.png]] 
+	- scan services and operation systems 
+
+##### zenmap 
+- 
+
+
