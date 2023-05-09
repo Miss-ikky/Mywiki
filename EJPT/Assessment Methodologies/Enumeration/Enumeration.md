@@ -139,31 +139,22 @@ MAC Address: 02:A3:CA:EC:C9:AE (Unknown)
 Service Info: OSs: Windows, Windows Server 2008 R2 - 2012; CPE: cpe:/o:microsoft:window
 
 Host script results:
-|nbstat: NetBIOS name: WIN-OMCNBKR66MN, NetBIOS user: <unknown>, NetBIOS MAC: 02:a3:ca
+nbstat: NetBIOS name: WIN-OMCNBKR66MN, NetBIOS user: <unknown>, NetBIOS MAC: 02:a3:ca
 
-| smb-os-discovery:
-|   OS: Windows Server 2012 R2 Standard 9600 (Windows Server 2012 R2 Standard 6.3)
-|   OS CPE: cpe:/o:microsoft:windows_server_2012::-
-|   Computer name: WIN-OMCNBKR66MN
-|   NetBIOS computer name: WIN-OMCNBKR66MN\x00
-|   Workgroup: WORKGROUP\x00
-|_  System time: 2023-05-09T09:37:12+00:00
+smb-os-discovery:
 
-| smb-security-mode:
-|   account_used: guest
-|   authentication_level: user
-|   challenge_response: supported
-|_  message_signing: disabled (dangerous, but default)
+smb-security-mode:
 
-| smb2-security-mode:
-|   2.02:
-|_    Message signing enabled but not required
+smb2-security-mode:
 
-| smb2-time:
-|   date: 2023-05-09T09:37:12
-|_  start_date: 2023-05-09T08:54:02
 
----- 
+
+
+
+
+
+
+
 
 
 
