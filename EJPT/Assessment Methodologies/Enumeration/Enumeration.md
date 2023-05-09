@@ -20,7 +20,9 @@ Examples of services that you would see on a server
 - CIFS (generic version) works the same as SMB 
 - port 445 
 - netbios sets up session for smb 
--  Run an nmap scan for open ports ![[Pasted image 20230509105853.png]]
+- SMB recon: 
+-  Run an nmap scan for open ports ![[Pasted image 20230509105853.png]] Nmap ‘--open’ option would show only exposed ports of the live hosts
+  
 - Run scan for service enumeration on our OS 
 ![[Pasted image 20230509104119.png]]
 - nmap {target ip} -sV -sC  (sC runs basic scripts) ![[Pasted image 20230509104300.png]]
@@ -30,11 +32,11 @@ Examples of services that you would see on a server
 
 SMB Discover and Mount 
 - Objective: Learn to use Nmap to scan the target machine and mount the SMB share of the target machine using the Windows File Explorer as well as using the command prompt.  Objective: Discover SMB share and mount it
-
-Lab: 
+---
+Lab SMB: 
 
 1. ipconfig to get ip and check cidr 
-2. nmap -T4 10.2.29.125/20 --open
+2. Run Nmap scan against the subnet to discover the target machine’s IP address:  *nmap -T4 10.2.29.125/20 --open*
 
 Nmap scan report for ip-10-2-16-110.eu-central-1.compute.internal (
 Host is up (0.010s latency).
@@ -84,5 +86,84 @@ PORT     STATE SERVICE
 1037/tcp open  ams
 1050/tcp open  java-or-OTGfileshare
 3389/tcp open  ms-wbt-server 
+
+---
+
+**nmap 10.2.18.61 -sV -O**
+
+Nmap scan report for ip-10-2-18-61.eu-central-1.compute.inter
+
+PORT      STATE SERVICE            VERSION
+135/tcp   open  msrpc              Microsoft Windows RPC
+139/tcp   open  netbios-ssn        Microsoft Windows netbios-
+**445/tcp   open  microsoft-ds       Microsoft Windows Server 2**
+3389/tcp  open  ssl/ms-wbt-server?
+49152/tcp open  msrpc              Microsoft Windows RPC
+49153/tcp open  msrpc              Microsoft Windows RPC
+49154/tcp open  msrpc              Microsoft Windows RPC
+49155/tcp open  msrpc              Microsoft Windows RPC
+49165/tcp open  msrpc              Microsoft Windows RPC
+
+Network Distance: 1 hop
+Service Info: OSs: **Windows, Windows Server 2008 R2 - 2012**; CP
+
+OS and Service detection performed. Please report any incorre
+Nmap done: 1 IP address (1 host up) scanned in 78.05 seconds
+
+
+---
+
+ **nmap 10.2.18.61 -sV -sC**
+PORT      STATE SERVICE            VERSION
+135/tcp   open  msrpc              Microsoft Windows RPC
+139/tcp   open  netbios-ssn        Microsoft Windows netbios-ssn
+445/tcp   open  microsoft-ds       Windows Server 2012 R2 Standard 9600 microsoft-ds
+3389/tcp  open  ssl/ms-wbt-server?
+| rdp-ntlm-info:
+|   Target_Name: WIN-OMCNBKR66MN
+|   NetBIOS_Domain_Name: WIN-OMCNBKR66MN
+|   NetBIOS_Computer_Name: WIN-OMCNBKR66MN
+|   DNS_Domain_Name: WIN-OMCNBKR66MN
+|   DNS_Computer_Name: WIN-OMCNBKR66MN
+|   Product_Version: 6.3.9600
+|_  System_Time: 2023-05-09T09:37:12+00:00
+| ssl-cert: Subject: commonName=WIN-OMCNBKR66MN
+| Not valid before: 2023-05-08T08:54:07
+|Not valid after:  2023-11-07T08:54:07
+49152/tcp open  msrpc              Microsoft Windows RPC
+49153/tcp open  msrpc              Microsoft Windows RPC
+49154/tcp open  msrpc              Microsoft Windows RPC
+49155/tcp open  msrpc              Microsoft Windows RPC
+49165/tcp open  msrpc              Microsoft Windows RPC
+MAC Address: 02:A3:CA:EC:C9:AE (Unknown)
+Service Info: OSs: Windows, Windows Server 2008 R2 - 2012; CPE: cpe:/o:microsoft:window
+
+Host script results:
+|nbstat: NetBIOS name: WIN-OMCNBKR66MN, NetBIOS user: <unknown>, NetBIOS MAC: 02:a3:ca
+
+| smb-os-discovery:
+|   OS: Windows Server 2012 R2 Standard 9600 (Windows Server 2012 R2 Standard 6.3)
+|   OS CPE: cpe:/o:microsoft:windows_server_2012::-
+|   Computer name: WIN-OMCNBKR66MN
+|   NetBIOS computer name: WIN-OMCNBKR66MN\x00
+|   Workgroup: WORKGROUP\x00
+|_  System time: 2023-05-09T09:37:12+00:00
+
+| smb-security-mode:
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+
+| smb2-security-mode:
+|   2.02:
+|_    Message signing enabled but not required
+
+| smb2-time:
+|   date: 2023-05-09T09:37:12
+|_  start_date: 2023-05-09T08:54:02
+
+---
+
 
 
