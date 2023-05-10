@@ -230,7 +230,7 @@ Host script results:
     
 -   challenge_response: ondersteund: dit betekent dat het challenge-response-authenticatiemechanisme wordt ondersteund. Dit is een protocol dat wordt gebruikt om de identiteit van een gebruiker te verifiëren zonder het wachtwoord zelf te verzenden.
     
--   message_signing: disabled (gevaarlijk, maar standaard): dit betekent dat SMB-berichtondertekening is uitgeschakeld. Ondertekening van berichten is een beveiligingsfunctie die ervoor zorgt dat berichten niet kunnen worden gewijzigd terwijl ze in transit zijn. Wanneer het is uitgeschakeld, kunnen aanvallers verkeer tussen de client en de server manipuleren en in sommige gevallen vertrouwelijke gegevens stelen of beschadigen.
+-   message_signing: disabled (gevaarlijk, maar standaard): dit betekent dat SMB-berichtondertekening is uitgeschakeld.   Ondertekening van berichten is een beveiligingsfunctie die ervoor zorgt dat berichten niet kunnen worden gewijzigd terwijl ze in transit zijn. Wanneer het is uitgeschakeld, kunnen aanvallers verkeer tussen de client en de server manipuleren en in sommige gevallen vertrouwelijke gegevens stelen of beschadigen.
 
 3. .  Enumerate active sessions, shares, Windows users, domains, services, etc.
 
