@@ -138,13 +138,30 @@ smb2-security-mode:
 ##### SMB: Nmap scripts
 
 - Once you establish the existence of the smb server now we procede with enumeration which invovles finding more info about the service (what can we learn from it and what can we do with it)
-- nmap has an scripting engine 
+- nmap has an scripting engine (see documentation of nmap)
+	- to use scripts we use: *--script {scriptname}*
 - stappenplan: 
 
 1. ping target ip to check connection  
 2.  run an nmap scan:  *nmap {target ip}*
 3. check if it has smb (port 445 is open)
 4. run an nmap scan just on the smb port 445 where we look at the smb protocol: *nmap -p445 --script smb-protocols {target ip}*
+5. run an nmap scan just on smb port 445 where we check the securty mode: *nmap -p445 --script smb-security-mode {target ip}*
+6. run an nmap scan where we enumerate a session: *nmap -p445 --script smb-enum-sessions {target ip}*
+	- smb-eum-sessions: geeft Nmap opdracht om het script smb-enum-sessions uit te voeren, wat informatie over actieve sessies in het SMB-protocol kan opleveren
+7. run the following nmap: *nmap -p445 --script smb-enum-sessions --script-args* *smbusername={adminstrator}, smbpassword={smbserver_771} {target ip}*
+	 - script-args: geeft argumenten door aan het smb-enum-sessions script, die specifiek zijn voor dat script. 
+8. run the following nmap command to enumerate the shares: *nmap -p445 --script smb-enum-shares {target ip}* 
+	- gebruikt om de gedeelde bronnen te identificeren die beschikbaar zijn op een bepaalde host die SMB gebruikt op poort 445. SMB is een protocol dat wordt gebruikt voor het delen van bestanden en printers tussen computers op een netwerk
+	- .![[Pasted image 20230510145104.png]]
+	- ipc$ is usefull because it is a null session (anonymous session) where you can get in as a **guest** account but also utilize this session: IPC$ is een speciale gedeelde bron op computers die het SMB-protocol gebruiken. Het is een null sessie, wat betekent dat er geen inloggegevens vereist zijn om toegang te krijgen tot deze gedeelde bron. Het kan worden gebruikt door geautoriseerde gebruikers om verbinding te maken met het bestandssysteem en printers van de computer via het netwerk, zonder dat ze een geldige inlognaam of wachtwoord nodig hebben.  mogelijk is dat kwaadwillende gebruikers deze null sessie gebruiken om ongeautoriseerde toegang te krijgen tot de bronnen van een computer.
+9. Now run a command where we enumerate the shares after authenticating: *nmap -p445  --script smb-enum-shares --script-args smbusername=administrator, smbpaswordsmbserver_771 {target ip}*
+10. now enumerate the users to find out which users exist: *nmap -p445 --script smb-enum-users 
+     -script-args smbusername=administrator smbpasword=smbserver_771 {target ip}* ![[Pasted image 20230510150118.png]]
+     (bult in accounts for guests en password does not expire = misconfiguration). De gastaccount is een ingebouwde account in Windows-besturingssystemen en is bedoeld voor gebruikers die de computer of het netwerk bezoeken zonder geldige inloggegevens te hebben. De account biedt beperkte toegang tot bepaalde bronnen, zoals bestanden en printers, en heeft geen wachtwoord nodig om toegang te krijgen
+ 11. run a command to look at server statistic: *nmap -p445 --script smb-server-stats --script-arg smbusersname=administrator, smbpassword=smbserver_771 {target ip}*
+ 13. run command to check what domains exist: *nmap -p445 -script smb-enum-domains -s-cript-args smbusername=administrator, smbpassword=smbserver_771 {target ip}*
+	
 
 
 
