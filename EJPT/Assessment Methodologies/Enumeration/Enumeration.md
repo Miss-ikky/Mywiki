@@ -119,17 +119,6 @@ PORT      STATE SERVICE            VERSION
 139/tcp   open  netbios-ssn        Microsoft Windows netbios-ssn
 445/tcp   open  microsoft-ds       Windows Server 2012 R2 Standard 9600 microsoft-ds
 3389/tcp  open  ssl/ms-wbt-server?
-| rdp-ntlm-info:
-|   Target_Name: WIN-OMCNBKR66MN
-|   NetBIOS_Domain_Name: WIN-OMCNBKR66MN
-|   NetBIOS_Computer_Name: WIN-OMCNBKR66MN
-|   DNS_Domain_Name: WIN-OMCNBKR66MN
-|   DNS_Computer_Name: WIN-OMCNBKR66MN
-|   Product_Version: 6.3.9600
-|_  System_Time: 2023-05-09T09:37:12+00:00
-| ssl-cert: Subject: commonName=WIN-OMCNBKR66MN
-| Not valid before: 2023-05-08T08:54:07
-|Not valid after:  2023-11-07T08:54:07
 49152/tcp open  msrpc              Microsoft Windows RPC
 49153/tcp open  msrpc              Microsoft Windows RPC
 49154/tcp open  msrpc              Microsoft Windows RPC
@@ -139,16 +128,23 @@ MAC Address: 02:A3:CA:EC:C9:AE (Unknown)
 Service Info: OSs: Windows, Windows Server 2008 R2 - 2012; CPE: cpe:/o:microsoft:window
 
 Host script results:
-nbstat: NetBIOS name: WIN-OMCNBKR66MN, NetBIOS user: <unknown>, NetBIOS MAC: 02:a3:ca
+nbstat: NetBIOS name: WIN-OMCNBKR66MN, NetBIOS user: NetBIOS MAC: 02:a3:ca
 
-smb-os-discovery:
-
-smb-security-mode:
-
+smb-os-discovery: 
+smb-security-mode: 
 smb2-security-mode:
 
 
+##### SMB: Nmap scripts
 
+- Once you establish the existence of the smb server now we procede with enumeration which invovles finding more info about the service (what can we learn from it and what can we do with it)
+- nmap has an scripting engine 
+- stappenplan: 
+
+1. ping target ip to check connection  
+2.  run an nmap scan:  *nmap {target ip}*
+3. check if it has smb (port 445 is open)
+4. run an nmap scan just on the smb port 445 where we look at the smb protocol: *nmap -p445 --script smb-protocols {target ip}*
 
 
 
