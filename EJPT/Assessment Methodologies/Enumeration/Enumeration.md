@@ -510,3 +510,22 @@ Based on this output, we can see that there are several services running on the 
     -   SERVICE_CONTROL_STOP: The service can be stopped.
     -   SERVICE_CONTROL_NETBINDENABLE: The service can bind to all network addresses.
     -   SERVICE_CONTROL_INTERROGATE: The service can receive status requests.
+
+
+##### SMB: SMBMap 
+
+1. ping the target ip to check if it is alive 
+   
+2. run an nmap scan: *nmap {target ip}*
+   
+3. run an script voor smb protocols: *nmap -p445 --script smb-protocols {targetip}*  this will tell us the procols and dialects. When we spot dialect SMBv1 which is dangerous we will use smbmap
+   
+4.  run smbmap voor smbv1: *smbmap -u guest -p " " -d . -H {target ip}* 
+	- -   `-u guest`: gebruikt de gebruikersnaam "guest" om verbinding te maken met de host.
+	-   `-p " "`: stelt het wachtwoord in op een lege string, wat betekent dat er geen wachtwoord wordt gebruikt om verbinding te maken met de host.
+	-   `-d .`: stelt de domeinnaam in op "." (de huidige domeinnaam).
+	-   `-H {target ip}`: specificeert het IP-adres van de doel-SMB-host waarmee verbinding moet worden gemaakt.
+	- The results will be shares that the guest is able to connect to 
+	
+5. Try to run a command: *smbmap -H {taget ip} -u asminsitrator -p smbserver_771 -x 'ipconfig' *
+	- De optie `-x` wordt gebruikt om een opdracht uit te voeren op de SMB-host nadat er verbinding is gemaakt. In dit geval wordt de opdracht 'ipconfig' uitgevoerd, die de netwerkconfiguratie van de host weergeeft.
