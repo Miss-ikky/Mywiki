@@ -529,3 +529,4 @@ Based on this output, we can see that there are several services running on the 
 	
 5. Try to run a command: *smbmap -H {taget ip} -u asminsitrator -p smbserver_771 -x 'ipconfig' *
 	- De optie `-x` wordt gebruikt om een opdracht uit te voeren op de SMB-host nadat er verbinding is gemaakt. In dit geval wordt de opdracht 'ipconfig' uitgevoerd, die de netwerkconfiguratie van de host weergeeft.
+6. 
