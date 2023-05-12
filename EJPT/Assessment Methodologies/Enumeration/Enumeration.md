@@ -538,4 +538,8 @@ Based on this output, we can see that there are several services running on the 
 	- Door dit commando uit te voeren, maak je verbinding met de opgegeven SMB-server met de opgegeven inloggegevens en krijg je toegang tot de inhoud van de 'C$' gedeelde map, waarbij je informatie kunt zien over de bestanden en mappen die zich op de systeemschijf van de SMB-server bevinden.
 	- -r 'C$ Deze optie geeft aan dat je toegang wilt krijgen tot de gedeelde map C$ op de SMB-server. 'C$' is een verborgen gedeelde map op Windows-systemen die meestal verwijst naar de systeemschijf (meestal de C-schijf)
 	  
-8. 
+8. Lets try the following: 
+	1. create a file called backdoor: *touch backdoor*  check with ls to see if the file exist 
+	2.  run the following command: *smbmap -H {taget ip} -u Administrator -p 'smbserver_771' --upload '/root/backdoor' 'C$\backdoor'  * 
+				- --upload '/root/backdoor' 'C$\backdoor'`: This option is used to upload a file from the local machine to the remote server. It specifies the source file path (`/root/backdoor`) on the local machine and the destination file path (`C$\backdoor`) on the remote server. In this example, it is attempting to upload the file located at `/root/backdoor` to the `C:\backdoor` path on the remote server.
+	1. 
