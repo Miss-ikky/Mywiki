@@ -527,6 +527,15 @@ Based on this output, we can see that there are several services running on the 
 	-   `-H {target ip}`: specificeert het IP-adres van de doel-SMB-host waarmee verbinding moet worden gemaakt.
 	- The results will be shares that the guest is able to connect to 
 	
-5. Try to run a command: *smbmap -H {taget ip} -u asminsitrator -p smbserver_771 -x 'ipconfig' *
+5. Try to run a command: *smbmap -H {taget ip} -u administrator -p smbserver_771 -x 'ipconfig' *
 	- De optie `-x` wordt gebruikt om een opdracht uit te voeren op de SMB-host nadat er verbinding is gemaakt. In dit geval wordt de opdracht 'ipconfig' uitgevoerd, die de netwerkconfiguratie van de host weergeeft.
-6. 
+	  
+6. run a command to see a list of drives and folders     : *smbmap -H {taget ip} -u administrator -p 'smbserver_771' -L *
+	- Door dit commando uit te voeren, krijg je een lijst van gedeelde mappen te zien die beschikbaar zijn op de opgegeven SMB-server met behulp van de opgegeven inloggegevens. 
+	-   -L: Deze optie instrueert smbmap om een lijst van gedeelde mappen op de SMB-server weer te geven.
+
+7. if there is a C$ we will try to connect with it using the following command:   *smbmap -H {taget ip} -u Administrator -p 'smbserver_771' -r 'C$'*
+	- Door dit commando uit te voeren, maak je verbinding met de opgegeven SMB-server met de opgegeven inloggegevens en krijg je toegang tot de inhoud van de 'C$' gedeelde map, waarbij je informatie kunt zien over de bestanden en mappen die zich op de systeemschijf van de SMB-server bevinden.
+	- -r 'C$ Deze optie geeft aan dat je toegang wilt krijgen tot de gedeelde map C$ op de SMB-server. 'C$' is een verborgen gedeelde map op Windows-systemen die meestal verwijst naar de systeemschijf (meestal de C-schijf)
+	  
+8. 
