@@ -551,7 +551,7 @@ Based on this output, we can see that there are several services running on the 
 
 ----------------- 
 
-LAB Windows recon: SMBMap 
+LAB Windows recon: SMBMap   (deze nog een keer doen )
 
 Your task is to fingerprint the service using the tools available on the Kali machine and run the smbmap tool to enumerate the target machine service.
 
@@ -599,8 +599,8 @@ Stappenplan SMBMap:
 		|     3.00
 		|_    3.02
 
-   
-   
+   ![[Pasted image 20230515161029.png]]
+   ![[Pasted image 20230515161051.png]]
 4.  Run smbmap for SMBv1: `smbmap -u guest -p "" -d . -H {target ip}`.
    
 		root@attackdefense:~# smbmap -u Guest -p "" -d . -H 10.2.17.126
@@ -718,3 +718,217 @@ Stappenplan SMBMap:
 
 - run nmap on target 
 - run service scan on open port to determine what the services are (standard nmap makes a guess based on the port number but service scan gives definite anwer on the service)
+- run udp scan with --top-port 25 --open which mean that the top 25 port will be scanned that are open 
+- do service enumeration on open udp ports 
+- go back to enumeration on port 445: nmap {target ip} -p 445 --script smb-os-discovery 
+- run: **msfconsole** 
+	- The `msfconsole` command is used to launch the Metasploit Framework console, which is a command-line interface (CLI) for the Metasploit Framework. The Metasploit Framework is a powerful open-source penetration testing tool used for developing and executing exploit code against target systems.
+	- When you run `msfconsole`, it starts the console and provides you with an interactive shell where you can interact with the various modules, exploits, payloads, and auxiliary tools available within the Metasploit Framework. From the console, you can search for and select exploits, configure payloads, set options, run scans, exploit vulnerabilities, and perform various other security testing tasks.
+	- Once the `msfconsole` is launched, you will see a command prompt where you can enter commands and interact with the Metasploit Framework.
+
+
+		*msfconsole*
+		- use auxiliary/scanner/smb/smb_version 
+				When you execute this command in the Metasploit console (msf5), it sets the context to the specified auxiliary module, which is designed to scan and identify the SMB (Server Message Block) version running on a target system.
+		- show options  ![[Pasted image 20230515145301.png]]
+		- set rhost {target ip }
+		- options (check if options are good)
+		- run or exploit ![[Pasted image 20230515145701.png]]
+		- exit 
+
+
+
+- *nmblookup -h* 
+- *nmblookup -A {target IP}* Het nmblookup-commando is een hulpprogramma dat wordt gebruikt om NetBIOS-naamservers te bevragen om informatie te verkrijgen over NetBIOS-namen en hun bijbehorende IP-adressen. Door de optie -A te gebruiken, gevolgd door een doel-IP-adres, voert het commando een omgekeerde zoekopdracht uit om de NetBIOS-naam op te halen die is gekoppeld aan dat IP-adres. Samengevat, het commando nmblookup -A {doel-IP} haalt de NetBIOS-naam op die overeenkomt met het opgegeven doel-IP-adres door de NetBIOS-naamserver te bevragen. ![[Pasted image 20230515150443.png]] 
+	   `<20>`: Represents the NetBIOS service type. In this case, `<20>` corresponds to the file-sharing service.
+	 `<group>`: Indicates that the NetBIOS name is a group name, rather than an individual computer name.
+         `<active>`: Shows that the NetBIOS name is currently active.
+         `H`: Denotes that the device supports hybrid mode, which means it can communicate using both NetBIOS and DNS naming systems.
+	
+- We see <20> that means we can try to connect to this for this we use: smbclient. 
+- *smbclient -h*  Help page
+- *smbclient -L {targetip} -N*  
+	- -   `smbclient`: Dit is de opdracht om een SMB-clientprogramma te starten.
+	-   `-L {targetip}`: Deze optie geeft aan dat je een lijst van gedeelde bronnen op een specifiek IP-adres wilt verkrijgen. 
+	-   `-N`: Deze optie schakelt de authenticatie uit, waardoor je geen gebruikersnaam en wachtwoord hoeft op te geven om verbinding te maken met de SMB-server. Hierdoor kun je de lijst van gedeelde bronnen verkrijgen zonder authenticatiegegevens.
+
+When you see IPC$ with a null session (A null session refers to an unauthenticated connection or session established between a client and a server without providing any credentials or authentication information.) then you might be able to connect to it 
+
+- rcpclient -h 
+- *rpcclient -U "" -N {target ip}*
+	- `rpcclient`: Dit is de opdracht om een RPC-clientprogramma te starten
+	-   `-U ""`: Deze optie geeft aan dat je een lege gebruikersnaam ("") gebruikt om verbinding te maken. Hiermee wordt een null session geïnitieerd, wat betekent dat er geen expliciete gebruikersnaam wordt verstrekt voor authenticatie.
+	-   `-N`: Deze optie schakelt de authenticatie uit, waardoor er geen wachtwoord nodig is om verbinding te maken met de RPC-service.
+	-   `{target ip}`: Dit is het IP-adres van de doel-RPC-service waarmee verbinding moet worden gemaakt. Het moet worden vervangen door het werkelijke IP-adres. 
+
+
+
+-----
+
+LAB Samba Basics
+
+targetip: 192.179.187.3 
+
+Objective lab -> Questions
+
+1.  Find the default tcp ports used by smbd.
+   
+		   root@attackdefense:~# nmap 192.179.187.3
+			PORT    STATE SERVICE
+			139/tcp open  netbios-ssn
+			445/tcp open  microsoft-ds   📍
+			MAC Address: 02:42:C0:B3:BB:03 (Unknown)
+   
+   
+   
+2.  Find the default udp ports used by nmbd.
+   
+		   root@attackdefense:~# nmap -sU  --top-port 25 --open  192.179.187.3
+		Not shown: 23 closed ports
+		PORT    STATE         SERVICE
+		137/udp open          netbios-ns
+		138/udp open|filtered netbios-dgm
+
+   
+3.  What is the workgroup name of samba server?
+   
+		   root@attackdefense:~# nmap -sU -sV  --top-port 25 --open  192.179.187.3
+		Not shown: 23 closed ports
+		PORT    STATE         SERVICE     VERSION
+		137/udp open          netbios-ns  Samba nmbd netbios-ns (workgroup: RECONLABS) 📍
+		138/udp open|filtered netbios-dgm
+		Service Info: Host: SAMBA-RECON
+   
+4.  Find the exact version of samba server by using appropriate nmap script.
+   
+		root@attackdefense:~# nmap -p 445 --script smb-os-discovery 192.179.187.3
+		PORT    STATE SERVICE
+		445/tcp open  microsoft-ds
+		Host script results:
+		| smb-os-discovery:                         |
+		| ----------------------------------------- |
+		| OS: Windows 6.1 (Samba 4.3.11-Ubuntu)     | 📍
+		| Computer name: victim-1                   |
+		| NetBIOS computer name: SAMBA-RECON\x00    |
+		| Domain name: \x00                         |
+		| FQDN: victim-1                            |
+		| _  System time: 2023-05-15T13:57:22+00:00 | 
+
+
+5.  Find the exact version of samba server by using smb_version metasploit module.
+   
+   
+		   msf5 auxiliary(scanner/smb/smb_version) > run
+		   
+			[] 192.179.187.3:445     - Host could not be identified: Windows 6.1 (Samba 4.3.11-Ubuntu)
+		[] 192.179.187.3:445     - Scanned 1 of 1 hosts (100% complete)
+		[] Auxiliary module execution completed
+		
+   
+   
+6.  What is the NetBIOS computer name of samba server? Use appropriate nmap scripts.
+![[Pasted image 20230515160842.png]]
+![[Pasted image 20230515160851.png]]
+root@attackdefense:~# nmap -p 445 --script smb-os-discovery 192.179.187.3
+Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-15 13:57 UTC
+Nmap scan report for target-1 (192.179.187.3)
+Host is up (0.000049s latency).
+
+PORT    STATE SERVICE
+445/tcp open  microsoft-ds
+MAC Address: 02:42:C0:B3:BB:03 (Unknown)
+
+Host script results:
+| smb-os-discovery: 
+|   OS: Windows 6.1 (Samba 4.3.11-Ubuntu)
+|   Computer name: victim-1
+|   NetBIOS computer name: SAMBA-RECON\x00
+|   Domain name: \x00
+|   FQDN: victim-1
+|_  System time: 2023-05-15T13:57:22+00:00
+
+
+   
+   
+7.  Find the NetBIOS computer name of samba server using nmblookup
+   
+   
+   		   
+		   
+		   root@attackdefense:~# nmblookup -A 192.179.187.3
+		Looking up status of 192.179.187.3
+		        SAMBA-RECON     <00> -         H <ACTIVE> 
+		        SAMBA-RECON     <03> -         H <ACTIVE> 
+		        SAMBA-RECON     <20> -         H <ACTIVE>  📍
+		        ..__MSBROWSE__. <01> - <GROUP> H <ACTIVE> 
+		        RECONLABS       <00> - <GROUP> H <ACTIVE> 
+		        RECONLABS       <1d> -         H <ACTIVE> 
+		        RECONLABS       <1e> - <GROUP> H <ACTIVE> 
+		
+		        MAC Address = 00-00-00-00-00-00
+
+   
+   
+   
+   
+   
+   
+   
+   
+8.  Using smbclient determine whether anonymous connection (null session)  is allowed on the samba server or not.
+   
+   ✔
+   
+   
+   
+   root@attackdefense:~# smbclient -L 192.179.187.3 -N
+
+        Sharename       Type      Comment
+        ---------       ----      -------
+        public          Disk      
+        john            Disk      
+        aisha           Disk      
+        emma            Disk      
+        everyone        Disk      
+        IPC$            IPC       IPC Service (samba.recon.lab)
+Reconnecting with SMB1 for workgroup listing.
+
+        Server               Comment
+        ---------            -------
+
+        Workgroup            Master
+        ---------            -------
+        RECONLABS            SAMBA-RECON
+   
+   
+   
+   
+   
+9.  Using rpcclient determine whether anonymous connection (null session) is allowed on the samba server or not.
+
+✔
+
+![[Pasted image 20230515160600.png]]
+
+
+
+
+Stappenplan: 
+
+-   Voer een nmap-scan uit op het doel: `nmap {targetip}`
+-   Voer een servicescan uit op open poorten om te bepalen welke services actief zijn: `nmap -sV {targetip}`
+-   Voer een UDP-scan uit op de top 25 open poorten: `nmap -sU --top-ports 25 --open {targetip}`
+-   Voer een service-enumeratie uit op de open UDP-poorten: `nmap -sU -sV --top-ports 25 --open {targetip}`
+-   Ga terug naar de enumeratie op poort 445 en voer smb-os-discovery-script uit: `nmap -p 445 --script smb-os-discovery {targetip}`
+-   Start de Metasploit Framework-console met het commando `msfconsole`
+-   Voer de volgende stappen uit in de Metasploit-console:
+    1.  Toon de beschikbare opties: `show options`
+    2.  Stel het doel-IP in: `set rhost {targetip}`
+    3.  Controleer of de opties correct zijn: `options`
+    4.  Voer de exploit uit: `run` of `exploit`
+    5.  Verlaat de Metasploit-console: `exit`
+-   Voer `nmblookup -A {targetip}` uit om de NetBIOS-naam voor het opgegeven doel-IP op te halen.
+-   Gebruik smbclient om verbinding te maken met de gevonden service. Voer `smbclient -L {targetip} -N` uit.
+-   Gebruik `rpcclient -U "" -N {targetip}` om verbinding te maken met de RPC-service met een null session.
+
+
