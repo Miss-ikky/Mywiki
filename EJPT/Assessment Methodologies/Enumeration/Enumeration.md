@@ -1868,3 +1868,13 @@ LAB --
 3.  Fetch the flag from FTP server. 
 
 ![[Pasted image 20230516160454.png]]
+
+
+### SSH
+
+- Secure shell -> communicate with remote machine over protected channel 
+- Stappenplan: 
+
+1. Nmap scan on target ip 
+2. Do service scan (get operating system info) on port 22: nmap ip -sV -O 
+3. 
