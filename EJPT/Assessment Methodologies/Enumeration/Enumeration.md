@@ -1877,4 +1877,21 @@ LAB --
 
 1. Nmap scan on target ip 
 2. Do service scan (get operating system info) on port 22: nmap ip -sV -O 
-3. 
+3. run: ssh root@ip and try to login with maybe abc123 
+4. if permission denied try using netcat: nc ip port  (nc ip 22 ) this will give you the banner which is usefull for enumeration 
+5. run: nmap ip -p 22 --script ssh-enum-algos 
+	 - The script is designed to enumerate and display the supported encryption algorithms, key exchange algorithms, and message authentication codes (MACs) supported by the SSH server running on the target host. It helps in identifying the security configuration of the SSH service.
+	 - By running this command, you can gather information about the SSH encryption algorithms supported by the target host. This can be useful for assessing the security posture of SSH services and ensuring that strong encryption algorithms are being used.
+	 - 
+6. run: nmap ip -p 22 --script ssh-hostkey --script-args ssh_hostkey=full 
+	- `--script ssh-hostkey`: This option tells Nmap to use the `ssh-hostkey` script as part of the scan. The `ssh-hostkey` script is a built-in script in Nmap that retrieves and displays the SSH host key information for the target host.
+	- It specifies the `full` option, which indicates that detailed information about the SSH host key should be retrieved.
+7. check if there are any weak paswords for ssh:  nmap ip -p 22 --script ssh-auth-methods --script-args="ssh.user=student" 
+	- -   `--script ssh-auth-methods`: Dit geeft aan dat de Nmap-scripts met betrekking tot SSH-authenticatiemethoden moeten worden uitgevoerd. Deze scripts zullen proberen de ondersteunde authenticatiemethoden te identificeren die beschikbaar zijn op de SSH-server.
+	-   `--script-args="ssh.user=student"`: Dit is een scriptargument dat wordt doorgegeven aan de Nmap-scripts. In dit geval wordt de argumentwaarde "student" gebruikt om aan te geven dat de scan moet worden uitgevoerd alsof de gebruiker "student" is. Dit kan nuttig zijn als de SSH-server verschillende authenticatiemethoden aanbiedt op basis van de gebruiker. met deze opdracht wordt een Nmap-scan uitgevoerd om de SSH-authenticatiemethoden te identificeren die beschikbaar zijn op het opgegeven doel-IP-adres, waarbij de scan wordt uitgevoerd alsof de gebruiker "student" is.
+	- if the result is none than is dangerous 
+8. check if there are any weak paswords for ssh for admin:  nmap ip -p 22 --script ssh-auth-methods --script-args="ssh.user=admin" 
+
+Since the student did not require any authentication we try: ssh student@ip > who am i > ipconfig > cat FLAG > logout 
+![[Pasted image 20230517150117.png]]
+
