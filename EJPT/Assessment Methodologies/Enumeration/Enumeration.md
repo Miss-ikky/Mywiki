@@ -2166,3 +2166,13 @@ OF
 		 * Support:        https://ubuntu.com/advantage
 		SSH recon dictionary attack lab
 
+---
+
+
+### HTTP 
+
+- hosting website 
+- run standard nmap 
+- run extra nmap: nmap -sV -O 
+	- when port 80 is open we check in our webbrowser is we can connect to the website 
+- 
