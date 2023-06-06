@@ -2175,4 +2175,9 @@ OF
 - run standard nmap 
 - run extra nmap: nmap -sV -O 
 	- when port 80 is open we check in our webbrowser is we can connect to the website 
-- 
+- run: whatweb targetip 
+	- By executing "whatweb targetip," you are instructing the tool to scan the specified IP address and provide information about the technologies, frameworks, content management systems (CMS), server software, and other relevant details associated with the target web server 
+- run: http target ip 
+- run: dirb http://ip 
+	- dirb will look for directories - first it will ook at toplevel directories then it will  go to subfolders 
+- run: browsh --startup-url http://
