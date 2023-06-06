@@ -2177,7 +2177,58 @@ OF
 	- when port 80 is open we check in our webbrowser is we can connect to the website 
 - run: whatweb targetip 
 	- By executing "whatweb targetip," you are instructing the tool to scan the specified IP address and provide information about the technologies, frameworks, content management systems (CMS), server software, and other relevant details associated with the target web server 
-- run: http target ip 
+- run hhtpie: http target ip 
 - run: dirb http://ip 
 	- dirb will look for directories - first it will ook at toplevel directories then it will  go to subfolders 
-- run: browsh --startup-url http://
+- run: browsh --startup-url http:// 
+  ![[Pasted image 20230606133353.png]]
+  this will try to render the website if you do not have a browser 
+
+-- Lab --- 
+Nmap scan report for 10.2.24.249
+Host is up (0.0025s latency).
+Not shown: 994 closed ports
+PORT     STATE SERVICE       VERSION
+**80/tcp   open  http          Microsoft IIS httpd 10.0**
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+445/tcp  open  microsoft-ds?
+3306/tcp open  mysql         MySQL (unauthorized)
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+
+root@attackdefense:~# whatweb 10.2.24.249
+Ignoring eventmachine-1.3.0.dev.1 because its extensions are not built. Try: gem pristine eventmachine --version 1.3.0.dev.1
+Ignoring fxruby-1.6.29 because its extensions are not built. Try: gem pristine fxruby --version 1.6.29
+http://10.2.24.249 [302 Found] ASP_NET[4.0.30319], Cookies[ASP.NET_SessionId,Server], Country[RESERVED][ZZ], HTTPServer[Microsoft-IIS/10.0], HttpOnly[ASP.NET_SessionId], IP[10.2.24.249], Microsoft-IIS[10.0], RedirectLocation[/Default.aspx], Title[Object moved], X-Powered-By[ASP.NET], X-XSS-Protection[0]
+http://10.2.24.249/Default.aspx [302 Found] ASP_NET[4.0.30319], Cookies[ASP.NET_SessionId,Server], Country[RESERVED][ZZ], HTTPServer[Microsoft-IIS/10.0], HttpOnly[ASP.NET_SessionId], IP[10.2.24.249], Microsoft-IIS[10.0], RedirectLocation[/Default.aspx], Title[Object moved], X-Powered-By[ASP.NET], X-XSS-Protection[0]
+
+Using the whatweb tool we found information about the running IIS Server as mentioned below.  
+● IIS Server version is 10.0  
+● ASP.NET Version is 4.0.30319  
+● XSS Protection is 0  
+● The default page of the target web application is /Default.aspx
+
+
+oot@attackdefense:~# http 10.2.24.249
+HTTP/1.1 302 Found
+Cache-Control: private
+Content-Length: 130
+Content-Type: text/html; charset=utf-8
+Date: Tue, 06 Jun 2023 11:39:56 GMT
+Location: /Default.aspx
+Server: Microsoft-IIS/10.0
+Set-Cookie: ASP.NET_SessionId=h01rqvfmvmcrfvzxssw2c0wb; path=/; HttpOnly; SameSite=Lax
+Set-Cookie: Server=RE9UTkVUR09BVA==; path=/
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+X-XSS-Protection: 0
+
+object moved to < href="/Default.aspx">
+
+
+Default.aspx is de default pagina als je de website bezoekt voor websites gebouwdt met microsoft aspx 
+
+
+
+
+
