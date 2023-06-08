@@ -2382,3 +2382,38 @@ PORT   STATE SERVICE VERSION
 of 
 
 ![[Pasted image 20230608134850.png]]
+
+
+## SLQ 
+
+
+#### MySQL
+
+Runs on linux or unix and allows users to store info in database, can be pulled and used in many operations. It is often misconfigured and vulnerable 
+
+how do we enumerate? 
+- run service scan
+- run service scan on port with mysql 
+- mysql -h ip -u root                                            (-h = host -u = username, we are running out because root is often default admin we will try to login in sql)
+	- if you can login run: show databases (to look at the data)
+	- run: use {database}; (we are looking into the database "books") or run: select count(\*) from authors; 
+	- run help  to see commands in sql 
+	  
+- msfconsole
+- use auxiliary/scanner/mysql/mysql_writeable_dirs  
+- set dir_list /usr/share/metasploit-framework/data/wordlists/directory.txt 
+- setg rhost 192.125.250.3                               (setg means it will be set as global host so for the whole metasploit session this ip will be used so you wont habe to re-enter it everytime)
+- set verbose false    (verbose is in the advanced options and it will give you detailed status messages - to see advanced options type advances )
+- set password "" 
+- options  (check if you have al required items then run)
+
+- use auxiliary/scanner/mysql/mysql_hashdump  (you will get hashes of users)
+- options - set username root    set password "" run 
+
+loginto mysql 
+
+
+
+
+
+  
