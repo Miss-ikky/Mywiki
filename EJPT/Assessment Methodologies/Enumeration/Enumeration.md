@@ -2309,4 +2309,76 @@ je kunt bovenstaande command ook uitvoeren zonder p 80 (port te specificeren)
 - run: run basic scan, service scan on specific port (80) 
 - run when you see apache: nmap ip -p 80 -sV -script banner 
 	- banner: is information that is shared with you computer, the first time it connects remotely to another machine 
- - lets move to: mfsconsole 
+ - lets move to: mfsconsole (metasploit framework)
+	 - use auxiliary/scanner/http/http_version 
+		 - set rhosts (target ip) 
+			- options 
+		- run 
+		- exit 
+	- use auxiliary/scanner/http/brute_dirs 
+		- show options 
+		- set rhost to target up ip 
+- - dirb http://ip /usr/share/metasploit-framework/data/wordlists/directory.txt (zelfde als brute_dirs scanner in metasploit)
+- other commands you can run: 
+	- curl ip 
+	- wget "http://ip/index" will retrieve webfiles 
+	- browsh --startup-url ip (will render the website)s
+	- lynx http://ip 
+- robot.txt: 
+	- msfconsole 
+		- use  auxiliary/scanner/http/robots_txt 
+		- set rhost to target ip 
+		- options -> run 
+![[Pasted image 20230608132146.png]]
+
+robot.txt -> dit is een pagina die aangeeft welke bestanden mogen gelezen worden door search engines - het kan je vertellen welke subdirectories er zijn 
+
+--lab -- 
+
+1. Which web server software is running on the target server and also find out the version using nmap.
+   
+   root@INE:~# nmap 192.220.202.3 -sV
+
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+
+![[Pasted image 20230608134329.png]]
+
+   
+   
+2. Which web server software is running on the target server and also find out the version using suitable metasploit module.
+   
+   msf6 auxiliary(scanner/http/http_version) > run
+	192.220.202.3:80 Apache/2.4.18 (Ubuntu)
+
+   
+   
+3. Check what web app is hosted on the web server using curl command.
+   
+![[Pasted image 20230608132858.png]]
+   
+   
+4. Check what web app is hosted on the web server using wget command.
+   
+5. Check what web app is hosted on the web server using browsh CLI based browser.
+   
+6. Check what web app is hosted on the web server using lynx CLI based browser.
+   
+   
+7. Perform bruteforce on webserver directories and list the names of directories found. Use brute_dirs metasploit module.
+   
+   ![[Pasted image 20230608133747.png]]
+   
+   
+   
+8. Use the directory buster (dirb) with tool/usr/share/metasploit-framework/data/wordlists/directory.txt dictionary to check if any directory is present in the root folder of the web server. List the names of found directories.
+   
+
+![[Pasted image 20230608134200.png]]
+   
+9. Which bot is specifically banned from accessing a specific directory (flag) ?
+
+![[Pasted image 20230608133904.png]]
+of 
+
+![[Pasted image 20230608134850.png]]
