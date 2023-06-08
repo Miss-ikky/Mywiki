@@ -2226,9 +2226,87 @@ X-XSS-Protection: 0
 object moved to < href="/Default.aspx">
 
 
-Default.aspx is de default pagina als je de website bezoekt voor websites gebouwdt met microsoft aspx 
+**Default.aspx is de default pagina als je de website bezoekt voor websites gebouwdt met microsoft aspx** 
+
+### HTTP ISS Nmap script 
+
+- run: nmap ip 
+- run service scan: nmap ip -sV  and navigate to the website if port 80 is open 
+- run the following to check services but also what directories there are: nmap: ip -sV -p 80 --script http-enum 
+- run: nmap: ip -sV -p 80 --script http-headers 
+- run: nmap: ip -sV -p 80 --script http-methods --script=args http-methods.url-path=/webdav/
+- run this if you have a results for webdav using the above command: nmap: ip -sV -p 80 --script http-webdav-scan --script=args http-methods.url-path=/webdav/
 
 
+-- lab -- 
+
+- Identify IIS Server
+  80/tcp   open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP) 
+  
+- Get webserver header details
+
+80/tcp open  http    Microsoft IIS httpd 10.0
+| http-headers:                                                                          |
+| -------------------------------------------------------------------------------------- |
+| Cache-Control: private                                                                 |
+| Content-Type: text/html; charset=utf-8                                                 |
+**| Location: /Default.aspx                                                                |
+| Server: Microsoft-IIS/10.0**                                                             |
+| Set-Cookie: ASP.NET_SessionId=bjnf2tkiimxv3lwqoclojhle; path=/; HttpOnly; SameSite=Lax |
+**| X-AspNet-Version: 4.0.30319**                                                            |
+| Set-Cookie: Server=RE9UTkVUR09BVA = =; path=/                                            
+**| X-XSS-Protection: 0                                                                    |
+| X-Powered-By: ASP.NET**                                                                  |
+| Date: Thu, 08 Jun 2023 09:02:38 GMT                                                    |
+| Connection: close                                                                      
+ Content-Length: 130                                                                    
+
+  
+- Enumerated HTTP methods
+  
+  ORT   STATE SERVICE VERSION
+80/tcp open  http    Microsoft IIS httpd 10.0
+| http-enum: 
+|   /content/: Potentially interesting folder
+|   /downloads/: Potentially interesting folder
+|_  /webdav/: Potentially interesting folder
+|_http-server-header: Microsoft-IIS/10.0
+
+  
+  
+- Detect WebDAV configuration - etc (check all allowed methods on webdav)
+
+root@attackdefense:~# nmap 10.2.26.147 -sV -p 80 --script http-methods --script-args http-methods.url-path=/webdav/
+
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Microsoft IIS httpd 10.0
+| http-methods: 
+|   *Supported Methods: OPTIONS TRACE GET HEAD POST COPY PROPFIND DELETE MOVE PROPPATCH MKCOL LOCK UNLOCK PUT*
+|   Potentially risky methods: TRACE COPY PROPFIND DELETE MOVE PROPPATCH MKCOL LOCK UNLOCK PUT
+|_  Path tested: /webdav/
+|_http-server-header: Microsoft-IIS/10.0
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+root@attackdefense:~# nmap 10.2.26.147 -sV -p 80 --script http-webdav-scan --script-args http-methods.url-path=/webdav/   
+
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Microsoft IIS httpd 10.0
+|_http-server-header: Microsoft-IIS/10.0
+| http-webdav-scan: 
+|   Server Date: Thu, 08 Jun 2023 09:18:01 GMT
+|   Server Type: Microsoft-IIS/10.0
+|   Public Options: OPTIONS, TRACE, GET, HEAD, POST, PROPFIND, PROPPATCH, MKCOL, PUT, DELETE, COPY, MOVE, LOCK, UNLOCK
+|   Allowed Methods: OPTIONS, TRACE, GET, HEAD, POST, COPY, PROPFIND, LOCK, UNLOCK
+|_  WebDAV type: Unknown
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
 
 
+je kunt bovenstaande command ook uitvoeren zonder p 80 (port te specificeren)
 
+
+### HTTP Apache 
+
+- run: run basic scan, service scan on specific port (80) 
+- run when you see apache: nmap ip -p 80 -sV -script banner 
+	- banner: is information that is shared with you computer, the first time it connects remotely to another machine 
+ - lets move to: mfsconsole 
