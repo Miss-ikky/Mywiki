@@ -2410,7 +2410,12 @@ how do we enumerate?
 - use auxiliary/scanner/mysql/mysql_hashdump  (you will get hashes of users)
 - options - set username root    set password "" run 
 
-loginto mysql 
+loginto mysql (mysql -h ip -u root)
+- select load_file("/etc/shadow")   (test if you have access to files on sql system) 
+
+nmap: 
+- run: nmap ip -sV -p port --script=mysql-empty-password   (see what account you can get into with null session (empty password))
+- run: nmap ip -sV -p port --script=mysql-info 
 
 
 
