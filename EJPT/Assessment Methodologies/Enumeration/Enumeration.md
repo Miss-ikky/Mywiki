@@ -2416,6 +2416,13 @@ loginto mysql (mysql -h ip -u root)
 nmap: 
 - run: nmap ip -sV -p port --script=mysql-empty-password   (see what account you can get into with null session (empty password))
 - run: nmap ip -sV -p port --script=mysql-info 
+- nmap ip -sV -p port --script=mysql-users --script args="mysqlusers='root',mysqlpass=' ' " 
+- if you cant log into sql you can try this: nmap ip -sV -p port --script=mysql-databases --script args="mysqlusers='root',mysqlpass=' ' " 
+- ![[Pasted image 20230608170007.png]]
+- nmap ip -sV -p port --script=mysql-audit --script args="mysql-audit.username='root',mysql-audit.password=' ',mysql-audit.filename='/usr/share/nmap/nselib/data/mysql-cis.audit' "
+- Get all the hashes: nmap ip -sV -p port --script=mysql-dump-hashes --script args="username='root',password=' ' " 
+- use nmap to run a query: nmap ip -sV -p port --script=mysql-query --script args=" query='select count(\*) from books.authors;', username='root',password=' ' " 
+
 
 
 
