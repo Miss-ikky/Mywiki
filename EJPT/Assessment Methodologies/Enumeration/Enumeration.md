@@ -2391,6 +2391,8 @@ of
 
 Runs on linux or unix and allows users to store info in database, can be pulled and used in many operations. It is often misconfigured and vulnerable 
 
+**!!!!!!!!!!!!!! Let op by commands in mysql vergeet niet de ; aan het einde van de command** 
+
 how do we enumerate? 
 - run service scan
 - run service scan on port with mysql 
@@ -2424,20 +2426,77 @@ nmap:
 - use nmap to run a query: nmap ip -sV -p port --script=mysql-query --script args=" query='select count(\*) from books.authors;', username='root',password=' ' " 
 
 
--- Lab --- 
+-- Lab ---  192.100.216.3 
 
 1. What is the version of MySQL server?
+   
+   root@attackdefense:~# nmap 192.100.216.3 -sV 
+		PORT     STATE SERVICE VERSION
+		**3306/tcp open  mysql   MySQL 5.5.62-0ubuntu0.14.04.1**
+
+   
+   
 2. What command is used to connect to remote MySQL database?
+   
+  mysql -h ip -u root   
+   
 3. How many databases are present on the database server?
-4. How many records are present in table “authors”? This table is present inside the “books” database.
+   
+   ![[Pasted image 20230609143203.png]]
+   
+4. How many records are present in table “authors”? This table is present inside the “books” database. 10 
+   
+![[Pasted image 20230609143645.png]]
+   ![[Pasted image 20230609143828.png]]
 5. Dump the schema of all databases from the server using suitable metasploit module?
+![[Pasted image 20230609145208.png]]
+   
+   
+   
 6. How many directories present in the /usr/share/metasploit-framework/data/wordlists/directory.txt, are writable? List the names.
+   
+   In Metasploit, the auxiliary module auxiliary/scanner/mysql/mysql_file_dir can be used for directory scanning in MySQL.
+   
+   ![[Pasted image 20230609145426.png]]
+   
+   
+   
 7. How many of sensitive files present in /usr/share/metasploit-framework/data/wordlists/sensitive_files.txt are readable? List the names.
+   
+   In Metasploit, the auxiliary module `auxiliary/scanner/mysql/mysql_file_enum` can be used to scan for files in a MySQL server.
+   
+   ![[Pasted image 20230609151040.png]]
+   
+   
+   
 8. Find the system password hash for user "root".
+ 
+
+![[Pasted image 20230609153050.png]]
+
+-> if you want to get hashes of users - loginto mysql remotly and try to access the /etc/shadow file by running the following command: select load_file("/etc/shadow")
+
+![[Pasted image 20230609153323.png]] 
+
 9. How many database users are present on the database server? Lists their names and password hashes.
+
+
+![[Pasted image 20230609151550.png]]
+
+
+
 10. Check whether anonymous login is allowed on MySQL Server.
+    ![[Pasted image 20230609155308.png]]
+    
+    
 11. Check whether “InteractiveClient” capability is supported on the MySQL server.
+    
+    ![[Pasted image 20230609155430.png]]
+    
 12. Enumerate the users present on MySQL database server using mysql-users nmap script.
+    
+    
+    
 13. List all databases stored on the MySQL Server using nmap script.
 14. Find the data directory used by mysql server using nmap script.
 15. Check whether File Privileges can be granted to non admin users using mysql_audi nmap script.
