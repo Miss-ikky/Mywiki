@@ -2504,7 +2504,7 @@ nmap 192.128.174.3 -p 3306 --script=mysql-users --script args="mysqlusers='root'
 
 
 
-nmap -sV --script=mysql-users <target>
+nmap -sV --script=mysql-users
     
     
 13. List all databases stored on the MySQL Server using nmap script.
@@ -2518,8 +2518,14 @@ nmap -sV --script=mysql-users <target>
 17. Find the number of records stored in table “authors” in database “books” stored on MySQL Server using mysql-query nmap script (flag).
 
 
+### MySQL Dictionary Attack 
 
-## **MySQL Dictonary Attack** 
+Een MySQL dictionary-aanval is een aanvalsvector waarbij een aanvaller probeert toegang te krijgen tot een MySQL-database door systematisch verschillende gebruikersnamen en wachtwoorden uit een vooraf samengestelde lijst, ook wel een woordenboek genoemd, te proberen. 
+
+- run a service scan 
+- utalize msfconsole and an auxiliary scanner to brute force the login 
+	- use auxiliary.scanner/mysql/mysql_login
+	- set pass_file 
 
 
 
