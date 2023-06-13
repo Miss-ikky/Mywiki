@@ -2418,15 +2418,19 @@ loginto mysql (mysql -h ip -u root)
 nmap: 
 - run: nmap ip -sV -p port --script=mysql-empty-password   (see what account you can get into with null session (empty password))
 - run: nmap ip -sV -p port --script=mysql-info 
+  
 - nmap ip -sV -p port --script=mysql-users --script args="mysqlusers='root',mysqlpass=' ' " 
+  
 - if you cant log into sql you can try this: nmap ip -sV -p port --script=mysql-databases --script args="mysqlusers='root',mysqlpass=' ' " 
 - ![[Pasted image 20230608170007.png]]
 - nmap ip -sV -p port --script=mysql-audit --script args="mysql-audit.username='root',mysql-audit.password=' ',mysql-audit.filename='/usr/share/nmap/nselib/data/mysql-cis.audit' "
+  
 - Get all the hashes: nmap ip -sV -p port --script=mysql-dump-hashes --script args="username='root',password=' ' " 
+  
 - use nmap to run a query: nmap ip -sV -p port --script=mysql-query --script args=" query='select count(\*) from books.authors;', username='root',password=' ' " 
 
 
--- Lab ---  192.100.216.3 
+-- Lab ---  192.100.216.3 of 
 
 1. What is the version of MySQL server?
    
@@ -2494,10 +2498,20 @@ nmap:
     ![[Pasted image 20230609155430.png]]
     
 12. Enumerate the users present on MySQL database server using mysql-users nmap script.
-    
+
+
+nmap 192.128.174.3 -p 3306 --script=mysql-users --script args="mysqlusers='root',mysqlpass='' " 
+
+
+
+nmap -sV --script=mysql-users <target>
     
     
 13. List all databases stored on the MySQL Server using nmap script.
+    
+    
+    
+    
 14. Find the data directory used by mysql server using nmap script.
 15. Check whether File Privileges can be granted to non admin users using mysql_audi nmap script.
 16. Dump all user hashes using  nmap script.
@@ -2505,6 +2519,7 @@ nmap:
 
 
 
+## **MySQL Dictonary Attack** 
 
 
 
