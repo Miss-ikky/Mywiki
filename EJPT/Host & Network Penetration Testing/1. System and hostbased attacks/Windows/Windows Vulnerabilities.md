@@ -94,6 +94,12 @@ optie 2 in metasploit
 	- PsExec can be utilized to authenticate with target system legitimately and run arbitrary commands or launch a remote command prompt 
 	- very similar to RDP, however, instead of controlling the remote system via GUI (which is the case in RDP), commands are sent via CMD 
 
+PsExec uses the Server Message Block (SMB) protocol for authentication when establishing a connection to remote systems. PsExec is a command-line tool developed by Microsoft Sysinternals that allows for the execution of processes on remote systems. It leverages SMB to authenticate with the remote system and execute commands or run programs.
+
+When PsExec is used to connect to a remote system, it establishes an SMB session to the administrative share (C$) on the target machine. It then uses the provided credentials (username and password) to authenticate and gain access to the remote system. The authentication process relies on the SMB protocol for secure communication and credential validation.
+
+It's worth noting that PsExec requires administrative privileges on the remote system to function properly. Additionally, SMB can use different authentication mechanisms, such as NTLM or Kerberos, depending on the configuration and the environment.
+
 - SMB Exploitation With PsExec 
 	- In order to utilize PsExec to gain access to a Windows target, we will need to identify legitimate users accounts and their respective passwords or password hashes 
 	- this can be done by leveraging various tools and techniques, however most common technique will involve performing an SMB login brute-force attack 
@@ -103,7 +109,7 @@ optie 2 in metasploit
 
 - start with service version detection and default script with nmap: nmap -sV -sC 
 	- Message signing enabled but not required means you can authenticate with this system via PsExec  ![[Pasted image 20230703124308.png]]
-- Perform bruteforce with Metasploit module 
+- Perform bruteforce with Metasploit module to get username and password that we can use for psexec 
 	- service postgresql start && msfconsole 
 	- search smb_login 
 		- The auxiliary modules are mainly used for information gathering 
@@ -120,4 +126,14 @@ open new tab
 		- psexec.py Adminstrator@targetip cmd.exe ![[Pasted image 20230703125815.png]]
 		- extend this attack with metasploit module to get meterpreter session 
 			- search psexec 
-			- 
+			- use exploit/windows/smb/psexec 
+			- show options (set rhost to targetip and set smbpassword en username )
+
+------ LAB -------- 
+**Objective:** Exploit the SMB service to get a meterpreter on the target and retrieve the flag!
+- Dictionaries to use:
+- /usr/share/metasploit-framework/data/wordlists/common_users.txt
+- /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt 
+
+![[Pasted image 20230703152541.png]]![[Pasted image 20230703153551.png]]
+![[Pasted image 20230703154518.png]]
