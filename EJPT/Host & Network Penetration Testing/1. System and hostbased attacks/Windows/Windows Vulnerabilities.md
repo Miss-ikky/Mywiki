@@ -118,4 +118,6 @@ open new tab
 - psexec.py (allows you to authenticate with target system)
 	- psexec.py Adminstrator@targetip command_that_you_want_to_execute 
 		- psexec.py Adminstrator@targetip cmd.exe ![[Pasted image 20230703125815.png]]
-		- extend this attack with metasploit module 
+		- extend this attack with metasploit module to get meterpreter session 
+			- search psexec 
+			- 
