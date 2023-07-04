@@ -137,3 +137,31 @@ open new tab
 
 ![[Pasted image 20230703152541.png]]![[Pasted image 20230703153551.png]]
 ![[Pasted image 20230703154518.png]]
+
+### Exploiting Windows MS17-010SMB Vulnerability (EternalBlue)
+
+- EternelBlue is the name given to a collection of Windows vulnerabilities that allows remote code execution 
+- Developed by NSA and was leaked by Shadow Brokers in 2017 
+- EternelBlue takes advantage of vulnerability in the Windows SMBv1 protocol that allows attackers to send specially crafted packets that consequently facilitate the execution of arbitrary commands 
+- The EternalBlue exploit was used in the WannaCry ransomware attack 
+- The vulnerability affects multiple versions of Windows (both 32 and 64 bit)
+- Microsoft released a patch in 2017
+- The EthernalBlue exploit has a MSF auxiliary module that can be used to check if a target system if vulnerable to the exploit and also has an exploit module that can be used to exploit the vulnerability on unpatched systems. 
+- The EthernalBlue exploit module can be used to exploit vulnerable Windows systems and consequently provide us with a privileged meterpreter session on the target system 
+- tool: ![[Pasted image 20230704130440.png]]
+
+Demo 
+
+- Nmap to check smb service: **sudo nmap -sV -p 445 -O target** 
+	- -O to check operating system 
+- To check if target is vulnerable for eternal blue exploit use the following nmap script: **sudo nmap -sV -p 445 --script=smb-vuln-ms17-010 target** 
+
+Manual exploitation: Tool used: https://github.com/3ndG4me/AutoBlue-MS17-010 
+1. Clone the repository (in kali repository) (check requirement install python)
+2. navigate into shellcode directory 
+3. give the shell_prep.sh executable permissions: chmod +x shell_prep.sh 
+4. execute the bash script: ./shell_prep.sh 
+5. say yes to msfvenom, add ip of kali vm (ifconfig), Lport (the port you want to listen to for the connection once the payload is executed on the target), choose regular shell, select stageless payload
+6. 
+
+
