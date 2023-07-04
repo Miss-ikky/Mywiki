@@ -138,7 +138,7 @@ open new tab
 ![[Pasted image 20230703152541.png]]![[Pasted image 20230703153551.png]]
 ![[Pasted image 20230703154518.png]]
 
-### Exploiting Windows MS17-010SMB Vulnerability (EternalBlue)
+### Exploiting Windows MS17-010SMB Vulnerability (EternalBlue) - CVE-2017-0144
 
 - EternelBlue is the name given to a collection of Windows vulnerabilities that allows remote code execution 
 - Developed by NSA and was leaked by Shadow Brokers in 2017 
@@ -161,7 +161,7 @@ Manual exploitation: Tool used: https://github.com/3ndG4me/AutoBlue-MS17-010
 2. navigate into shellcode directory 
 3. give the shell_prep.sh executable permissions: chmod +x shell_prep.sh 
 4. execute the bash script: ./shell_prep.sh 
-5. say yes to msfvenom, add ip of kali vm (ifconfig), Lport (the port you want to listen to for the connection once the payload is executed on the target), choose regular shell, select stageless payload ![[Pasted image 20230704140223.png]]
+5. say yes to msfvenom, add ip of kali vm (ifconfig), Lport (the port you want to listen to for the connection once the payload is executed on the target), choose regular shell, select stageless payload  ![[Pasted image 20230704140223.png]]
 6. set up netcat listner in a different terminal: nc -nvlp 1234 
 7. chmod +x externalblue_exploit7.py![[Pasted image 20230704140431.png]]![[Pasted image 20230704140522.png]]
 			green = executable 
@@ -174,3 +174,11 @@ Automatically exploit eternelblue
 3. use: ![[Pasted image 20230704140841.png]]
 4. run exploit after fixing the options 
 
+
+## Exploiting RDP 
+
+- Remote Desktop Protocol GUI remote access protocol used to remotely connect and interact with a Windows system 
+- RDP uses TCP port 3389 by default but can be configured to run on any other tcp port 
+- RDP authentication requires a legitimate user account on the target system as well as the user's password in clear-text 
+- we can perform an rdp brute force attack to identify legitimate user credentials that we can use to gain remote access to the target system
+-  
