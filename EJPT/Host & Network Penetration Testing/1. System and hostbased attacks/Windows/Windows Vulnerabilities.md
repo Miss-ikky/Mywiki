@@ -174,5 +174,3 @@ Automatically exploit eternelblue
 3. use: ![[Pasted image 20230704140841.png]]
 4. run exploit after fixing the options 
 
-
-
