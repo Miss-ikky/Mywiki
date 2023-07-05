@@ -256,16 +256,51 @@ Demo
 - Perform nmap scan to check if winrm is enabled and running 
 - when you cannot identify port 5985 (or 5986): run nmap on exact port 
 - new terminal: launch crackmapexec 
-	- start the bruteforce: **crackmapexec winrm  targetip -u adminstrator -p /usr/share/metasploit-framework/wordlists/unix_password.txt** 
+	- start the bruteforce: **crackmapexec winrm  targetip -u adminstrator -p /usr/share/metasploit-framework/data/wordlists/unix_password.txt** 
 	- execute arbitrary windows command on target: 
 		- crackmapexec winrm targetip -u adminstrator -p tinkerbell -x "whoami"
 		- crackmapexec winrm targetip -u adminstrator -p tinkerbell -x "systeminfo"
 Can we obtain a command shell session? Yes! 
 1) one way is with evil-winrm.rb:
-	- **evil-winrm.rb -u adminstrator -p 'tinkerbell' targetip**
+	- **evil-winrm.rb -u adminstrator -p 'tinkerbell' -i targetip**
 2) Metasploit 
 	- service postgresql && msfconsole 
 	- search winrm_script and use winrm_script_exec 
 	- set FORCE_VBS true, set password and username 
+		- By setting "force_vbs" to true, you are instructing the exploit module to force the execution of the specified script as a VBScript (VBS) file instead of a PowerShell script. This can be useful in scenarios where PowerShell execution is restricted or detected, but VBScript execution is allowed.
+
+----- Lab ---- 
+
+![[Pasted image 20230705170156.png]]
+![[Pasted image 20230705170348.png]]
+
+![[Pasted image 20230705171023.png]]
+
+## Windows Kernel Exploits 
+
+
+Privilege escalation
+- Privilege escalation is the process of exploiting vulnerabilities or misconfigurations in systems to elevate privileges from one user to another, typically to a user with administrative or root access on a system. 
+- Privilege escalation is a vital element in attack life cycle 
+- After gaining an initial foothold on a target system you will be required to elevate your privileges in order to perform tasks and functionality that require administrative privileges
+
+Windows Kernel
+- A kernel is a computer program that is the core of an operating system and has complete control over every resource and hardware on a system. It acts as a translation layer between hardware and software and facilitates the communication between these two layers 
+- Windows NT is the kernel that comes pre-packaged with all versions of Microsoft Windows and operates as a traditional kernel with a few exceptions based on user design philosophy. It consists of two main modes of operation that determine access to system resources and hardware: 
+	- User mode:  Programs and services running in user mode have limited access to system resources and functionality 
+	- Kernel mode: Kernel mode has unrestricted access to system resources and functionality with the added functionality of managing devices and system memory 
+
+Windows Kernel Exploitation 
+- Kernel exploits on Windows will typically target vulnerabilities in the Windows Kernel to execute arbitrary code in order to run privileged system commands or to obtain a system shell 
+- This process will differ based on the version of Windows being targeted and the kernel exploit being used 
+- Privilege escalation on Windows systems will typically follow the following methodology: 
+	 1) identify kernel vulnerabilities 
+	 2) Downloading, compiling, and transferring kernel exploits onto the target system 
+
+Tools & Environment 
+-  Windows-Exploit-Suggester: this tool compares a targets patch levels against the Microsoft vulnerability database in order to detect potential missing patches on the target. It also notifies the user if there are public exploits and Metasploit modules available for the missing bulletins 
+  https://github.com/AonCyberLabs/Windows-Exploit-Suggester 
+- Windows-Kernel-Exploits: Collection of winodws kernel exploits sorted by CVE 
+  https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS16-135 
 
 
