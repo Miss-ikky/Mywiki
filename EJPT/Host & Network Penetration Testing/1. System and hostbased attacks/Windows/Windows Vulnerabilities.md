@@ -190,9 +190,52 @@ demo
 - search rdp_scanner (aux/scanner/rdp/rdp_scanner), set options 
 
 Bruteforce rdp
-- Use hydra: hydra -L /usr/share/metasploit-framework/data/wordlists/common_users.txt -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt rdp://targetip  -s rdp'port
+- Use hydra: **hydra -L /usr/share/metasploit-framework/data/wordlists/common_users.txt -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt rdp://targetip  -s rdp'port**
 	- you can reduce the bruteforce speed with hydra,the default is 16 but you can change it to make sure that you dont cause damage to the customer you are pentesting 
 	- you need to add -s the port because if you do not add the port it will assume the default rdp port 
 - authenticate with credentials found in target: xfreerdp /u:administrator /p:qwertyuiop /v:targetip 
 	- `xfreerdp`: This is the command to launch the FreeRDP client. used to initiate a remote desktop session - It will establish a graphical connection to the remote system, allowing you to interact with its desktop environment as if you were physically present at that machine. 
 	- /u: specify the username used for the remote desktop session, /p is the password and /v is the target ip or hostname of the target system 
+	- zet achter het targetip:port als de default port anders is anders kan je niet connecten 
+
+------------- Lab --------------------
+![[Pasted image 20230705135430.png]]
+![[Pasted image 20230705140236.png]]
+flag: port-number-3333![[Pasted image 20230705140914.png]]
+
+
+### Exploiting Windows CVE-2019-0708 RDP Vulnerability (BlueKeep) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Exploiting WinRM 
