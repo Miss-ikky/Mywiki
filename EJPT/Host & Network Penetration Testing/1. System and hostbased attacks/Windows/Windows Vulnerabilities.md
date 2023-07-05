@@ -181,4 +181,11 @@ Automatically exploit eternelblue
 - RDP uses TCP port 3389 by default but can be configured to run on any other tcp port 
 - RDP authentication requires a legitimate user account on the target system as well as the user's password in clear-text 
 - we can perform an rdp brute force attack to identify legitimate user credentials that we can use to gain remote access to the target system
--  
+
+demo 
+
+- Perform nmap scan - port scan on target 
+  OR
+- service postgresql start &&msfconsole
+- search rdp_scanner (aux/scanner/rdp/rdp_scanner)
+- 
