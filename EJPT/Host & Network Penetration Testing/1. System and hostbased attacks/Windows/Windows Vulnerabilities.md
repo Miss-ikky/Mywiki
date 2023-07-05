@@ -338,14 +338,31 @@ UACMe
 - It allows attackers to execute malicious payloads on a windows target with administrative/elevated privileges by abusing the inbuilt Windows AuteElevate tool. 
 - The UACMe GitHub repository has more than 60 exploits that can be used to bypass UAC depending on the version of Windows running on the target. 
 
-Demo 
+UAC on windows system 
 - open CMD in windows: net users 
 - check members of the group: net localgroup administrators 
+
+
+How to bypass UAC
+- perform nmap scan on target 
+- try to access webserver on target (port 80)
+- start up metasploit framework 
+	- search rejetto 
+	- use exploit and set options 
+	- perform basic local enumeration
+		- sysinfo
+		- pgrep explorer (to find processid for explorer.exe)
+		- migrate 2448 (we want to migrate to explorer session and get a 64bit meterpeter session)
+		- sysinfo 
+
+![[Pasted image 20230705214848.png]]
+		Now we are admin, who  is not administrator but part of the local administrators group 
+- we can get the current privileges of the users through meterpreter session with: getprivs 
+- verify that this user is part of local administrators group we start a shell session and identify the info by:
+	- netuser (shows all the users)
+	- net localgroup administrators ![[Pasted image 20230705215644.png]] we see that administrator is part of a the group which means that this user can essentially execute programs with elevated privileges but to do that we need to bypass UAC 
+
 - 
-
-
-
-
 
 
 
