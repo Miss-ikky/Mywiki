@@ -319,6 +319,57 @@ goal is to elevate privileges
 
 ### Bypassing UAC with UACMe 
 
+User Account Control 
+- User Account Control is a Windows Security feature introduced in windows Vista that is used to prevent unauthorized changes from being made to the operating system 
+- UAC is used to ensure that changes to the operating system require approval from the administrator or a user account that is part of the local administrators group 
+- A non-privileges user attempting to execute a program with elevated privileges will be prompted with the UAC credential prompt, whereas a privileges user will be prompted with a consent prompt
+   ![[Pasted image 20230705201332.png]]
+   - Attacks can bypass UAC in order to execute malicious executables with elevated privileges 
+     
+Bypassing UAC 
+-  In order to successfully bypass UAC, we will need to have access to a user account that is part of the local administrators group on the Windows Target system 
+- UAC allows a program to be executed with administrative privileges consequently prompting the user for confirmation 
+- UAC has various integrity levels ranging from low to high, if the UAC protection level is set below high, Windows programs can be executed with elevated privileges without prompting the user for confirmation 
+- There are multiple tools and techniques that can be used to bypass UAC, however, the tool and technique used will depend on the version of Windows running on the target system 
+
+UACMe
+- open source robus privilege escalation tool can be used to bypass windows UAC 
+- The UACMe 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
