@@ -333,9 +333,15 @@ Bypassing UAC
 - There are multiple tools and techniques that can be used to bypass UAC, however, the tool and technique used will depend on the version of Windows running on the target system 
 
 UACMe
-- open source robus privilege escalation tool can be used to bypass windows UAC 
-- The UACMe 
+- open source robust privilege escalation tool can be used to bypass windows UAC 
+- The UACMe GitHub repository contains documented list of methods that can be used to bypass multiple versions of Windows ranging from Windows 7 to 10 
+- It allows attackers to execute malicious payloads on a windows target with administrative/elevated privileges by abusing the inbuilt Windows AuteElevate tool. 
+- The UACMe GitHub repository has more than 60 exploits that can be used to bypass UAC depending on the version of Windows running on the target. 
 
+Demo 
+- open CMD in windows: net users 
+- check members of the group: net localgroup administrators 
+- 
 
 
 
