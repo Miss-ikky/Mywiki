@@ -304,3 +304,24 @@ Tools & Environment
   https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS16-135 
 
 
+demo is on bases of windows 7 
+![[Pasted image 20230705183039.png]]
+goal is to elevate privileges 
+
+- the command in msf getsystem tries to elevate privileges 
+- module in msf will enumerate all vulnerabilities for windows 7: suggester (it will show which exploits you can use to elevate your privliges![[Pasted image 20230705183219.png]]
+- use the command background to put sessions in the background - type sessions to list active sessions or jobs, enter session number to go to the session you want to bring back 
+- 
+-WATCH THIS VIDEO AGAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+
+
+
+
+### Bypassing UAC with UACMe 
+
+
+
+
+
+
+## Access token Impersonation 
