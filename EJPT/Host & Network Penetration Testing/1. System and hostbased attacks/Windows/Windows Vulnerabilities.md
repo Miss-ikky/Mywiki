@@ -481,4 +481,56 @@ Demo:
 
 When you do not find privileged access tokens -> use patato attack 
 
+![[Pasted image 20230706211910.png]]
+
+## Alternate Data Streams 
+
+- Alternative Data Streams (ADS) is an NTFS (new Technology File System) file attribute and was designed to provide compatibility with the MacOS HFS (hierarchical File system )
+- Any file created on an NTFS formatted drive will have two different forks/streams 
+	- Data stream - Default stream that contains the data of the file 
+	- Resource stream - Typically contains the metadata of the file 
+- Attackers can us ADS to hide malicious code or executables in legitimate files in order to evade detection 
+- This can be done by storing the malicious code or executables in the file attribute resource stream (metadata) of a legitimate file 
+- This technique is usually used to evade basic signature based AVs and Static scanning tools 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Windows Credential Dumping 
+
+### Windows Password Hashes 
+### Searching for Passwords in Windows Configuration Files 
+### Dumping Hashes With mimikatz 
+### Windows: Meterpreter: Kiwi Extension 
+### Pass-The-Hash Attacks 
 
