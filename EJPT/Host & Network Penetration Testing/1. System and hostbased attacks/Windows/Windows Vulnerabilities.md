@@ -434,7 +434,7 @@ Part 2:
    - Check the current working directory (pwd).
    - Retrieve the current user ID (getuid).
    - Verify privileges (getprivs).
-   - Change the directory to C://.
+   - Change the directory to C:\\.
    - Create a new directory named "Temp" (mkdir Temp).
    - Change to the Temp directory (cd temp).
    - Upload the backdoor.exe file to the target system.
