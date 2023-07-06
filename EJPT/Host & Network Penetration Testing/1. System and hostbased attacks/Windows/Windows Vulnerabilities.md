@@ -493,9 +493,22 @@ When you do not find privileged access tokens -> use patato attack
 - This can be done by storing the malicious code or executables in the file attribute resource stream (metadata) of a legitimate file 
 - This technique is usually used to evade basic signature based AVs and Static scanning tools 
 
+demo 
+how to hide executable in legitimate file?
 
+- navigate to temp directory in windows 
+- open cmd: 
+	- cd Desktop 
+	-  create file: notepad test.txt 
+	- create file and add in helloword in file 
+	- open the file that is on the desktop 
+		- properties -> details (metadata) -> delete the txt with delete 
+![[Pasted image 20230706221313.png]]
 
+- notepad test.txt:secret.txt (hidden secret.txt file)
 
+- WinPiece is a utility used by penetration testers to perform local enumeration on a windows system in order to identify vulnerabilities that can be exploited or vulnerabilities that can be exploited to elevate our privileges' its not something malicious but its something that you want to keep hidden as much as possible. 
+- 
 
 
 
