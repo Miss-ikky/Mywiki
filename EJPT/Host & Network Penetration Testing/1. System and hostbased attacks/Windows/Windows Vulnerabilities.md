@@ -467,7 +467,7 @@ Demo:
 	 - run sysinfo 
 	 - migrate our meterpreter session into different process: pgrep explorer and then migrate to this id 
 	 - getuid 
-		 - Local service is by default unpriviliged: run getprivs to check priviliges that you have 
+		 - Local service is by default unpriviliged, run: **getprivs** to check priviliges that you have 
 		 - The SeImpersonatePrivilige can be used to impersonate other  access tokens![[Pasted image 20230706193427.png]]
 		- load incognito 
 		- list_tokens -u 
