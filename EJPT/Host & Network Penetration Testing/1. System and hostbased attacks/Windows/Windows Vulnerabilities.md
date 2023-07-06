@@ -421,4 +421,7 @@ Lab
 
 
 
-## Access token Impersonation 
+## Access Token Impersonation 
+
+- Windows access tokens are core element of the authentication process on Windows and are created an managed by the Local Security Authority SUbsystem Services (LSASS)
+- A windows access token is responsible for identifying and describing the seucirty context of a process or threat running on a system. Simply put an access token be thought of 
