@@ -23,9 +23,8 @@ Exploiting WebDAV With Metasploit
 		    The generated `meterpreter.asp` file contains the payload code in ASP format. When this file is executed on a vulnerable web server, it establishes a reverse TCP connection back to the attacker's machine, allowing them to gain control over the compromised system.
 		    
 		    In summary, the `windows/meterpreter/reverse_tcp` payload establishes a reverse TCP connection from the target machine to the attacker's machine, while the `meterpreter.asp` file is the output file that contains the payload code in ASP format.
-
-
-
+		    
+Now... moving to cadaver 
 - use cadaver to get sudo shell: cadaver http://target-ip/webdav
 	- 'ls' to list the files 
 	- use **put** to upload the file that you created: put /root/meterpreter.asp 
@@ -51,7 +50,7 @@ Exploiting WebDAV With Metasploit
 
 delete shell.asp will delete the file, this is good to do once you have access, to avoid detection 
 
-optie 2 in metasploit 
+We have a second option using metasploit 
 
 - search iis upload ![[Pasted image 20230703111527.png]]
 - use exploit/windows/iis/iis_webdav_upload_asp
@@ -435,13 +434,13 @@ Windows access Tokens
 - Impersonate level tokens can be used to impersonate a token on the local system and not on any external systems that utilize the token
 - Delegate-level tokens pose the largest threat as they can be used to impersonate tokens on any system 
 
-Interactive Logon: An interactive logon refers to a user logging into a system through direct interaction, typically by entering credentials at the login screen or through a user interface. It involves a user physically or remotely accessing the system and providing authentication credentials for their login. Examples of interactive logon methods include traditional logins, where a user enters their username and password, or remote access protocols like RDP, where a user connects to a remote system using credentials.
+**Interactive Logon:** An interactive logon refers to a user logging into a system through direct interaction, typically by entering credentials at the login screen or through a user interface. It involves a user physically or remotely accessing the system and providing authentication credentials for their login. Examples of interactive logon methods include traditional logins, where a user enters their username and password, or remote access protocols like RDP, where a user connects to a remote system using credentials.
 
-Non-Interactive Logon: A non-interactive logon, on the other hand, occurs when a login process is initiated automatically without direct user interaction. It is typically performed by system services or domain logons, such as when a service starts or when a computer joins a domain. Non-interactive logons do not require the user to enter credentials directly but rely on pre-configured authentication mechanisms or system-generated tokens.
+**Non-Interactive Logon**: A non-interactive logon, on the other hand, occurs when a login process is initiated automatically without direct user interaction. It is typically performed by system services or domain logons, such as when a service starts or when a computer joins a domain. Non-interactive logons do not require the user to enter credentials directly but rely on pre-configured authentication mechanisms or system-generated tokens.
 
-Impersonate-Level Tokens: Impersonate-level tokens are access tokens that are created as a result of a non-interactive logon. These tokens are primarily used to allow a process to impersonate a user or another security context within the local system. They have limited scope and can only be used to impersonate tokens on the local system where they were created. Impersonate-level tokens are often associated with system services or background processes that require limited access to resources.
+**Impersonate-Level Tokens**: Impersonate-level tokens are access tokens that are created as a result of a non-interactive logon. These tokens are primarily used to allow a process to impersonate a user or another security context within the local system. They have limited scope and can only be used to impersonate tokens on the local system where they were created. Impersonate-level tokens are often associated with system services or background processes that require limited access to resources.
 
-Delegate-Level Tokens: Delegate-level tokens, on the other hand, are created through an interactive logon process. These tokens are generated when a user logs in interactively, providing their credentials for authentication. Delegate-level tokens have a broader scope compared to impersonate-level tokens. They can be used not only for local system impersonation but also for impersonating tokens on external systems. Delegate-level tokens pose a higher security risk because they can be leveraged to gain access to resources across multiple systems.
+**Delegate-Level Tokens:** Delegate-level tokens, on the other hand, are created through an interactive logon process. These tokens are generated when a user logs in interactively, providing their credentials for authentication. Delegate-level tokens have a broader scope compared to impersonate-level tokens. They can be used not only for local system impersonation but also for impersonating tokens on external systems. Delegate-level tokens pose a higher security risk because they can be leveraged to gain access to resources across multiple systems.
 
 Windows privileges 
 - The process of impersonating access token to elevate privileges on a system will primarily depend on the privileges assigned to the account to the account that has been exploited to gain initial access as well as the impersonation or delegation tokens are available 
@@ -508,22 +507,18 @@ how to hide executable in legitimate file?
 - notepad test.txt:secret.txt (hidden secret.txt file)
 
 - WinPiece is a utility used by penetration testers to perform local enumeration on a windows system in order to identify vulnerabilities that can be exploited or vulnerabilities that can be exploited to elevate our privileges' its not something malicious but its something that you want to keep hidden as much as possible. 
-- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- rename the WInpiece exe to payload and move it to temp directory 
+- navigate into temp 
+	- type payload.exe > windowslog.txt:winpiece.exe 
+The  command `type payload.exe > windowslog.txt:winpiece.exe` reads the contents of the file `payload.exe` and redirects the output to a file named `windowslog.txt:winpiece.exe`. The resulting file will contain the contents of `payload.exe` with the specified filename `winpiece.exe` inside the `windowslog.txt` file. 
+- delete payload because its now into windpiece.exe which is stored in resource stream of windlowslogs.txt file 
+- execute the exe: start windowslog.txt:windpeas.exe 
+	- did not work? create symbolic link
+		- create symbolic link within windows directory under windows\\system32:
+			- **mklink wupdate wupdate.txt** **c:\temp\windowslog.txt:winpeas.exe** 
+			  (when you type wupdate it will automatically execute the hidden WinPiece executable hidden within the resource stream)
+			- run with elevated session: run as administrator![[Pasted image 20230706224610.png]]
+	
 
 
 
@@ -541,9 +536,108 @@ how to hide executable in legitimate file?
 
 # Windows Credential Dumping 
 
-### Windows Password Hashes 
-### Searching for Passwords in Windows Configuration Files 
+### Windows Password Hashes
+
+Windows password hashes 
+- The Windows OS stores hashed user account passwords locally in the SAM (Security Accounts Manager) database.
+- Hashing is the process of converting a piece of data into another value. A hashing function or algorithm is used to generate the new value. The result of a hashing algorithm is known as a hash or hash value
+- Authentication and verification of user credentials are facilitated by the Local Security Authority (LSA).
+- Windows versions up to Windows Server 2003 utilize two different types of hashes: 
+	- LM
+	- NTLM.
+- Windows **disables** LM hashing and utilizes NTLM hashing from Windows Vista onwards.
+
+SAM Database 
+- The SAM (Security Account Manager) is a is a database file that is responsible for managing user accounts and passwords on Windows. All user account passwords stored in the SAM database are hashed
+- The SAM database file cannot be copied while the operating system is running.
+- The Windows NT kernel keeps the SAM database file locked and as a result, attackers typically utilize in-memory techniques and tools to dump SAM hashes from the LSASS process
+- In modern versions of Windows, the SAM database is encrypted with a **syskey**.
+ - Note: Elevated/Administrative privileges are required to access and interact with the LSASS process.
+
+LM (LanMan) 
+- LM is the default hashing algorithm used in Windows operating systems prior to NT4.0.
+- The LM hashing protocol for user passwords involves:
+    - Breaking the password into two seven-character chunks.
+    - Converting all characters to uppercase.
+    - Hashing each chunk separately with the DES algorithm.
+- LM hashing is considered weak and susceptible to cracking due to the lack of salts in the password hash, making brute-force and rainbow table attacks effective against LM hashes
+	- a salt is a random value that is added to a password before it is hashed
+
+![[Pasted image 20230706225907.png]]
+
+NTLM (NTHash)
+- NTLM is a collection of authentication protocols that are utilized in Windows to facilitate authentication between computers. The authentication process involves using a valid username and password to authenticate successfully.
+  
+- From Windows Vista onwards, Windows disables LM hashing and utilizes NTLM\ hashing. When a user account is created, it is encrypted using the MD4 hashing algorithm, while the original password is disposed of.
+
+- NTLM improves upon LM in the following ways:
+	+ Does not split the hash in to two chunks.
+	+ Case sensitive.
+	+ Allows the use of symbols and unicode characters
+
+![[Pasted image 20230706225922.png]]
+
+
+
+### Searching for Passwords in Windows Configuratio in Files 
+
+Windows Configuration Files 
+
+- Windows can automate a variety of repetitive tasks, such as the mass rollout or installation of Windows on many systems.
+- This is typically done through the use of the Unattended Windows Setup utility,
+- which is used to automate the mass installation/deployment of Windows on
+- systems.
+- This tool utilizes configuration files that contain specific configurations and user account credentials, specifically the Administrator account’s password.
+- If the Unattended Windows Setup configuration files are left on the target system after installation, they can reveal user account credentials that can be used by attackers to authenticate with Windows target legitimately.
+
+
+Unattended WIndows Setuo 
+
+- The Unattended Windows Setup utility will typically utilize one of the following configuration files that contain user account and system configuration information:
+	- C:\Windows\Panther\Unattend.xml
+	- C:\Windows\Panther\Autounattend.xml
+- As a security precaution, the passwords stored in the Unattended Windows
+- Setup configuration file may be encoded in base64
+
+
+
+
+
+
+
+
+
+
+
 ### Dumping Hashes With mimikatz 
-### Windows: Meterpreter: Kiwi Extension 
+
+Mimikatz 
+- Mimikatz is a Windows post-exploitation tool written by Benjamin Delpy (@gentilkiwi). It allows for the extraction of clear-text passwords, hashes and Kerberos tickets from memory.
+- The SAM (Security Account Manager) database, is a database file on Windows systems
+that stores hashed user passwords.
+- Mimikatz can be used to extract hashes from the lsass.exe process memory where hashes are cached.
+- We can utilize the pre-compiled mimikatz executable, alternatively, if we have access to a meterpreter session on a Windows target, we can utilize the inbuilt meterpreter extension Kiwi.
+- Note: Mimikatz will require elevated privileges in order to run correctly
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Pass-The-Hash Attacks 
 
+Pass-THe-Hash
+
+- Pass-the-hash is an exploitation technique that involves capturing or harvesting NTLM hashes or clear-text passwords and utilizing them to authenticate with the target legitimately.
+	+ We can use multiple tools to facilitate a Pass-The-Hash attack:
+	+ Metasploit PsExec module
+	+ Crackmapexec
+- This technique will allow us to obtain access to the target system via legitimate
+	credentials as opposed to obtaining access via service exploitation
