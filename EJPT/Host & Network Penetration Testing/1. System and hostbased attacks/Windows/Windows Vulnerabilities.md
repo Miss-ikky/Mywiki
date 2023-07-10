@@ -802,3 +802,6 @@ Above we used psexec for pas the hash attack but you can also use other tools su
 In summary, CrackMapExec is focused on password auditing and Windows network exploitation, Evil-WinRM enables remote command execution on Windows systems, Cadaver is used for interacting with WebDAV servers, and msfvenom is a payload generator for creating malicious payloads within the Metasploit Framework. 
 
 
+
+
+(doe de pass the hash attacks nog een keer en loop nauwkeurig door omdat het in powershel lgebeurt )
