@@ -8,6 +8,7 @@ Frequently Exploited Linux Services
 - Linux has various use cases, however, it is typically deployed as a server operating system. For this reason, there are specific services and protocols that will typically be found running on a Linux server. 
 - These services provide an attacker with an access vector that they can utilize to gain access to a target host. 
 - Having a good understanding of what these services are, how they work and their potential vulnerabilities is a vitally important skill to have as a penetration tester
+  
 ![[Pasted image 20230706231607.png]]
 
 
@@ -20,6 +21,7 @@ CVE-2014-6271 - Shellshock:
 - Bash is a \*Nix shell that is part of the GNU project and serves as the default shell for most Linux distributions.
 
 - The Shellshock vulnerability occurs due to a flaw in Bash, where Bash mistakenly executes trailing commands after a series of characters: "() {:;};"
+	- als deze characters in bash worden ingevoerd dan wordt alles erna ook excuted door bash. 
 - This vulnerability specifically affects Linux systems, as Windows does not use Bash since it is not a \Nix-based operating system.
 - In the context of remote exploitation, Apache web servers configured to run CGI scripts or .sh scripts are also vulnerable to this attack.
 - CGI (Common Gateway Interface) scripts are utilized by Apache to execute arbitrary commands on the Linux system, with the output being displayed to the client
@@ -30,6 +32,42 @@ Shellshock Exploration:
 - In the case of an Apache web server, you can leverage any legitimate CGI scripts that are accessible on the server.
 - When a CGI script is executed, the web server starts a new process and runs the script using Bash.
 - The Shellshock vulnerability can be exploited manually by crafting specific payloads or automatically using an MSF exploit module.
+
+
+-- Demo --- 
+ 
+- perform service detection scan on target to confirm apache running 
+- visit the ip in browser 
+	- identify CGI script on webpage (look at page source) ![[Pasted image 20230710132143.png]]
+	 the cgi script is passing commands in bash you can use this as input vector but before that you need to check if this system is vulnerable to shellshock explotation -> check in nmap 
+- Check if system is vulnerable to shellshock: nmap -sV ip --script=http-shellshock --script-args "http-shellshock.uri=/gettime.cgi" 
+	- `--script=http-shellshock`: This option specifies that you want to use the `http-shellshock` script. Shellshock is a vulnerability in the Bash shell that allows remote code execution. The script is designed to detect if the target web server is vulnerable to this specific vulnerability.
+	- `--script-args "http-shellshock.uri=/gettime.cgi"`: This argument provides additional parameters to the `http-shellshock` script. In this case, it sets the URI (Uniform Resource Identifier) to `/gettime.cgi`, which is the path of a specific CGI script on the target server. This allows the script to test the vulnerability specifically on that CGI script.
+	- go to the browser and visit targetip/cgi link - configure Mozilla with foxyproxy - select Burp so all the traffic is redirected to Burp ![[Pasted image 20230710133011.png]]
+- Open up Burb: 
+	- go to proxy and make sure intercept is on 
+	- make get request to cgi script in browser 
+	- send incoming get request in burp to repeater 
+		- in repeater get rid of user-agent and replace them with own characters: () {   :;    } ; echo;   echo;  /bin/bash -c 'cat   /etc/passwd'![[Pasted image 20230710133404.png]] ![[Pasted image 20230710133525.png]]  
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Exploiting FTP 
