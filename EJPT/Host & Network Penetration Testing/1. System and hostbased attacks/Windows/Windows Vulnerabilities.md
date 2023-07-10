@@ -638,26 +638,37 @@ Demo - find password of administrator within a legitimate windows config file
 Administrators often forget to delete these kind of files. Hackers can use these files to attain privileged account by getting the password from Unattended Windows Setup utility configuration file
 
 
---- Lab ---- 
-
-Your task is to run [PowerUp.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1) Powershell script to find a common Windows privilege escalation flaw that depends on misconfigurations.  The [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)post-exploitation framework has provided to you on the windows machine.
-
-Objective: Gain access to meterpreter session with high privileg
 
 ![[Pasted image 20230707151714.png]]
 
 ![[Pasted image 20230707151727.png]] Victim 
 
 ![[Pasted image 20230707152325.png]]
+![[Pasted image 20230707164727.png]]
 
+--- Lab ---- 
+
+Your task is to run [PowerUp.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1) Powershell script to find a common Windows privilege escalation flaw that depends on misconfigurations.  The [PowerSploit](https://github.com/PowerShellMafia/PowerSploit)post-exploitation framework has provided to you on the windows machine.
+
+Objective: Gain access to meterpreter session with high privileg
+
+
+- The command "powershell -ep bypass" is used to launch a PowerShell session with the execution policy bypassed 
+![[Pasted image 20230707163044.png]]
+
+![[Pasted image 20230707163028.png]]
+read the file in powershell: 
+![[Pasted image 20230707163144.png]]
+![[Pasted image 20230707163608.png]]
+
+DOE DEZE LAB OPNIEUW!!! 
 
 
 ### Dumping Hashes With mimikatz 
 
 Mimikatz 
 - Mimikatz is a Windows post-exploitation tool written by Benjamin Delpy (@gentilkiwi). It allows for the extraction of clear-text passwords, hashes and Kerberos tickets from memory.
-- The SAM (Security Account Manager) database, is a database file on Windows systems
-that stores hashed user passwords.
+- The SAM (Security Account Manager) database, is a database file on Windows systems that stores hashed user passwords.
 - Mimikatz can be used to extract hashes from the lsass.exe process memory where hashes are cached.
 - We can utilize the pre-compiled mimikatz executable, alternatively, if we have access to a meterpreter session on a Windows target, we can utilize the inbuilt meterpreter extension Kiwi.
 - Note: Mimikatz will require elevated privileges in order to run correctly
@@ -706,6 +717,33 @@ Demo
 3. **"lsadump::sam"** is a Mimikatz command that specifically focuses on dumping the Security Account Manager (SAM) database from the target system. The SAM database stores user account information, including usernames and password hashes. By executing this command, Mimikatz extracts the password hashes stored in the SAM database.
     
 4. **"sekurlsa::sam"** is a Mimikatz command that extracts password hashes from the Security Account Manager (SAM) database in memory. It specifically targets the SAM and retrieves the password hashes, allowing further analysis, cracking, or other security-related activities.
+
+
+
+---- Lab --- 
+
+Your task is to fingerprint the application using the tools available on the Kali machine and then exploit the machine using the appropriate Metasploit module. Then, use the meterpreter Kiwi plugin to extract sensitive data from the target's machine.
+
+Objective: Exploit the application and find all the flags.
+
+- Find Administrator and Student users NTLM hash.
+- Dump LSA secrets to find Syskey
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
