@@ -66,7 +66,7 @@ How do we exploit this vulnerability in metasploit?
 	- we have aux module and exploit module 
 	- use exploit and specify the options including path to cgi script 
 	- you have meterpreter session 
-		- sysinfo 
+		- sysinfo s
 		- elevate privilege's 
 
 
