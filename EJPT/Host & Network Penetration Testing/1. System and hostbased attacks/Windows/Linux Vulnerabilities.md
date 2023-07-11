@@ -91,6 +91,7 @@ How do we exploit this vulnerability in metasploit?
     - It is commonly used for transferring files to and from the directory of a web server.
 - FTP authentication requires a username and password combination, making it possible to perform a brute-force attack on the FTP server to discover valid credentials.
 - In certain cases, FTP servers may be configured to allow anonymous access, granting unrestricted access to the FTP server without requiring any legitimate credentials.
+	- anonymous access: login without credentials 
 
 
 --- demo - --
