@@ -140,10 +140,12 @@ How do we exploit this vulnerability in metasploit?
 - perform nmap service scan 
 - perform bruteforce attack: 
 	- hydra -L /usr/share/metasploit-framework/data/wordlists/common_users.txt -P /usr/share/metasploit-framework/data/wordlists/common_passwords.txt targetip -t 4 ssh 
-	- 
-
-
-
+	- use credentials to try to log into target system: ssh username@ip 
+		- groups user: see if it is part of sudo group 
+		- cat /etc/\*issue to see version 
+		- uname -r 
+		- cat /etc/passwd 
+	- find the flag 
 
 
 
@@ -166,7 +168,7 @@ SMB (Server Message Block):
 
 - SMB is a network file sharing protocol used for sharing files and peripherals between computers on a local network (LAN).
 - The default port for SMB is 445 (TCP). However, it originally ran on top of NetBIOS using port 139.
-- Samba is the Linux implementation of SMB, enabling Windows systems to access Linux shares and devices.
+- Samba is the Linux implementation of SMB, enabling Windows systems to access Linux shares and devices. Not prepacked 
 
 Exploiting SAMBA:
 
@@ -174,6 +176,19 @@ Exploiting SAMBA:
 - A brute-force attack can be performed on the SAMBA server to obtain legitimate credentials.
 - Once legitimate credentials are obtained, the SMBMap utility can be used to enumerate SAMBA share drives, list share contents, download files, and execute remote commands on the target.
 - Another tool called smbclient, part of the SAMBA software suite, provides a client interface similar to FTP. It allows downloading files from the server to the local machine, uploading files from the local machine to the server, and retrieving directory information from the server
+
+Demo enumerating shares 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
