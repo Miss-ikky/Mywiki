@@ -381,6 +381,7 @@ SUID (Set Owner User ID) Permissions:
 
 - rm greetings 
 - create own greetings binary: cp /bin/bash greetings 
+	- ![[Pasted image 20230713124512.png]]
 
 
 
@@ -417,17 +418,14 @@ SUID (Set Owner User ID) Permissions:
 ## Dumping Linux Password Hashes 
 
 Multi-User Support in Linux:
-
 - Linux supports multiple users, allowing simultaneous access to the system. This offers both advantages and disadvantages from a security perspective. Multiple accounts provide multiple access vectors for attackers, increasing the overall risk of the server.
 
 User Account Information:
-
 - User account information for Linux is stored in the `/etc/passwd` file.
 - Passwords in the passwd file are encrypted, making them unreadable by users on the system.
 - Encrypted passwords for users are stored in the `/etc/shadow` file, which can only be accessed and read by the root account. This is a crucial security feature that prevents other accounts from accessing the hashed passwords.
 
 Linux Password Hashes:
-
 - The passwd file provides information about the hashing algorithm used and the password hash. This information helps determine the type and strength of the hashing algorithm.
 - The type of hashing algorithm can be determined by looking at the number after the username encapsulated by the dollar symbol (`$`).
 
