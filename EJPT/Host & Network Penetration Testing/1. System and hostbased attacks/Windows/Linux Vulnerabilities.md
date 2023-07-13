@@ -429,8 +429,11 @@ Linux Password Hashes:
 - The passwd file provides information about the hashing algorithm used and the password hash. This information helps determine the type and strength of the hashing algorithm.
 - The type of hashing algorithm can be determined by looking at the number after the username encapsulated by the dollar symbol (`$`).
 
-
 ![[Pasted image 20230706232136.png]]
+5 and 6 are harder to crack 
+
+-- demo -- 
+- 
 
 
 
