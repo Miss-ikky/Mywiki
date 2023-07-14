@@ -72,7 +72,8 @@ How do we exploit this vulnerability in metasploit?
 
 -- Lab -- 
 
-
+![[Pasted image 20230714152603.png]]
+![[Pasted image 20230714152800.png]]
 
 
 
