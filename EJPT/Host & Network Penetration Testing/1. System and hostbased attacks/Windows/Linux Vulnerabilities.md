@@ -559,7 +559,9 @@ SUID (Set Owner User ID) Permissions:
 - rm greetings 
 - create own greetings binary: cp /bin/bash greetings 
 	- ![[Pasted image 20230713124512.png]]
-
+		- - `cp`: It stands for "copy" and is a command used in Unix-like operating systems to copy files and directories.
+		- `/bin/bash`: It is the source file that is being copied. In this case, `/bin/bash` refers to the Bash shell executable file located in the `/bin` directory.
+		- `greetings`: It is the destination file where the copy of `/bin/bash` will be saved. This file will be created in the current working directory 
 
 --- Lab --- 
 
@@ -567,6 +569,7 @@ SUID (Set Owner User ID) Permissions:
 1. Get as root shell on the system
 2. View /etc/shadow
 3. Retrieve the flag
+
 
 
 
