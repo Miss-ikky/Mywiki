@@ -620,7 +620,6 @@ Andere manier is met hashdump module
 - post/linux.gather/hashdump module 
 - set session 2 (meterpreter session) 
 - give you hashed passwords and save them in a txt for you 
-- ... 
 
 --- Lab --- 
 
@@ -634,4 +633,7 @@ exploits/linux/remote/16921.rb
 ProFTPd-1.3.3c 
 
 root:$6sgewtGbwihhoUYASuXTh7Dmw0adpC7a3fBGkf9hkOQCffBQRMIF8/0w6g/Mh4jMWJ0yEFiZyqVQhZ4.vuS8XOyq.hLQBb.:18348:0:99999:7::: 
+
+\$sgewtGbw$ihhoUYASuXTh7Dmw0adpC7a3fBGkf9hkOQCffBQRMIF8/0w6g/Mh4jMWJ0yEFiZyqVQhZ4.vuS8XOyq.hLQBb 
+
 
