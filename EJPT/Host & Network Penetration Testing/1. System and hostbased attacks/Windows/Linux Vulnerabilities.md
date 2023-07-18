@@ -620,15 +620,17 @@ Andere manier is met hashdump module
 - post/linux.gather/hashdump module 
 - set session 2 (meterpreter session) 
 - give you hashed passwords and save them in a txt for you 
+  
 
---- Lab --- 
+--- --- ---- ---- ------- Lab ----- --- ---- ---- ---- --- ---- ---- 
 
 - auxiliary/analyze/crack_linux
 - Use /**usr/share/metasploit-framework/data/wordlists/unix_users.txt** for username dictionary
 
 
+192.69.237.2/24
 
-192.238.212.3 
+
 exploits/linux/remote/16921.rb 
 ProFTPd-1.3.3c 
 
