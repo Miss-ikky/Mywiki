@@ -168,7 +168,7 @@ A WiFi traffic capture is provided in the lab. Analyze the traffic using Wiresha
    SSID: SecurityTube_Open
    
 2. The SSID 'Home_Network' is operating on which channel?
-   
+   6
    
 3. Which security mechanism is configured for SSID 'LazyArtists'? Your options are: OPEN, WPA-PSK, WPA2-PSK.
    
