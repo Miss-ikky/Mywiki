@@ -61,5 +61,25 @@ MSF Console with Pentest
 
 ##### Metasploit Fundamentals 
 
+Installing & configuring the Metasploit framework
+- the metasploit database (msfDB) is the main database that is used by metasploit to keep track of all your assessments, host data scans etc. 
+- the metasploit framework uses PostgreSQL as the primary database server therefore you need to ensure that the PostgreSQL database service is running and configured correctly 
+- msfDB also stored scan results from third party tools like nmap 
+
+installation steps 
+1. update repo and upgrade metasploit framework to latest version
+   Command: sudo apt-get update && sudo apt-get install metasploit-framework -y
+2. start and enable PostgreSQL 
+   Command: sudo systemctl enable postgresql 
+   Command: sudo systemctl start postgresql 
+3. Initialize the metasploit framework database (msfdb)
+      Command: sudo msfdb 
+      Command: sudo msfdb init    (or reinit)
+      Command: sudo msfdb status (to check if it is active)
+4. launch msfconsole 
+      Command: msfconsole 
+      
+
+
 
 
