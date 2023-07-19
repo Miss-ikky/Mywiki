@@ -25,4 +25,3 @@
 	- [https://github.com/danielmiessler/SecLists](https://github.com/danielmiessler/SecLists) which Daniel Miessler curates. 
 - Tools e.g. ffuf, dirb and gobuster 
 
-
