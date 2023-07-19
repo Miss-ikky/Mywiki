@@ -152,7 +152,37 @@ PORT   STATE SERVICE
 MAC Address: 08:00:27:4A:45:F3 (Oracle VirtualBox virtual NIC)
 
 
+### WiFi Traffic Analysis 
 
+- Protocol 802.11 = wifi 
+- ![[Pasted image 20230719121414.png]]
+- 
 
+-- Lab --- 
 
+A WiFi traffic capture is provided in the lab. Analyze the traffic using Wireshark and answer the following questions:
 
+1. What is the name of the Open (No Security) SSID present in the packet dump?  
+   SSID (Service Set Identifier) is a unique name that identifies a wireless network. When a device, such as a laptop or smartphone, wants to connect to a Wi-Fi network, it searches for available SSIDs in its vicinity 
+   
+   SSID: SecurityTube_Open
+   
+2. The SSID 'Home_Network' is operating on which channel?
+   
+   
+3. Which security mechanism is configured for SSID 'LazyArtists'? Your options are: OPEN, WPA-PSK, WPA2-PSK.
+   
+   
+   
+4. Is WiFi Protected Setup (WPS) enabled on SSID 'Amazon Wood'?  State Yes or No.
+   
+   
+5. What is the total count of packets which were either transmitted or received by the device with MAC e8:de:27:16:87:18?
+   
+   
+   
+6. What is the MAC address of the station which exchanged data packets with SSID 'SecurityTube_Open'?
+   
+   
+   
+7. From the last question, we know that a station was connected to SSID 'SecurityTube_Open'. Provide TSF timestamp of the association response sent from the access point to this station
