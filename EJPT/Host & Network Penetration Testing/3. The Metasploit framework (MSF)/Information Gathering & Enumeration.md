@@ -7,8 +7,11 @@
 
 Importing scans into msfconsole 
 - command: service PostgreSQL start 
-- db_import /root/ 
-- 
+- check the files - command: db_import /root/ 
+- import the file - command: db_import /root/filename
+- confirm that it is important - command: hosts 
+- print services for hosts that you important - command: services 
+
 
 
 
