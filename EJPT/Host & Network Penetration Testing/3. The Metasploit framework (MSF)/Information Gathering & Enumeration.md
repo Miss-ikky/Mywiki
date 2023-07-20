@@ -10,7 +10,12 @@ Importing scans into msfconsole
 - check the files - command: db_import /root/ 
 - import the file - command: db_import /root/filename
 - confirm that it is important - command: hosts 
-- print services for hosts that you important - command: services 
+- print services for hosts that you imported - command: services 
+- initiate nmap scan from within msfconsole and save results in database - 
+	  - Create new workspace - command: workspace -a nmap_msf 
+	  - command: db_nmap -Pn -sV -O ip 
+	  - list out the hosts and services 
+	  - 
 
 
 
