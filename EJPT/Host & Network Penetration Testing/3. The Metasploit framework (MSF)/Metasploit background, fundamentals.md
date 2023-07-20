@@ -78,8 +78,60 @@ installation steps
       Command: sudo msfdb status (to check if it is active)
 4. launch msfconsole 
       Command: msfconsole 
-      
 
+MSFconsole Fundamentals - how to utlilize the metasploit console 
+
+
+
+1. How to search for modules 
+  Command: search \[keyword]  
+   
+   
+2. How to select modules 
+   use \[name of the module]
+   
+   
+3. How to configure modules options & variables 
+   ![[Pasted image 20230720105347.png]]
+   - Lhost and Lport are usefull when a module provides us a reverse shell. (1) exploit is sent and executed on target system (2) payload initiates reverse connection to the attacker (for this the Lhost and Lport are needed). 
+
+show options 
+   
+4. How to search for payloads 
+   
+   search -h
+   ![[Pasted image 20230720112145.png]]
+   search eternalblue 
+   
+5. Managing sessions 
+   
+   command view active sessions: sessions 
+   
+6. Additional functionality 
+   ![[Pasted image 20230720112915.png]]
+   command allows banner  : connect 
+   
+7. Saving your configurations 
+
+
+used to set the global variable value for the RHOSTS option -> setg RHOSTS 
+query can be used to limit the results to only display modules compatible with Windows --> search type:exploit platform:windows 
+
+##### Workspaces 
+
+Workspaces allow you to keep track of all your hosts, scans and activities and are extremely useful when conducting penetration tests as they allow you to sort and organize data based on the target or organization 
+
+MSFconsole provides you with the ability to create, manage and switch between multiple workspaces depending on your requirements 
+
+check status of dc - command: db_status 
+check help menu workspaces - command: workspace -h 
+check which workspace you in - command: workspace 
+
+create new workspace - command: workspace -a Test 
+command: hosts 
+switch back to another workspace - command: workspace \[name workspace]
+delete workspace - command: workspace -d \[name workspace]
+rename workspace - command: workspace -r \[workspace name] \[new name workspace]
 
 
 
