@@ -1,17 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 #### Port scanning & Enumeration with nmap 
 
 - Command: nmap -Pn -sV -O ip
@@ -19,8 +6,9 @@
 - nmap -h to see other commands that can be used for output 
 
 Importing scans into msfconsole 
-- command: service postgresql start 
-- .... 
+- command: service PostgreSQL start 
+- db_import /root/ 
+- 
 
 
 
