@@ -20,7 +20,7 @@ Importing scans into msfconsole  (start msfconsole
 ## Enumeration 
 
 
-###### Port scanning 
+###### Port scanning / pivoting 
 
 Auxiliary modules are used to perform functionality like scanning, discovery and fuzzing. We can use it to perform TCP and UDP port scanning as well as enumerating information from services FTP, SSH, HTTP 
 	Auxiliary modules can be used during information gathering phase 
@@ -72,6 +72,11 @@ Commands
 - ifconfig
 - exit 
 - Add the route to metasploit's routing table, command: run autoroute -s 192.135.243.2 
+- background
+- search portscan 
 
-192.135.243.2 
+
+### FTP Enumeration
+
+Use: file sharing between server and clients, transferring files to directory or web server. FTP access is via username and password
 
