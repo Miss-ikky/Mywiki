@@ -34,4 +34,6 @@ Waarom auxiliary modules gebruiken als je ook met nmap kunt scannen? Auxiliary m
 - check the status of the database, command: db_status 
 - set up workspace, command: workspace -a Port_scan 
 - use the auxiliary tcp portscan 
-- 
+- from the auxiliary module run  curl to download homepage of web application, command: curl ip 
+	- search xoda webapplication -> xoda_file_upload
+	- 
