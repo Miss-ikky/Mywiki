@@ -78,5 +78,15 @@ Commands
 
 ### FTP Enumeration
 
-Use: file sharing between server and clients, transferring files to directory or web server. FTP access is via username and password
+Use: file sharing between server and clients, transferring files to directory or web server. FTP access is via username and password. We can use multiple auxiliary modules to enumerate information as well as brute-force attacks on targets running an FTP server. Improper configurated FTP server can allow anonymous logon.  
+
+Commands 
+- service postgresql start 
+- start up msfconsole 
+- check if target system has ftp server running
+	- create workspace, command: workspace -a ftp_enum 
+	- search portscan -> use aux/scan/portscan/tcp 
+	- when you have to many search results use, command: search type: auxiliary name: ftp 
+	- use aux/scanner/ftp/ftp_version 
+	- search for ftp server software to check for vulnerabilities, command search: ProFTPD 
 
