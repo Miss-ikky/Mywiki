@@ -111,6 +111,38 @@ Commands enumerating ftp  192.104.50.2
 
 ### SMB Enumeration 
 
+SMB is network file sharing protocol that is used to facilitate of sharing of files and  devices within a local network (LAN). Port 445 but older version of Windows it ran on top of NetBIOS using port 139. Linux uses SAMBA to allow windows systems to access linux shares and drives. 
 
 
+1a) smb enumeration - identify SMB version on target 
+- start up postgresql so we can interact with metasploit database framework (service postgresql start) and start msfconsole 
+- add new workspace -a smb_enum 
+- als je zelfde target ip blijft gebruiken bij elke module dan gebruik je de variable setg: setg rhost ip 
+- search type:auxiliary name:smb 
+- use aux/scanner/smb/smb_version 
 
+1b) enumerate smb users 
+- search type:auxiliary name:smb_enumusers
+
+1c) enumerate smb shares 
+- search type: auxiliary name:smb_enumshares 
+
+2) bruteforce to identify passwords for most interesting user (e.g. admin)
+	- search smb_login 
+	- set SMBUser (perform bruteforce for admin user without userlist)
+	- set pass_file /usr/share/metasploit-framework/data/wordlist/unix_passwords.txt 
+	- exit 
+	  
+3) try login with credentials 
+	- command: smbclient -L\\\\\\\\ip\\\\\ -U admin  
+		  - `smbclient`: This is the name of the command-line utility used to access SMB/CIFS (Common Internet File System) shares `-L`: This option is used to list the available shares on the specified server.` - `\\\\\\\\\` before `ip`, where the first two backslashes are escape characters, and the remaining `\\` is treated as a literal backslash.\\\\ After the IP address or hostname, there is a single backslash before the `-U` option. This single backslash is also intended to be treated as a literal backslash, so it is not followed by another backslash for escaping. The `ip` should be replaced with the actual IP address or hostname of the server you want to connect to.
+  
+	![[Pasted image 20230724151801.png]]
+	if you want to access any of these shares you will need smbclient and login directly. Follow the following steps: 
+	- ,this command lists out the shares: 
+	  smbclient -L \\\\\\\\ip\\\\\ -U admin  
+	- now we try to access a specific share:   
+	  smbclient -L \\\\\\\\ip\\\\\share -U {usernameyouhavecredentialsfor}  ----> smbclient -L \\\\\\\\ip\\\\*\public* -U *admin*  
+	- ls 
+	- to download a file using SMB client, we say: **get** {filename} when you exit you should have the file 
+	- 
