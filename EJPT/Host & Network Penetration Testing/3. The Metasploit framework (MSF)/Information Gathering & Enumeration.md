@@ -149,3 +149,8 @@ SMB is network file sharing protocol that is used to facilitate of sharing of fi
 
 ### Web Server Enumeration 
 
+Web server is software that is used to serve website data on the web, weh servers use HTTP (port 80) to facilitate communication between clients and the web server. We can use auxiliary modules to enumerate the web server version. Examples of popular web servers are?: Apache, Nginx, Microsoft IIS.
+
+start postgresql - launch msfconsole - set up workspace - setg rhost 
+
+1)  
