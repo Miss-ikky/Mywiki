@@ -109,5 +109,8 @@ Commands enumerating ftp  192.104.50.2
    - search type: aux name:ftp   (we are looking for aux/scanner/ftp/anonymous)
    
 
+### SMB Enumeration 
+
+
 
 
