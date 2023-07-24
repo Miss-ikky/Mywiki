@@ -80,7 +80,7 @@ Commands
 
 Use: file sharing between server and clients, transferring files to directory or web server. FTP access is via username and password. We can use multiple auxiliary modules to enumerate information as well as brute-force attacks on targets running an FTP server. Improper configurated FTP server can allow anonymous logon.  
 
-Commands enumerating ftp 
+Commands enumerating ftp  192.104.50.2
 
 1) FTP portscan and ftp version scan 
 - service postgresql start 
