@@ -82,7 +82,7 @@ Use: file sharing between server and clients, transferring files to directory or
 
 Commands enumerating ftp  192.104.50.2
 
-1) FTP portscan and ftp version scan 
+1) FTP portscan and ftp version scan (enumeration)
 - service postgresql start 
 - start up msfconsole 
 - check if target system has ftp server running
