@@ -80,13 +80,34 @@ Commands
 
 Use: file sharing between server and clients, transferring files to directory or web server. FTP access is via username and password. We can use multiple auxiliary modules to enumerate information as well as brute-force attacks on targets running an FTP server. Improper configurated FTP server can allow anonymous logon.  
 
-Commands 
+Commands enumerating ftp 
+
+1) FTP portscan and ftp version scan 
 - service postgresql start 
 - start up msfconsole 
 - check if target system has ftp server running
 	- create workspace, command: workspace -a ftp_enum 
 	- search portscan -> use aux/scan/portscan/tcp 
 	- when you have to many search results use, command: search type: auxiliary name: ftp 
-	- use aux/scanner/ftp/ftp_version 
-	- search for ftp server software to check for vulnerabilities, command search: ProFTPD 
+	- use aux/scanner/ftp/ftp_version (this will give us version of ftp and the ftp banner which is usefull information because we can use it to identify vulnerabilities for that version. e.g. search proftpd)
+
+2) ftp bruteforce 
+- search for module: search aux ftp (search for aux/scanner/ftp/ftp_login)
+- set the user file and pasword file:
+	- User_FILE -> /usr/share/metasploit-framework/data/wordlists/common_users.txt 
+	- PASS_FILE ->  /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt 
+- when you have found a password, you can login within  metasploit session, command:  ftp target ip. When you get a service not available error it means that the bruteforce has overwhelmed the service and that there are processes in places for example ddos protection that can make the service unavailable. You have to wait a few minutes. 
+- exit the msfconsole
+	- command: ftp target 
+	- give username and password 
+	- ls 
+	- get {file}
+	- exit 
+	- cat {file}
+  
+3) anonymous login (access remote and anonymously)
+   - search type: aux name:ftp   (we are looking for aux/scanner/ftp/anonymous)
+   
+
+
 
