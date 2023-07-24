@@ -145,4 +145,7 @@ SMB is network file sharing protocol that is used to facilitate of sharing of fi
 	  smbclient -L \\\\\\\\ip\\\\\share -U {usernameyouhavecredentialsfor}  ----> smbclient -L \\\\\\\\ip\\\\*\public* -U *admin*  
 	- ls 
 	- to download a file using SMB client, we say: **get** {filename} when you exit you should have the file 
-	- 
+
+
+### Web Server Enumeration 
+
