@@ -153,4 +153,20 @@ Web server is software that is used to serve website data on the web, weh server
 
 start postgresql - launch msfconsole - set up workspace - setg rhost 
 
-1)  
+1.a) enum http server 
+- search for http module: search type: aux name: http 
+- use the http_version module to get information about the version http server 
+- additional enumeration to http headers 
+	- use http_header module  
+
+1b) enumeration to hidden directories that you have not access to by downloading and analyzing the robots.txt. The robots.txt prevents search engines from indexing certain files 
+- use aux/scanner/http/robots_txt 
+	- you do not need to change the path / because the robobts.txt file is usually stored at the root of the webserver 
+	- curl http://ip/pathyoufound  (downloads the html file/pulling the index)
+		![[Pasted image 20230725151019.png]] when you see index of .. this tells us that this webserver has directory listing enabled, Directory listing is native to some webservers waaronder Apachi this allows you to store files within a directory and they can be indexed and accessed within that directory. Directory listing is mainly used for download pages
+		
+
+	2) Directory Brute force (objective: finding hidden directories that cannot be accessed good way to find out what is hosted on the webserver)
+		- use dir_scanner 
+			- you can use *curl* to analyze content 
+We can also do file bruteforcing which is the opposite to directory bruteforcing because instead of performing a bruteforce to find directories we perform a bruteforce to find files 
