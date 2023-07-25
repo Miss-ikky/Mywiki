@@ -151,7 +151,21 @@ SMB is network file sharing protocol that is used to facilitate of sharing of fi
 
 Web server is software that is used to serve website data on the web, weh servers use HTTP (port 80) to facilitate communication between clients and the web server. We can use auxiliary modules to enumerate the web server version. Examples of popular web servers are?: Apache, Nginx, Microsoft IIS.
 
+used modules: 
+- auxiliary/scanner/http/apache_userdir_enum
+- auxiliary/scanner/http/brute_dirs
+- auxiliary/scanner/http/dir_scanner
+- auxiliary/scanner/http/dir_listing
+- auxiliary/scanner/http/http_put
+- auxiliary/scanner/http/files_dir
+- auxiliary/scanner/http/http_login
+- auxiliary/scanner/http/http_header
+- auxiliary/scanner/http/http_version
+- auxiliary/scanner/http/robots_tx
+
 start postgresql - launch msfconsole - set up workspace - setg rhost 
+IF you hare targeting a webserver with SSL than add SSL cert in modules 
+
 
 1.a) enum http server 
 - search for http module: search type: aux name: http 
@@ -169,4 +183,24 @@ start postgresql - launch msfconsole - set up workspace - setg rhost
 	2) Directory Brute force (objective: finding hidden directories that cannot be accessed good way to find out what is hosted on the webserver)
 		- use dir_scanner 
 			- you can use *curl* to analyze content 
-We can also do file bruteforcing which is the opposite to directory bruteforcing because instead of performing a bruteforce to find directories we perform a bruteforce to find files 
+			  
+We can also do file bruteforcing which is the opposite to directory bruteforcing because instead of performing a bruteforce to find directories we perform a bruteforce to find files.  
+- use aux/scanner/http/files_dir 
+
+2) Bruteforce 
+	- Use module: http_login 
+		- we need to setup AUTH_URI --> the directory that has the authentication enabled (the security directory) /path/ 
+		- only use the default username and password list 
+		- if you get no results use following wordlist:
+			- user_file  /usr/share/metasploit-framework/data/wordlists/namelists.txt
+			  Pass_file /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt 
+			  verbose: false 
+		- use module: apache_userdir_enum to find users if the bruteforce is taking to long and no results 
+			- change wordlist: common_users.txt 
+			- use the usernames for the bruteforce: 
+				- use http_login 
+					- options 
+					- use default passwordlist or change the password file to different one
+					- create your own userfile 
+						- echo "username" > user.txt   (file is stored under root directory)
+						- set user_file /root/user.txt 
