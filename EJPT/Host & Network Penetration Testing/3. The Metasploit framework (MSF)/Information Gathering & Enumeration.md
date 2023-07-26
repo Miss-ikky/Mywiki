@@ -204,3 +204,13 @@ We can also do file bruteforcing which is the opposite to directory bruteforcing
 					- create your own userfile 
 						- echo "username" > user.txt   (file is stored under root directory)
 						- set user_file /root/user.txt 
+
+### MySQL Enumeration 
+
+MySQL is relational database management system based on SQL and used to store data. Uses tcp port 3306. 
+
+Prep: start postgresql - launch msfconsole - set up workspace - setg rhost 
+
+1) Identify the version of MySQL 
+     - search type: aux name: mysql 
+     - 
