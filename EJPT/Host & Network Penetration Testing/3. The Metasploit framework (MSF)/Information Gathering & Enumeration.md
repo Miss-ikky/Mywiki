@@ -212,5 +212,14 @@ MySQL is relational database management system based on SQL and used to store da
 Prep: start postgresql - launch msfconsole - set up workspace - setg rhost 
 
 1) Identify the version of MySQL 
-     - search type: aux name: mysql 
-     - 
+     - use portscan/tcp
+	     - perform port scan to check which port MySQL is on 
+ -    - search type: aux name: mysql 
+	 - use mysql_version module 
+	 - you can search for exploit for the version of mysql if there is no exploit for the version than you can to bruteforce: 
+
+2) Bruteforce for credentials 
+	-  use mysql_login (we are after the root user)
+		- set username to root  -> set USERNAME root 
+		- set pass_file /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt 
+		- 
