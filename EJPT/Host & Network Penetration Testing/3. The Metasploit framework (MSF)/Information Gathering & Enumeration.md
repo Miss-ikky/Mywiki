@@ -256,3 +256,61 @@ How to quickly get access to mysql database server:
 
 
 ### SSH enumeration 
+
+-> get the version of ssh and find credentials to get remote access to target 
+
+start up metasploit framework - creatework space - setg rhosts and rhost
+
+1) get more information about ssh version 
+	- search type:auxiliary name:ssh 
+	- use aux/scanner/ssh/ssh_version 
+	  
+2) perform bruteforce to get credentials 
+	- search ssh_login (and use)
+	- options (you can lower the number of bruteforce speed to stay stealthy)
+	- set USER_FILE /usr/share/metasploit-framework/data/wordlists/common_users.txt
+	- set PASS_FILE /usr/share/metasploit-framework/data/wordlists/common_passwords.txt 
+
+IF the target has been configured to use PASSWORD AUTHENTICATION then we use --> aux/scanner/ssh/ssh_login 
+IF the target has been configured to use PUBLIC KEYS than we use aux/scanner/shh/ssh_login_pubkey 
+(om die info te vinden kijk in `/etc/ssh/sshd_config` of in de banner)
+
+
+3) switch to session 
+	- sessions 1
+	- span a bash session within the session: /bin/bash -i 
+	- ls , whoami
+
+Other usefull modules to find usernames 
+- use aux/scanner/shh/ssh_enumusers 
+	- set user_file /usr/share/metasploit-framework/data/wordlists/common_users.txt 
+
+
+### SMTP Enumeration 
+
+SMTP is a communication protocol that is used for transmission of email. 
+SMTP uses tcp port 25 but can also run on 465 and 587
+
+add workspace -a SMTP_enum + setg rhosts 
+
+1)  what version of smtp and more info 
+	- use aux/scanner/smtp/smtp_version 
+	- use aux/scanner/smtp/smtp_enum 
+
+
+--- lab --- 192.145.100.2/24
+
+1. What is the SMTP server name and banner. 
+   192.145.100.3:25 SMTP 220 openmailbox.xyz ESMTP Postfix: Welcome to our mail server.\x0d\x0a
+   
+2. Connect to SMTP service using netcat and retrieve the hostname of the server (domain name).
+   
+   
+3. Does user “admin” exist on the server machine? Connect to SMTP service using netcat and check manually.
+4. Does user “commander” exist on the server machine? Connect to SMTP service using netcat and check manually.
+5. What commands can be used to check the supported commands/capabilities? Connect to SMTP service using telnet and check.
+6. How many of the common usernames present in the dictionary /usr/share/commix/src/txt/usernames.txt exist on the server. Use smtp-user-enum tool for this task.
+7. How many common usernames present in the dictionary /usr/share/metasploit-framework/data/wordlists/unix_users.txt exist on the server. Use suitable metasploit module for this task.
+8. Connect to SMTP service using telnet and send a fake mail to root user.
+9. Send a fake mail to root user using sendemail command.
+msfconsole
