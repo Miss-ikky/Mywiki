@@ -248,4 +248,11 @@ How to quickly get access to mysql database server:
 - command: mysql -h ip -u root -p 
 - command: show databases; 
 
-192.249.146.2 
+
+--- Lab --- 
+
+
+
+
+
+### SSH enumeration 
