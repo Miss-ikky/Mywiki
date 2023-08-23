@@ -296,21 +296,73 @@ add workspace -a SMTP_enum + setg rhosts
 1)  what version of smtp and more info 
 	- use aux/scanner/smtp/smtp_version 
 	- use aux/scanner/smtp/smtp_enum 
-
+2) Use verify to manually check if user exists. TO connect to smtp server with netcat use: nc -v ip port 
+	- `VRFY` is used to verify whether a mailbox in the argument exists on the local host. The server response includes the user’s mailbox and may include the user’s full name. 
+	- `EXPN` is used to verify whether a mailing list in the argument exists on the local host. The positive response will specify the membership of the recipients
+	- `VRFY` and `EXPN` implement SMTP authentication.  Also, they are useful to perform an internal audit of the server. On the other hand, these commands are considered a security risk. Spammers can use them to harvest valid email addresses from the server. Therefore, messaging systems either install corresponding protections or disable the commands.
 
 --- lab --- 192.145.100.2/24
 
 1. What is the SMTP server name and banner. 
-   192.145.100.3:25 SMTP 220 openmailbox.xyz ESMTP Postfix: Welcome to our mail server.\x0d\x0a
+   root@attackdefense:~# 192.145.100.3:25 SMTP 220 openmailbox.xyz ESMTP Postfix: Welcome to our mail server.\x0d\x0a
    
 2. Connect to SMTP service using netcat and retrieve the hostname of the server (domain name).
    
+   root@attackdefense:~# **nc -v 192.145.100.3 25**
+target-1 [192.145.100.3] 25 (smtp) open
+220 openmailbox.xyz ESMTP Postfix: Welcome to our mail server. 
+   
+   
+   
    
 3. Does user “admin” exist on the server machine? Connect to SMTP service using netcat and check manually.
+   
+   **vrfy admin**
+252 2.0.0 admin
+
+   
+   
 4. Does user “commander” exist on the server machine? Connect to SMTP service using netcat and check manually.
+   
+   **vrfy commander**
+550 5.1.1 <commander>: Recipient address rejected: User unknown in local recipient table
+
+   
+
 5. What commands can be used to check the supported commands/capabilities? Connect to SMTP service using telnet and check.
+   
+   
+   220 openmailbox.xyz ESMTP Postfix: Welcome to our mail server.
+*EHLO me.com*
+250-openmailbox.xyz
+250-PIPELINING
+250-SIZE 10240000
+250-VRFY
+250-ETRN
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-8BITMIME
+250-DSN
+250 SMTPUTF8
+   
+   
 6. How many of the common usernames present in the dictionary /usr/share/commix/src/txt/usernames.txt exist on the server. Use smtp-user-enum tool for this task.
+
+![[Pasted image 20230823164226.png]]
+
+command: smpt-user-enum -U .usr/share/commix/src/txt/username.txt -t ip 
+
 7. How many common usernames present in the dictionary /usr/share/metasploit-framework/data/wordlists/unix_users.txt exist on the server. Use suitable metasploit module for this task.
+   
+   [*] 192.145.100.3:25      - 192.145.100.3:25 Banner: 220 openmailbox.xyz ESM , daemon, games, gnats, irc, list, lp, mail, man, news, nobody, postmaster, proxy, sync, sys, uucp, www-data
+[*] 192.145.100.3:25      - Scanned 1 of 1 hosts (100% complete)
+   
+   
+   
 8. Connect to SMTP service using telnet and send a fake mail to root user.
+   
+   https://mailtrap.io/blog/smtp-commands-and-responses/#Essential-SMTP-commands-in-the-order-they-may-be-used 
+   
+   
 9. Send a fake mail to root user using sendemail command.
-msfconsole
+https://www.kali.org/tools/sendemail/ 
