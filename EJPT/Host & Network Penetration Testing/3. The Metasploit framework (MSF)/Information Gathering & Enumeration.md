@@ -325,7 +325,7 @@ target-1 [192.145.100.3] 25 (smtp) open
 4. Does user “commander” exist on the server machine? Connect to SMTP service using netcat and check manually.
    
    **vrfy commander**
-550 5.1.1 <commander>: Recipient address rejected: User unknown in local recipient table
+550 5.1.1 commander: Recipient address rejected: User unknown in local recipient table
 
    
 
@@ -361,12 +361,48 @@ command: smpt-user-enum -U .usr/share/commix/src/txt/username.txt -t ip
    
 8. Connect to SMTP service using telnet and send a fake mail to root user.
    
-   https://mailtrap.io/blog/smtp-commands-and-responses/#Essential-SMTP-commands-in-the-order-they-may-be-used 
+   https://mailtrap.io/blog/smtp-commands-and-responses/Essential-SMTP-commands-in-the-order-they-may-be-used 
    
    
 9. Send a fake mail to root user using sendemail command.
-https://www.kali.org/tools/sendemail/ 
+www.kali.org/tools/sendemail
 
---------
 
-### 
+
+### Vulnerability Scanner with Metasploit framework 
+
+- information will be handy during exploitation phase 
+
+![[Pasted image 20230824101216.png]]
+
+check what hosts are up 
+   - sudo nmap -sn localnetwork/subnet 
+   - check: ip a s 
+Create a workspace 
+
+Identify vulnerability on target system 
+
+Open MSFconsole 
+1) identify vulnerable versions
+	- db_nmap -sS -sV -O target 
+	- command *hosts* shows that information from above command is stored 
+	  
+2) find exploit for version of a service 
+	- search type:exploit name: *service*
+	- search *service* 
+
+	1) how to check if the module will work 
+		- copy module and use it 
+		- command: info (this will display info about the module and what version of the service it will exploit) 
+		- set payload to windows/meterpreter/reverse_tcp (this because we are targeting a windows system, default is linux)
+
+3) searchsploit allows you to search in exploit db (we can limit the results to only show metasploit exploit)
+	- searchsploit "Microsoft Windows SMB" 
+![[Pasted image 20230824105504.png]] Alles met Metasploit tussen haakjes is een msfconsole module 
+
+-  only show metasploit exploits: searchsploit "Microsoft Windows SMB" | grep -e "Metasploit" 
+
+
+
+
+
