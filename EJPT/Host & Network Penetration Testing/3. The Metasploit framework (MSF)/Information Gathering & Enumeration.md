@@ -406,11 +406,57 @@ Open MSFconsole
 	- Download the metasploit plugin![[Pasted image 20230824112043.png]]
 	- move the file: sudo mv db_autopawn.rb usr/share/metasploit-framework/plugins directory 
 	- load db_autopwn 
-	- to use use it: db_autopwn 
+	- command to use the plugin: db_autopwn 
 	- use the plugin to enumerate modules: db_autopwn -p -t 
 	- use the plugin but specify the port: db_autopwn -p -t -PI 445
 
 
+5) analyze command will analyze content of metasploit framework database and provide list of vulnerabilities that can be exploited from services 
+	- command: analyze 
+	- command: vulns 
 
+
+
+### Nessus scanner 
+To do 
+
+
+###  Web App Vulnerability Scanning With WMAP 
++ WMAP can be used to automate web server enumeration and scan web applications for vulnerabilities 
++ available as MSF plugin and can be loaded directly into MSF 
++ WMAP is fully integrated with MSF which allows us to perform web app vulnerability scanning from within the msf 
+192.51.202.3
+
+1. **Use `wmap`**: Make sure to first start up postgresql (service postgresql start)
+    - `load wmap`: This command loads the `wmap` module if it's not already loaded.
+        
+    - `wmap_`: The `wmap_` command is not entirely clear from the provided instructions, but it could be used to access various functionalities within the `wmap` module.
+        
+    - **Open Documentation for `wmap` Site**: `wmap_sites -h` is used to open the documentation for the `wmap_sites` feature, which likely deals with managing target websites.
+        
+    - **Add a Site**: `wmap_sites -a ip` would be used to add a website or IP address to the list of sites to be scanned.
+        
+    - **Set Up Target**: `wmap_targets -h` opens the documentation for setting up target websites. `wmap_targets -t http://targetip` is used to specify a target website for scanning.
+        
+    - **Check Sites and Scans**: `wmap_sites -l` and `wmap_targets -l` are used to list the sites that have been added for scanning and what scans have been conducted.
+        
+2. **Search for Modules for target**:
+    
+    - `wmap_run -t`: This command is used to search for modules that can be used to enumerate information from the specified target website. It helps identify available vulnerabilities or information-gathering modules.
+      
+3. **Run Enabled Modules**:
+    
+    - `wmap_run -e`: This command executes the enabled modules, likely including the ones discovered in the previous step. These modules will scan the target for vulnerabilities and gather information.
+4. **List Vulnerabilities**:
+    
+    - `wmap_vulns -l`: After running the modules, this command is used to list out all the vulnerabilities that the tool was able to find on the target website.
+      
+      
+5. **Use the `aux/scanner/http/options` Module**:
+    
+    - The `aux/scanner/http/options` module is likely used to interact with the HTTP options of a web server to see what commands are allowed. This can help identify potential security weaknesses related to HTTP methods.
+6. **Use the `aux/scanner/http/http_put` Module**:
+    
+    - The `aux/scanner/http/http_put` module is used to test various directories on a web server to see whether it allows the uploading of files. The provided instructions suggest trying different directories if the root ("/") does not allow file uploads. After attempting an upload, you can use `curl` to check if the upload was successful by accessing the uploaded file via its URL. curl http://ip:80/path/textfile 
 
 
