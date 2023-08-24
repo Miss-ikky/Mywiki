@@ -402,6 +402,14 @@ Open MSFconsole
 
 -  only show metasploit exploits: searchsploit "Microsoft Windows SMB" | grep -e "Metasploit" 
 
+4) DB Autopwn plugin ![[Pasted image 20230824111947.png]]
+	- Download the metasploit plugin![[Pasted image 20230824112043.png]]
+	- move the file: sudo mv db_autopawn.rb usr/share/metasploit-framework/plugins directory 
+	- load db_autopwn 
+	- to use use it: db_autopwn 
+	- use the plugin to enumerate modules: db_autopwn -p -t 
+	- use the plugin but specify the port: db_autopwn -p -t -PI 445
+
 
 
 
