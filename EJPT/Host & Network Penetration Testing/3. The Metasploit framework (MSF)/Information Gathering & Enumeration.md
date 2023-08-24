@@ -460,3 +460,26 @@ To do
     - The `aux/scanner/http/http_put` module is used to test various directories on a web server to see whether it allows the uploading of files. The provided instructions suggest trying different directories if the root ("/") does not allow file uploads. After attempting an upload, you can use `curl` to check if the upload was successful by accessing the uploaded file via its URL. curl http://ip:80/path/textfile 
 
 
+## Client Side Attacks 
+
+### Generating payloads with MSFvenom 
+
+What is difference between client-side attacks and host-based/service-based attacks. 
+	Client-side attacks target end-user devices and exploit software or hardware vulnerabilities, aiming to compromise user systems and access sensitive data, often using social engineering tactics; whereas host-based/service-based attacks focus on the host system or network services, seeking to exploit vulnerabilities in underlying software or services to gain unauthorized access, manipulate services, or compromise network resources, demanding measures such as patch management, access controls, and intrusion detection for protection.. 
+
+
+- A client side attack is an attack vector that involves coercing a client to execute a malicious payload on their system that consequently connects back to te attacker when executed 
+- Client side attack an use social engineering and portable executables (PEs)
+- Client side attack take advantage of human vulnerabilities as opposed to vulnerabilities in services or software running on the target system 
+- Attackers need to be aware of AV detection because malicious payload is stored on the clients device. 
+
+Generate payload with msfvenom -> inject the payload ->  distribute the payload through other channel --> when in the system, wait till they click so that the payload will be executed --> be ready with a handler/listener to receive incoming connection back from target system = access to target system. 
+
+msfvenom
+- command line utility that can be used to generate and encode MSF payloads for different operating systems 
+- msfvenom is a combination of two utilities: msfpayload and msfencode 
+- msfvenom is used to generate a malicious meterpreter payload that can be transferred to a client target system. Once executed it will connect back to our payload handler and provide us with remote access to target system. 
+
+
+How to generate payload with msfvenom? 
+
