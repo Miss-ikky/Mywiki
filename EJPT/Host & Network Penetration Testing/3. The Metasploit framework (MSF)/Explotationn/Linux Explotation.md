@@ -17,4 +17,7 @@
 9) upgrade session to meterpreter session (put other session in background)
 	1) `search shell_to_meterpreter` (will upgrade current shell session to meterpreter session)
 	2) `use post/multi/manage/shell_to_meterprete`r (this is a post module so you can only use it when you have an active session on the target system)
-	3) 
+	3) ..
+
+.. -\/- .. 
+ 
