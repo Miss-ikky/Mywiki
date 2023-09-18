@@ -91,6 +91,30 @@ our meterpreter session
 
 ##### Enumerating Processes & Services 
 
+**Process** is an instance of a running executable (.exe) or program -  (launch google chrome)
+A **service** is a process which runs in the background and does not interact with the desktop - (not end-user applications or third party applications)
+
+Info we are looking for: 
+- Running processes & services 
+- Scheduled tasks 
+
+
+meterpreter:
+- `ps` 
+	- user column shows priviliges associated with specific processes. 
+	- it will show priviliges associated with the user that you hacked 
+- `pgrep explorer.exe ` (when no process id is shown it means that the process is not running)
+- `migrate process_id`
+- `getuid`
+- `sysinfo`
+
+Command shell session
+- `shell` 
+- `net start` (services are listed not processes)
+- `wmic service list brief` (list running services)
+- `tasklists /SVC` (process running and services running under a process)
+- `schtasks /query /fo LIST /v` (scheduled task that have been configured to run on target)
+	- scheduled task can be exploited to elevate priviliges, scheduled that are running with nt authority system priviliges, we can let it executable that we specify we can elevate our priviliges. 
 
 
 
@@ -111,28 +135,8 @@ our meterpreter session
 
 
 
+##### Automating Windows Local Enumeration  (metasploit)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##### Automating Windows Local Enumeration 
 
 
 
