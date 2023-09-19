@@ -67,14 +67,18 @@ Information we are looking for
 
 
 Command shell session:
-- `shell` 
-- `ipconfig` 
--  `ipconfig /all`
-- `route print`
-- `arp -a`
-- `netstat -ano`
+- `shell` (Interactieve toegang tot het systeem om verdere aanvallen uit te voeren.)
+- `ipconfig` (Identificeert netwerkconfiguratie voor lateralisatie en informatie over het systeem.)
+- `ipconfig /all` (Biedt gedetailleerde netwerkinformatie voor bredere verkenning van het netwerk.)
+- `route print` (Onthult routeringstabellen om netwerkverkeer te begrijpen.)
+- `arp -a` (Toont IP-naar-MAC-mapping voor het identificeren van aangesloten apparaten.)
+- `netstat -ano` (Geeft actieve verbindingen weer en helpt bij het vinden van kwetsbaarheden.)
+  
 ![[Pasted image 20230917174525.png]] 
-our meterpreter session 
+	our meterpreter session 
+	
+- `netsh firewall show state` (Onthult de firewallstatus voor potentiële bypassing of regelwijzigingen.)
+- `netsh advfirewall firewall` (Beheer van geavanceerde firewallregels om beveiliging te verminderen of verkeer te manipuleren.)
 
 - `netsh firewall show state` 
 - `netsh advfirewall firewall
@@ -112,12 +116,8 @@ Command shell session
 
 
 
-
-
-
 ##### Automating Windows Local Enumeration  
 
-Metasploit
 
 Metapsloit 
 - nmap -sV -p 5958 ip (target WinRM protocol)
