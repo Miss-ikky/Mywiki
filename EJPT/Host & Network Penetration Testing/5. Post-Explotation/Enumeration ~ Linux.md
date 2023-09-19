@@ -123,9 +123,11 @@ Meterpreter:
 
 ##### Automating Linux Local Enumeration 
 
+- LinEnum is a simple bash script that automates common Linux local enumeration check in addition to identifying privilege scalation vulnerabilities. 
+	- Github: https://github.com/rebootuser/LinEnum 
 
 
-
+/gettime.cgi script is vulnerable for shellshock 
 
 
 
