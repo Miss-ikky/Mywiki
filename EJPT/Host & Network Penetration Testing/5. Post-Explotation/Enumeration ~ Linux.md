@@ -121,20 +121,30 @@ Meterpreter:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ##### Automating Linux Local Enumeration 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
