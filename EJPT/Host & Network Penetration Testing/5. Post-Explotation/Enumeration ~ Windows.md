@@ -16,15 +16,15 @@
 
 
 Meterpreter session: 
-- `getuid` 
-- `sysinfo` 
-- `cd system32 `   (stored in `C:\Windows\System32`)
-	- `cat eula.txt `
+- `getuid`: Geeft het gebruikers-ID (UID) weer van de huidige gebruiker. Dit kan helpen bij het bepalen van de rechten van de gebruiker.
+- `sysinfo`: Levert gedetailleerde informatie over het besturingssysteem en de hardware van het gecompromitteerde systeem. 
+- `cd system32` (opgeslagen in `C:\Windows\System32`): Navigeert naar de systeemmap van Windows, wat belangrijk kan zijn om systeemgerelateerde bestanden en instellingen te verkennen.
+    - `cat eula.txt`: Toont de inhoud van het "eula.txt"-bestand binnen de System32-map, wat mogelijk nuttige informatie bevat over licenties en gebruik
 - get a command shell:  `shell` 
 	-  `hostname` 
-	- `systeminfo`  (gives List of installed updates)
+	- `systeminfo` 
 	- more info about hotfixes: 
-	  `wmic qfe get Caption,Description,HotFIxID,InstalledOn`
+	  `wmic qfe get Caption,Description,HotFIxID,InstalledOn` Toont details over geïnstalleerde hotfixes en patches op het systeem
 
 
 ##### Enumerating Users & Groups
@@ -43,14 +43,14 @@ Meterpreter session:
 	- set to meterpreter session - run 
 
 command shell session
-- `shell` 
-- `whoami` 
-- `whoami /privs `
-- `query user `
-- `net user administator`
-- `net user guest `
-- `net localgroup` 
-- `net localgroup administators`
+- `shell`: Biedt toegang tot een interactieve shell op het gecompromitteerde systeem voor verschillende taken.
+- `whoami`: Geeft de naam van de huidige gebruiker weer, wat handig is om te weten wie is ingelogd.
+- `whoami /priv`: Toont de privileges van de huidige gebruiker, essentieel om de acties die de gebruiker kan ondernemen te begrijpen.
+- `query user`: Lijst van ingelogde gebruikers op het systeem, nuttig om andere actieve gebruikers te identificeren.
+- `net user administrator`: Geeft informatie over het administrator-account, handig om te weten of het is ingeschakeld en mogelijke kwetsbaarheden te identificeren.
+- `net user guest`: Toont informatie over het gastaccount, handig om te weten of het account is ingeschakeld en of het een zwakke plek vormt.
+- `net localgroup`: Lijst van lokale gebruikersgroepen op het systeem, helpt bij het identificeren van andere groepen met specifieke rechten.
+- `net localgroup administrators`: Toont de leden van de 'Administrators'-groep, belangrijk om te weten wie beheerdersrechten heeft op het systeem
 
 
 #####  Enumerating Network Information 
