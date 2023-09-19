@@ -18,11 +18,11 @@
 Meterpreter session: 
 - `getuid` 
 - `sysinfo` 
-- `cd system32 `
+- `cd system32 `   (stored in `C:\Windows\System32`)
 	- `cat eula.txt `
 - get a command shell:  `shell` 
 	-  `hostname` 
-	- `systeminfo` 
+	- `systeminfo`  (gives List of installed updates)
 	- more info about hotfixes: 
 	  `wmic qfe get Caption,Description,HotFIxID,InstalledOn`
 
