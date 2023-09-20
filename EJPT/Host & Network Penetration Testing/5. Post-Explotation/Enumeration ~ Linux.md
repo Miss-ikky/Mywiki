@@ -137,9 +137,21 @@ Useful metasploit modules for enumeration (post exploitations modules need activ
 
 - LinEnum is a simple bash script that automates common Linux local enumeration check in addition to identifying privilege scalation vulnerabilities. 
 	- Github: https://github.com/rebootuser/LinEnum 
-
-
 - upload exploit files and scripts to temp directory (small possibility of being discovered )
+- ga naar script in github - raw data - copy the script code into text file in lab environment  - save it on desktop folder of root user as LinEnum.sh (bc its a bash script)
+  
+  In meterpreter 
+- `upload /root/Desktop/LinEnum.sh `
+- `shell` 
+- list content of temp directory 
+- `chmod -x LinEnum.sh `
+- `./LinEnum.sh` (execute the script)
+- 
+
+
+
+
+
 
 
 
