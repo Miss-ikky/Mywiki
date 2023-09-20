@@ -140,7 +140,9 @@ Useful metasploit modules for enumeration (post exploitations modules need activ
 
 
 - upload exploit files and scripts to temp directory (small possibility of being discovered )
-- 
+
+
+
 
 
 
