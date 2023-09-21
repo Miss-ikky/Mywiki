@@ -11,26 +11,24 @@ Information:
 - CPU information 
 - Disk information & mounted drives 
 - Installed packages/software
-
+192.107.143.2/24
 
 - upgrade the shell session to a meterpreter session
 - ``sysinfo`` 
 - `shell`
 - `/bin/bash -i`
-- navigate to root of home directory: `cd /root`
-	- `hostname`
-	- `cat /etc/issue`
-	- `cat /etc/*release`
-	- `uname -a `
-	- `env`
-	- `ls cpu `
-	- `free -h `
-	- `df -h`
-	- `df -ht ext4`
-	- `lsblk | grep sd `
-	- for debian: `dpkg -l `
-	
-
+- navigate to root of home directory: `cd /root'
+	- `hostname` (Display hostname):** This command reveals the hostname of the compromised system. It's interesting because knowing the hostname can help attackers identify the target system and its role in a network.
+	- `cat /etc/issue` (Display distribution issue file):** Displays information about the Linux distribution, version, and release. It's useful for understanding the specific distribution running on the compromised system, which can guide further exploitation or post-exploitation activities.
+	- `cat /etc/*release` (Display release information):** Similar to the previous command, this provides distribution and version details. It helps in identifying the Linux distribution and release, which may be important for finding and exploiting vulnerabilities.
+	- `uname -a` (Display system information):** This command shows detailed information about the system, including the kernel version and system architecture. Attackers use it to gather system-specific details for potential vulnerabilities.
+	- `env` (Display environment variables):** Reveals environment variables, which can contain valuable information about the system's configuration and may include sensitive data such as passwords or API keys.
+	- `lscpu` (List files or directories in 'cpu' directory):** Lists the contents of the 'cpu' directory. This is interesting if there are specific files or configurations in that directory that may be relevant to the attack or post-exploitation activities.
+	- `free -h` (Display memory usage):** Provides information about the system's memory usage. Knowing available memory can be important for planning resource-intensive tasks or attacks.
+	- `df -h` (Display disk space usage):Shows disk space usage across mounted file systems. Understanding disk space availability is essential for identifying storage constraints or opportunities for data exfiltration.
+	- `df -ht ext4` (Display ext4 file system usage): Lists disk space usage specifically for ext4 file systems. Useful for focusing on a particular file system type when assessing storage resources.
+	- `lsblk | grep sd` (List block devices containing 'sd'): Lists block devices containing 'sd' in their names. This can help identify storage devices, which is relevant for data discovery and manipulation.
+	- `dpkg -l` (List installed packages - Debian): For Debian-based systems, this command lists all installed packages. It's valuable for identifying installed software and potential targets for exploitation or privilege escalation in a Debian environment.
 
 ##### Enumerating User & Groups
 
@@ -53,12 +51,12 @@ Meterpreter
                  ![[Pasted image 20230918165340.png]]
 
 - `cat /etc/passwd | grep -v /nologin ` (not show service accounts)
-- ` ls -al /home `
-- `groups` 
-- `groups user_name`
-- `who` 
+- ` ls -al /home ` Get list of files and directories in /home
+- `groups` lists the users group memberships
+- `groups user_name` lists group memberships of specific group
+- `who` displays info about currently logged-in users 
 - `last`  (legitimate connections by other users on system)
-- `lastlog` (ssh or fysically)
+- `lastlog` (login via ssh or physically)
 
 
 
@@ -77,14 +75,13 @@ Meterpreter session
 - `netstat` 
 - `route` 
 - `shell` 
-	- `ifconfig` 
-	- `ip a s`
-	- `cat /etc/networks
-	- `cat /etc/hosts `
-	- `cat /etc/resolv.conf `
-	- `arp -a `
-- `arp` 
-- help in meterpreter, look at networking command 
+	- `ifconfig`: Geeft informatie over de netwerkinterfaces van het systeem, inclusief IP-adressen en MAC-adressen.
+	- `ip a s`: Toont gedetailleerde informatie over netwerkinterfaces, inclusief IP-adressen en status. (Beschouwd als een modernere en uitgebreidere versie van `ifconfig`.)
+	- `cat /etc/networks`: Laat informatie zien over gedefinieerde netwerken in het systeem. (Kan helpen bij het begrijpen van beschikbare netwerkconfiguraties.)
+	- `cat /etc/hosts`: Toont de inhoud van het hostbestand, dat host-naamkoppelingen naar IP-adressen definieert. (Handig om aangepaste host-naamkoppelingen te controleren die kunnen worden gebruikt voor doelsystemen of om verkeer om te leiden.)
+	- `cat /etc/resolv.conf`: Geeft informatie over DNS-configuratie op het systeem, inclusief DNS-serveradressen. (Kan helpen bij het identificeren van gebruikte DNS-servers voor netwerkcommunicatie en DNS-verzoekmanipulatie.)
+	- `arp -a`: Toont de ARP-cache van het systeem, die IP-adres-naamkoppelingen bevat. (Nuttig voor het ontdekken van andere apparaten in het lokale netwerk en het identificeren van mogelijke doelen voor verdere verkenning of aanvallen.)
+	- `arp` help in meterpreter, look at networking command 
 `
 
 
