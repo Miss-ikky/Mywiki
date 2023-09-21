@@ -79,16 +79,10 @@ Meterpreter session
 	- `ip a s`: Toont gedetailleerde informatie over netwerkinterfaces, inclusief IP-adressen en status. (Beschouwd als een modernere en uitgebreidere versie van `ifconfig`.)
 	- `cat /etc/networks`: Laat informatie zien over gedefinieerde netwerken in het systeem. (Kan helpen bij het begrijpen van beschikbare netwerkconfiguraties.)
 	- `cat /etc/hosts`: Toont de inhoud van het hostbestand, dat host-naamkoppelingen naar IP-adressen definieert. (Handig om aangepaste host-naamkoppelingen te controleren die kunnen worden gebruikt voor doelsystemen of om verkeer om te leiden.)
-	- `cat /etc/resolv.conf`: Geeft informatie over DNS-configuratie op het systeem, inclusief DNS-serveradressen. (Kan helpen bij het identificeren van gebruikte DNS-servers voor netwerkcommunicatie en DNS-verzoekmanipulatie.)
+	- `cat /etc/resolv.conf`: Geeft informatie over DNS-configuratie op het systeem, inclusief DNS-serveradressen. (Kan helpen bij het identificeren van gebruikte DNS-servers/name-server voor netwerkcommunicatie en DNS-verzoekmanipulatie.)
 	- `arp -a`: Toont de ARP-cache van het systeem, die IP-adres-naamkoppelingen bevat. (Nuttig voor het ontdekken van andere apparaten in het lokale netwerk en het identificeren van mogelijke doelen voor verdere verkenning of aanvallen.)
 	- `arp` help in meterpreter, look at networking command 
 `
-
-
-
-
-
-
 
 
 ##### Enumerating Processes & Cron Jobs
@@ -112,10 +106,21 @@ Meterpreter:
 - `ps aux | grep root`  (processes that belong to user root)
 - `ps aux | grep program_name`
 
+- `ps` (Displays information about running processes on a Unix-like operating system. Interesting in post-exploitation because it allows an attacker to gather information about the running processes on the compromised system, potentially identifying vulnerabilities or valuable targets.)
+- `pgrep process_name` (Searches for and lists the process IDs (PIDs) of processes that match a given name. Interesting in post-exploitation because it helps identify specific processes by name, which can be useful for targeting or interacting with them.)
+- `shell`
+    - `top` (Displays real-time system information, including running processes. Interesting in post-exploitation for monitoring system activity.)
+    - `/bin/bash -i` (Starts an interactive Bash shell. Interesting in post-exploitation because gaining access to a shell is a pivotal step for further interaction and control over the compromised system.)
+    - `ps` (Displays information about running processes.)
+    - `ps aux` (Displays detailed information about all running processes.)
+    - `crontab -l` (Lists the cron jobs of the current user. Interesting in post-exploitation for identifying scheduled tasks.)
+    - `ls -al /etc/cron*` (Lists cron-related files in the /etc directory. Interesting in post-exploitation for examining cron configurations.)
+    - `cat /etc/cron*` (Displays the contents of cron-related files.)
+- `ps aux | grep root` (Combines `ps` with `grep` to list processes owned by the user "root." Interesting in post-exploitation because it helps identify processes running with elevated privileges, which may be crucial for escalating privileges or targeting critical system components.)
+- `ps aux | grep program_name` (Lists processes and filters them based on a specific program name (`program_name`). Interesting in post-exploitation because it allows the attacker to identify and target processes associated with a particular program or service, potentially for further exploitation or manipulation.)
 
 
-
-
+cat /etc/shells 
 
 
 ##### Automating Linux Local Enumeration 
@@ -132,7 +137,8 @@ Useful metasploit modules for enumeration (post exploitations modules need activ
 - post/linux/gather/enum_checkvm 
 
 
-- LinEnum is a simple bash script that automates common Linux local enumeration check in addition to identifying privilege scalation vulnerabilities. 
+
+LinEnum is a simple bash script that automates common Linux local enumeration check in addition to identifying privilege scalation vulnerabilities. 
 	- Github: https://github.com/rebootuser/LinEnum 
 - upload exploit files and scripts to temp directory (small possibility of being discovered )
 - ga naar script in github - raw data - copy the script code into text file in lab environment  - save it on desktop folder of root user as LinEnum.sh (bc its a bash script)
@@ -143,7 +149,7 @@ Useful metasploit modules for enumeration (post exploitations modules need activ
 - list content of temp directory 
 - `chmod -x LinEnum.sh `
 - `./LinEnum.sh` (execute the script)
-- 
+
 
 
 
