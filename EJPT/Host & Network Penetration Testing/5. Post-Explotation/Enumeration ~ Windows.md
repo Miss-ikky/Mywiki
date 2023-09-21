@@ -147,7 +147,7 @@ jaws.enum.ps1 script (copy the code and paste in the lab-environment, (control s
 - `dir` 
 - ALWAYS save your files you upload to target in temp directory (if the temp directory does not exit `mkdir Temp`) 
 - `cd Temp`
-- `upload /rppt/Desktop/jaws-enum.ps1`
+- `upload /root/Desktop/jaws-enum.ps1`
 - `shell`
 - `dir`
 - execute powershell from within command shell session: `powershell.exe -ExecutionPolicy BYpass -File .\jaws-enum.ps1 -OutputFilename JAWD-Enum.txt `
