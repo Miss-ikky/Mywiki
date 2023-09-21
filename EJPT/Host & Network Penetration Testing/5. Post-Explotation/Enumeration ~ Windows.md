@@ -120,7 +120,7 @@ Command shell session
 
 
 Metapsloit 
-- nmap -sV -p 5958 ip (target WinRM protocol)
+- nmap -sV -p 5985 ip (target WinRM protocol)
 - metasploit module winrm_script_exec 
 	- set FORCE_VBS ture 
 	
