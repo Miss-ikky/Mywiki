@@ -92,19 +92,7 @@ Information
 - Cron Jobs 
 
 Meterpreter:
-- ? (look at system commands)
-- `ps` 
-- `pgrep process_name 
-- `shell`
-	- top
-	- `/bin/bash -i `
-	- `ps` 
-	- `ps aux` 
-	- `crontab -l`
-	- `ls -al /etc/cron*`
-	- `cat /etc/cron*`
-- `ps aux | grep root`  (processes that belong to user root)
-- `ps aux | grep program_name`
+- `?` (look at system commands)
 
 - `ps` (Displays information about running processes on a Unix-like operating system. Interesting in post-exploitation because it allows an attacker to gather information about the running processes on the compromised system, potentially identifying vulnerabilities or valuable targets.)
 - `pgrep process_name` (Searches for and lists the process IDs (PIDs) of processes that match a given name. Interesting in post-exploitation because it helps identify specific processes by name, which can be useful for targeting or interacting with them.)
@@ -120,7 +108,9 @@ Meterpreter:
 - `ps aux | grep program_name` (Lists processes and filters them based on a specific program name (`program_name`). Interesting in post-exploitation because it allows the attacker to identify and target processes associated with a particular program or service, potentially for further exploitation or manipulation.)
 
 
-cat /etc/shells 
+pgrap 
+
+cat /etc/shells to see what kind of shells are installed 
 
 
 ##### Automating Linux Local Enumeration 
