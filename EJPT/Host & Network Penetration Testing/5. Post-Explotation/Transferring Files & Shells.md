@@ -1,10 +1,12 @@
 ## Transferring Files
+ sudo nmap -sV -sT -sC {IP} -p- --open
 
+heart 1
 #####  set up webserver with python
 Two step approach where you need to host the files you want to transfer on a web server (1) and download the files hosted on the web server to the target system (2). 
 
-**SimpleHTTPServer = python2
-http.server = python3** 
+**SimpleHTTPServer => python2
+http.server => python3** 
 
 - copy file: `cp path/file.exe .` 
 - set up http server: 
