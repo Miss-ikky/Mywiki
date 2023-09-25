@@ -5,6 +5,34 @@
 
 
 
+##### NTLM hashes 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Linux hashes 
+
+##### Linux Password Hashes 
+
+

