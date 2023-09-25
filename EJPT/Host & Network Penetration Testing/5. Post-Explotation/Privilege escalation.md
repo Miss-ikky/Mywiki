@@ -120,14 +120,13 @@ so this means that we have to replace the password with a hashed password (this 
 `sudo -l `(list of commands you can run as the user)
 
  
- /usr/bin/man can be exploited if misconfigured with pseudo priviliges: 
+ /usr/bin/man can be exploited if misconfigured with sudo priviliges: 
  unprivileged can run this binary with sudo priviliges (root priviliges) without root password/  -- bypassing permissions & privileges
  
  man utility can allow users to spawn a bash session from within the utility, how: 
 
   try to run with sudo privliges:
   -  `sudo man ls `  (it should not ask for password)
-  - `sudo man ls` 
   - we can spawn a bash session with: 
   `  !/bin/bash `
 because we are running the man binary with pseudo priviliges, we are able to execute whatever, from the man binary. 
