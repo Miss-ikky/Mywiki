@@ -7,7 +7,8 @@ Gaining initial foothold is not enough, you need to setup and maintain persisten
 
 ##### Persistence via Services 
 
-
+- identify vulnerable system you can exploit on target system 
+- 
 
 
 
