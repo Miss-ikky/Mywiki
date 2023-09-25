@@ -137,7 +137,7 @@ LinEnum is a simple bash script that automates common Linux local enumeration ch
 - `upload /root/Desktop/LinEnum.sh `
 - `shell` 
 - list content of temp directory 
-- `chmod -x LinEnum.sh `
+- `chmod +x LinEnum.sh `
 - `./LinEnum.sh` (execute the script)
 
 
