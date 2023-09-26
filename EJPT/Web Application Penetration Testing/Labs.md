@@ -44,3 +44,42 @@ If PUT is possible: `curl ip/uploads/ --upload-file file.txt`
 
 ##### Scanning Web Application with ZAProxy 
 
+- run nmap scan 
+open owasp zap 
+click around on website to collect data 
+![[Pasted image 20230926180039.png]]
+
+Select form based authentication
+![[Pasted image 20230926180141.png]]
+Make sure user mode is enabled 
+Use the spider to do enumaration 
+
+##### Scanning web Applications with Nikto 
+
+- `ping` and `nmap` for port 80 
+- `nikto` 
+- `nikto -Help `
+- `nikto -h http://ip `
+- `nikto -h http://ip/full_url -Tuning 5 -Display V
+
+
+
+
+
+
+##### Passive Crawling with Burp Suite 
+
+
+##### SQL Injection with SQLMap 
+
+
+##### XSS Attack with XSSer
+
+##### Authenticated XSS Attack with XSSer 
+
+##### Attacking HTTP Login From with Hydra 
+
+##### Attacking Basic Auth with Burp Suite 
+
+
+##### Attacking HTTP Login From ZAProxy 
