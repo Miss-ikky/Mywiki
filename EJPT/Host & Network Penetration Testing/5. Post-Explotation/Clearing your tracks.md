@@ -22,7 +22,7 @@ moreover,
 	cat resource script to check the automations of deleting the files 
 
 
-Methods to clear tracks after exploiting victim: 
+**Methods to clear tracks after exploiting victim: Resource scripts** 
 
 - Resource scripts: 
 	- In meterpreter of the target run the resource file: ``resource path/resource_file.rc `` ![[Pasted image 20230925215156.png]]
@@ -38,7 +38,7 @@ keep an eye of resource scripts and where they are stored, so you can use them a
 - when transferring file always upload to centralized directory -> /tmp 
 - Every user has a bash_history file: ``history`` command gives overview of commands used. One way to clean up is by deleting the commands you typed instead of deleting the content of bash history file, this makes it to obvious. 
 		- clear bash history: ``hisctory -c ``
-
+![[Pasted image 20230926112729.png]]
 
 
 
