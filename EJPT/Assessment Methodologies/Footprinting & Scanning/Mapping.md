@@ -72,69 +72,7 @@ Other tools:
 
 
 
-Server 1
-
-1. Ping the ip
-
-2. nmap {target ip} -p 1-250
-
-3. run aggresive scan on open port: nmap {target ip} -p {port} -A
-
-      1. Aggressive scan will look for service, finger printing, operating system,  get the banner, trace route, and more
-
-4. run same scan again but this time for UDP: nmap {target ip} -p 1-250 -*sU*
-
-5. hone in the open ports with a service scan: nmap {target ip} -p {port1, port2.port3 etc} -sUV
-
-      1. Filtered means there was no response. Closed means the connection was refused. When a port gives back filtered try run the discovery script:
-
-            1. nmap {target ip} -p {port that gives filtered} -sUV --script=discovery
-
-      2. if still no results check the connection: tftp {ip} -p {port}  
-
-            1. tftp> *status*    if result is not connected try again
-
-            2. tftp> quit
-
-            3. tftp {ip} {port}
-
-               Filtered means there was no response. Closed means the connection was refused.
-
-            ![[Pasted image 20230506134243.png]] 
-
-Server 2
-
-1. Ping the ip
-
-2. nmap {target ip} -p 1-250
-
-3. run aggresive scan on open port: nmap {target ip} -p {port} -A
-
-      1. Aggressive scan will look for service, finger printing, operating system,  get the banner, trace route, and more
-
-4. run same scan again but this time for UDP: nmap {target ip} -p 1-250 -*sU*
-
-5. hone in the open ports with a service scan: nmap {target ip} -p {port1, port2.port3 etc} -sUV
-
-      1. Filtered means there was no response. Closed means the connection was refused. When a port gives back filtered try run the discovery script:
-
-            1. nmap {target ip} -p {port that gives filtered} -sUV --script=discovery
-
-      2. if still no results check the connection: tftp {ip} -p {port}  
-
-            1. tftp> *status*    if result is not connected try again
-
-            2. tftp> quit
-
-            3. tftp {ip} {port}
-
-               Filtered means there was no response. Closed means the connection was refused.
-
-            ![[Pasted image 20230506134243.png]]
-
-            tftp wil host-name en port niet -p
-
-            results of: tftp {ip} {port} shows it is there, that port is hostng the tftp server (Trivial File Transfer Protocol. _TFTP_ is een protocol dat gebruikt kan worden om bestanden over te brengen via netwerken en tussen computers.)
+ results of: tftp {ip} {port} shows it is there, that port is hostng the tftp server (Trivial File Transfer Protocol. _TFTP_ is een protocol dat gebruikt kan worden om bestanden over te brengen via netwerken en tussen computers.)
 
 
 

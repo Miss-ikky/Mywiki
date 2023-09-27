@@ -29,7 +29,7 @@ We need to know what ports are open on victim2 so we can try to exploit the serv
 6. add route from victim 1 to victim 2 by adding entire subnet that victim 1 is part of: ``run autoroute -s 10.10.29.0/20``![[Pasted image 20230925210153.png]]
 7. ``run autoroute -p`` to display routing table 
 	when the subnet is added we can scan any device on that subnet, from within msfconsole 
-8. search portscan (use portscan/tcp) (the scanning is done through victim 2 bc we cannot communicate directly to victim 2)
+8. search `portscan` (use portscan/tcp) (the scanning is done through victim 2 bc we cannot communicate directly to victim 2)
 	1. ``show options`` 
 	2. specify ``target ip`` (victim 2 machine) 
 	3. set ``port range ``

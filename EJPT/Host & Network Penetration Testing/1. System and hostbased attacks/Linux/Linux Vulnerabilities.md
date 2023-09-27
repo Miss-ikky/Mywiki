@@ -189,8 +189,6 @@ Set up `meterpreter` session:
 		- `ls - alps` 
 		- `./les.sh` 
 verify exploit code to ensure that it is not doing anything malicious 
-
-![[Pasted image 20230712152115.png]]
 download ![[Pasted image 20230712152149.png]]
 to run C you need to install package: sudo apt-get install gcc 
 ![[Pasted image 20230712175057.png]]

