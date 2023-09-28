@@ -20,15 +20,15 @@ Sessions (HTTP does not maintain sessions but it uses cookies): ![[Pasted image 
 login.php is file that is used by apache webserver 
 
 First info gathering: 
-- nmap domainname 
-- nmap domainname -p port,port -sV 
+- `nmap domainname `
+- `nmap domainname -p port,port -sV `
   
 inspect elements on webpage 
-port 80 is http not https, if you spin up wireshark you can listen to traffic bc its not encrypted. 
+port 80 is http not https, if you spin up Wireshark you can listen to traffic bc its not encrypted. 
 
-- curl http://domain -v 
+- c`url http://domain -v `
 
 to find all the files stored on webserver: 
 - ``dirb http://domainname``  (directory busting)
-- 
+
 

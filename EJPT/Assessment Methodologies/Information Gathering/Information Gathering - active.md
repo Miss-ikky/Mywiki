@@ -54,16 +54,15 @@ save ouput
 - `-oX  voor .xml file `
 
 steps
-1. ping the target:  ping -c 5 {ip} 
-2. run a simple nmap scan on the target: nmap {ip} 
-3. use -Pn option to force the nmap to scan ports even if the host is down: nmap -Pn {ip}
-	1. -Pn (Treat all hosts as online -- skip host discovery) this  option will force the scanning even if it has detected the target as down in host discovery
-4. run nmap on closed port to see the output: nmap -Pn -p 443 {ip}
-5. we have received port state as a filtered because target is up with a firewall ![[Pasted image 20230503131521.png]] 
+1. ping the target:  `ping -c 5 {ip} `
+2. simple nmap 
+3.   `nmap -Pn {ip}`
+	-  `-Pn` (Treat all hosts as online -- skip host discovery) this  option will force the scanning even if it has detected the target as down in host discovery
+4. run nmap on closed port to see the output: `nmap -Pn -p 443 {ip}`
+    we have received port state as a filtered because target is up with a firewall ![[Pasted image 20230503131521.png]] 
 	1. We will scan any random port which isn’t open. In this case scan port 443. If the port is not open we would receive “filtered” as an output to that port
-	2. About Filtered port:  “Nmap cannot determine whether the port is open because packet filtering prevents its probes  from reaching the port. The filtering could be from a dedicated firewall device, router rules, or  host-based firewall software. These ports frustrate attackers because they provide so little  information. Sometimes they respond with ICMP error messages such as type 3 code 13  destination unreachable: communication administratively prohibited), but filters that simply drop  probes without responding are far more common. This forces Nmap to retry several times just in  case the probe was dropped due to network congestion rather than filtering. This slows down the scan dramatically.
 6. if we want to discover the running application on port 80 we could use option  
--sV and this option is used to determine the application version information: nmap -Pn -sV -p 80 {ip}
+`-sV` and this option is used to determine the application version information: `nmap -Pn -sV -p 80 {ip}`
 
 
 

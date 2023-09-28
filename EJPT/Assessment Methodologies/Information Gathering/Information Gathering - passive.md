@@ -40,7 +40,7 @@
 
 #### Whois Enumeration 
 
--  *`who is* {domain}  `![[
+-  *`who is* {domain}  `
 	- DNSSEC: Enabled - personal info is all redacted for privacy reasons  
 - *`host* {domain}`
    ![[Pasted image 20230425154304.png]]
