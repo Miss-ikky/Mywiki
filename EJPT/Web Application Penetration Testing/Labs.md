@@ -1,5 +1,5 @@
 
-##### Web and HTTP protocol 
+##### Web and HTTP protocol (enumerate HTTP methods)
 
 - Use inspector to inspect logon page (method and where it is send)
 - dirb for directory busting:
@@ -11,10 +11,35 @@
 	- `curl -X PUT ip `
 	- `curl -X OPTIONS ip/loging.php -v `
 	- `curl -X POST ip `
+	- `curl -X HEAD ip`
 	- `curl -X POSt ip/login.php -d "name=john&password=password" -v` 
 	- `curl -X OPTIONS ip/page_of_interest -v `
+	- curl -XPUT ip 
 
 If PUT is possible: `curl ip/uploads/ --upload-file file.txt`
+
+Use Burp Suite and Curl to enumerate the HTTP method allowed by the web page/directory.
+192.183.223.3 
+
+HTTP Methods 
+- **GET**
+- **POST**
+- **PUT**
+- **HEAD**
+- **DELETE**
+- **PATCH**
+- **OPTIONS**
+- **CONNECT**
+- **TRACK**
+
+index.php
+js
+mail
+uploads
+vendor
+img
+css
+
 
 
 ##### Directory enumeration with GoBuster 

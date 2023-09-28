@@ -26,7 +26,7 @@ First info gathering:
 inspect elements on webpage 
 port 80 is http not https, if you spin up Wireshark you can listen to traffic bc its not encrypted. 
 
-- c`url http://domain -v `
+- `curl http://domain -v `
 
 to find all the files stored on webserver: 
 - ``dirb http://domainname``  (directory busting)

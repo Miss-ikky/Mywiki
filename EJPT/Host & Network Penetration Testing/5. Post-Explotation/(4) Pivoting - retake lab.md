@@ -46,3 +46,6 @@ Next step is to identify exact service version on a port (e.g. 80) on victim 2 -
 	- ``set rhost victim2_machineip``
 	- run 
 	meterpreter session on victim 2 
+
+
+
