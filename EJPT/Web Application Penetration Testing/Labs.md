@@ -61,7 +61,7 @@ send request to repeater and change the method in the request:
 	- Sniper (directly) Attack type are different 
 - Payloads
 	- Add: data, passwords, phphmyadmin, js, images, 
-	- load wordlist from kali: wordlists/dirb/common
+	- + load wordlist from kali: wordlists/dirb/common
 
 
 
@@ -79,9 +79,14 @@ click around on website to collect data
 ![[Pasted image 20230926180039.png]]
 
 Select form based authentication
+Right click on the POST request, navigate to "Include in Context" and select on
+"Default Context".
 ![[Pasted image 20230926180141.png]]
 Make sure user mode is enabled 
 Use the spider to do enumaration 
+
+
+
 
 ##### Scanning web Applications with Nikto 
 
@@ -90,8 +95,8 @@ Use the spider to do enumaration
 - `nikto -Help `
 - `nikto -h http://ip `
 - `nikto -h http://ip/full_url -Tuning 5 -Display V
-- `nikto -h http://ip/full_url -Tuning 5 -Display V -o nikto-results.hthml -Format html' 
-
+	- HTML rapport overzicht: `nikto -h http://ip/full_url -Tuning 5 -Display V -o nikto-results.hthml -Format html' 
+ file:///root/nikto.html 
 
 ##### Passive Crawling with Burp Suite 
 
@@ -100,6 +105,11 @@ Use the spider to do enumaration
 - check http history 
 - target shows tree of site map 
 - add the ip you test to the scope 
+- proxy tab - HTTP history 
+![[Pasted image 20230928205515.png]]
+after clicking on website the crawler gets te data -> Target tab 
+
+
 
 
 ##### SQL Injection with SQLMap 
