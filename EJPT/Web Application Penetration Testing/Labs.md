@@ -1,26 +1,6 @@
 
 ##### Web and HTTP protocol (enumerate HTTP methods)
 
-- Use inspector to inspect logon page (method and where it is send)
-- dirb for directory busting:
-	- `dirb http://ip `
-- Check what options are possible for the webfiles/directories found with dir: 
-	- `curl -X GET ip `
-	- `curl -I ip `
-	- `curl -X OPTIONS ip -v`
-	- `curl -X PUT ip `
-	- `curl -X OPTIONS ip/loging.php -v `
-	- `curl -X POST ip `
-	- `curl -X HEAD ip`
-	- `curl -X POSt ip/login.php -d "name=john&password=password" -v` 
-	- `curl -X OPTIONS ip/page_of_interest -v `
-	- curl -XPUT ip 
-
-If PUT is possible: `curl ip/uploads/ --upload-file file.txt`
-
-Use Burp Suite and Curl to enumerate the HTTP method allowed by the web page/directory.
-192.183.223.3 
-
 HTTP Methods 
 - **GET**
 - **POST**
@@ -31,16 +11,34 @@ HTTP Methods
 - **OPTIONS**
 - **CONNECT**
 - **TRACK**
+  
+- Use inspector to inspect logon page (method and where it is send)
+- dirb for directory busting (find hidden direcotries):
+	- `dirb http://ip `
+- Check what options are possible for the webfiles/directories found with dir: 
+	- `curl -X GET ip `
+	- `curl -I ip ` (HEAD)
+	- `curl -X OPTIONS ip -v`
+	- `curl -X PUT ip `
+	- `curl -X OPTIONS ip/loging.php -v `
+	- `curl -X POST ip `
+	- `curl -X HEAD ip`
+	- `curl -X POSt ip/login.php -d "name=john&password=password" -v` 
+	- `curl -X OPTIONS ip/page_of_interest -v `
+	- `curl -XPUT ip `
+	- `curl -XDELETE ip/uploads/file.txt`
 
-index.php
-js
-mail
-uploads
-vendor
-img
-css
+The Webdav module is enabled on the Apache Server, Webdav module allows file upload via PUT method
+PUT method. ![[Pasted image 20230928141102.png]]
 
+If PUT is possible: `curl ip/uploads/ --upload-file file.txt`
 
+-- 
+
+To use Burp to find the HTTP methods allowd: 
+send request to repeater and change the method in the request:
+![[Pasted image 20230928141257.png]]
+![[Pasted image 20230928141341.png]]
 
 ##### Directory enumeration with GoBuster 
 
@@ -49,8 +47,7 @@ css
 - `gobuster`  (manual)
 - `gobuster dir -u http://ip -w /usr/share/wordlist/dirb/common.txt `
 - `gobuster dir -u http://ip -w /usr/share/wordlist/dirb/common.txt -b 403,404 ` (filter out 403 and 404)
-
-
+- scan for specific file extensions: .php, .xml, .txt: `gobuster dir -u http://192.156.207.3 -w /usr/share/wordlists/dirb/common.txt -b 403,404 -x .php,.xml,.txt -r``
 
 
 
@@ -60,11 +57,18 @@ css
 - Action - send to intruder 
 - check target 
 - intruder (positions)
-- ` Get /$name$` ![[Pasted image 20230926152712.png]] 
+- change get request ` Get /$name$` ![[Pasted image 20230926152712.png]] 
 	- Sniper (directly) Attack type are different 
 - Payloads
 	- Add: data, passwords, phphmyadmin, js, images, 
-	- load wordlist from kali: wordlists -> dirb --> common
+	- load wordlist from kali: wordlists/dirb/common
+
+
+
+
+GET /§name§ HTTP/1.0
+Cookie: c=cval
+Content-Length: 17
 
 
 ##### Scanning Web Application with ZAProxy 
