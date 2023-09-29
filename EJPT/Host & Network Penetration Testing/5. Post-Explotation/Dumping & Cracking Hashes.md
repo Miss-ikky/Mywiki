@@ -41,13 +41,12 @@ New terminal:
 
 **how to crack ntlm hashes with John the ripper?** 
 - ``john to see manual ``
-- ``john --list=formats ``
-- `` john --list=formats | grep NT ``
-- ``john --list=NT file_that_contains_hashes wordlist ``
+- ``john --list=formats `` lijst met mogelijkheden
+- `` john --list=formats | grep NT ``  
+- ``john --format=NT file_that_contains_hashes --wordlist=/usr/share.wordlist/rockyou.txt ``
   (if you do not specify wordlist than john will use default wordlist)
 ``gzip -d /usr/share/wordlists/rockyou.txt.gz  ``
 the rockyou wordlist is always zipped. unzip before using it 
-``john --list=NT file_that_contains_hashes wordlist=/usr/share/wordlists/rockyou.txt ``
 
 
 **method 2 - Crack with hashcat** 
