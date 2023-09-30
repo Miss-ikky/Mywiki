@@ -1,4 +1,4 @@
-
+https://blog.syselement.com/ine/courses/ejpt/assessment-methodologies/3-enumeration/smb-enum
 Assessment methodologies 
 - Locate endpoints on a network 
 	- `nmap -sC -sV -oA nmap_results ip `
@@ -153,4 +153,12 @@ WIndows Vulnerabilities
 	- windows/meterpreter/reverse_tcp
 	- `getprivs` -> SeImpersonatePrivilige needs to be present 
 - Alternate Data streams 
-	- 
+	- Passwords in Windows Configuration Files 
+		- C:\\Windows\\Panther\\Unattend.xml
+		- C:\\Windows\\Panther\\Autounattend.xml
+- Pash the hash attack 
+
+
+
+
+![[Pasted image 20230930202128.png]]

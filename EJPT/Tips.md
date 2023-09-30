@@ -6,3 +6,4 @@ Blogs:
 - https://github.com/grumpzsux/eJPT-Notes 
 
 
+https://blog.syselement.com/ine/courses/ejpt/assessment-methodologies/3-enumeration/smb-enum 
