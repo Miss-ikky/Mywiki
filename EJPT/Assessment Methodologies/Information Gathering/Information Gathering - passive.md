@@ -84,10 +84,10 @@
 - Google hacking database (exploit database) 
 	- Wordpress config file contains credentials to mysql database 
 
-#### Email Harvesting With theHarvester 
+#### Email Harvesting With the Harvester 
 
 - can be used as subdomain enumeration 
-- je hebt zowel passive als active information gathering in theHarvester ![[Pasted image 20230502125213.png]]
+- je hebt zowel passive als active information gathering in the Harvester ![[Pasted image 20230502125213.png]]
 - `theHarvester -d {*domain or companyname*} -b google, linkedin,yahoo,dnsdumpster,crtsh,duckduckgo`
 
 

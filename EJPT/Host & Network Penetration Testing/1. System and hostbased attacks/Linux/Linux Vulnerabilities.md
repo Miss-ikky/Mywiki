@@ -40,9 +40,7 @@ Shellshock Exploration:
 	- identify CGI script on webpage (look at page source) ![[Pasted image 20230710132143.png]]
 	 the cgi script is passing commands in bash you can use this as input vector but before that you need to check if this system is vulnerable to shellshock exploration -> check in nmap 
 - `nmap -sV ip --script=http-shellshock --script-args "http-shellshock.uri=/gettime.cgi" `
-	- `--script=http-shellshock`: This option specifies that you want to use the `http-shellshock` script. Shellshock is a vulnerability in the Bash shell that allows remote code execution. The script is designed to detect if the target web server is vulnerable to this specific vulnerability.
-	- `--script-args "http-shellshock.uri=/gettime.cgi"`: This argument provides additional parameters to the `http-shellshock` script. In this case, it sets the URI (Uniform Resource Identifier) to `/gettime.cgi`, which is the path of a specific CGI script on the target server. This allows the script to test the vulnerability specifically on that CGI script.
-	- go to the browser and visit targetip/cgi link - configure Mozilla with foxyproxy - select Burp so all the traffic is redirected to Burp ![[Pasted image 20230710133011.png]]
+- go to the browser and visit targetip/cgi link - configure Mozilla with foxyproxy - select Burp so all the traffic is redirected to Burp ![[Pasted image 20230710133011.png]]
 - Open up Burb: 
 	- go to proxy and make sure intercept is on 
 	- make get request to cgi script in browser 
