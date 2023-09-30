@@ -1,5 +1,5 @@
 
-Exploiting WebDAV With Metasploit 
+Exploiting **WebDAV** With Metasploit 
 
 - Start with nmap scan on target to confirm that IIS is running and WebDav is configured 
 	- `*nmap -sV -p 80 --script=http-enum target* `
@@ -438,12 +438,12 @@ how to hide executable in legitimate file?
 ![[Pasted image 20230706221313.png]]
 
 - notepad `test.txt:secret.txt` (hidden secret.txt file)
-
+##### winpeas
 - WinPiece is a utility used by penetration testers to perform local enumeration on a windows system in order to identify vulnerabilities that can be exploited or vulnerabilities that can be exploited to elevate our privileges' its not something malicious but its something that you want to keep hidden as much as possible. 
-- rename the WinPiece exe to payload and move it to temp directory 
-- navigate into temp 
-	- `type payload.exe` > windowslog.txt:winpiece.exe 
-The  command `type payload.exe > windowslog.txt:winpiece.exe` reads the contents of the file `payload.exe` and redirects the output to a file named `windowslog.txt:winpiece.exe`. The resulting file will contain the contents of `payload.exe` with the specified filename `winpiece.exe` inside the `windowslog.txt` file. 
+- `rename` the WinPiece exe to payload and move it to temp directory 
+- navigate into `temp` 
+- `type payload.exe` > `windowslog.txt:winpiece.exe `
+	- The  command `type payload.exe > windowslog.txt:winpiece.exe` reads the contents of the file `payload.exe` and redirects the output to a file named `windowslog.txt:winpiece.exe`. The resulting file will contain the contents of `payload.exe` with the specified filename `winpiece.exe` inside the `windowslog.txt` file. 
 - delete payload because its now into windpiece.exe which is stored in resource stream of windlowslogs.txt file 
 - execute the exe: start windowslog.txt:windpeas.exe 
 	- did not work? create symbolic link

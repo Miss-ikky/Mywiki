@@ -19,7 +19,7 @@ CVE-2014-6271 - Shellshock:
 - Shellshock (CVE-2014-6271) is a family of vulnerabilities in the Bash shell (since V1.3) that allows an attacker to execute remote arbitrary commands via Bash, leading to potential remote access to the target system via a reverse shell.
 - The Shellshock vulnerability was discovered by Stéphane Chazelas on September 12, 2014, and publicly disclosed on September 24, 2014.
 - Bash is a \*Nix shell that is part of the GNU project and serves as the default shell for most Linux distributions.
-- The Shellshock vulnerability occurs due to a flaw in Bash, where Bash mistakenly executes trailing commands after a series of characters: "() {:;};"
+- The Shellshock vulnerability occurs due to a flaw in Bash, where Bash mistakenly executes trailing commands after a series of characters: **"() {:;};"**
 	- als deze characters in bash worden ingevoerd dan wordt alles erna ook excuted door bash. 
 - This vulnerability specifically affects Linux systems, as Windows does not use Bash since it is not a \Nix-based operating system.
 - In the context of remote exploitation, Apache web servers configured to run CGI scripts or .sh scripts are also vulnerable to this attack.

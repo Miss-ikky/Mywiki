@@ -333,7 +333,7 @@ ftp te bruteforce strategy:
 robot.txt -> dit is een pagina die aangeeft welke bestanden mogen gelezen worden door search engines - het kan je vertellen welke subdirectories er zijn 
 
 
-## SLQ 
+## SQL 
 
 
 #### MySQL

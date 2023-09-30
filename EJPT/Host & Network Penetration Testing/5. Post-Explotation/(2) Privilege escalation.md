@@ -6,6 +6,7 @@
 	- https://github.com/itm4n/PrivescCheck 
 
 ----
+(can also be used to deliver winpeas)
 
 web_delivery module (`show info`)
 - set target to powershell:` set target PSH\ (Binary`) 
