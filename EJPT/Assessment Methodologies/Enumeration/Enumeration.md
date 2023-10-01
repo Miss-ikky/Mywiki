@@ -242,7 +242,7 @@ ftp te bruteforce strategy:
 - Secure shell -> communicate with remote machine over protected channel 
 
 
-1. `Nmap` 
+1. `Nmap` search
 2.  `nmap ip -sV -O `
 3. `ssh root@ip` and try to login with maybe `abc123 `
 4. if permission denied try using netcat: `nc ip port  `(nc ip 22 ) this will give you the banner which is useful for enumeration 
