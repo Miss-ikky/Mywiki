@@ -259,7 +259,9 @@ ftp te bruteforce strategy:
 	- if the result is none than is dangerous 
 8. check if there are any weak paswords for ssh for admin: ` nmap ip -p 22 --script ssh-auth-methods --script-args="ssh.user=admin" `
 
-9. ``nmap -p 22 --script=ssh-run --script-args="ssh-run.cmd=cat ``/home/student/FLAG, ssh-run.username=student,ssh-run.password=" ip 
+9. ``nmap -p 22 --script=ssh-run --script-args="ssh-run.cmd=cat ```
+`/home/student/FLAG, ssh-run.username=student,ssh-run.password=" ip`
+` 
 	-  `--script=ssh-run`: . The "ssh-run" script is a pre-defined script in Nmap that allows running custom commands on an SSH server.
 	-   `--script-args="ssh-run.cmd=cat /home/student/FLAG, ssh-run.username=student,ssh-run.password="`: This argument provides the arguments or parameters to the "ssh-run" script. It consists of three key-value pairs:
 	    -   `ssh-run.cmd=cat /home/student/FLAG`: This specifies the command to be executed on the SSH server. In this case, the command is `cat /home/student/FLAG`, which will read the contents of the "/home/student/FLAG" file on the remote SSH server.
