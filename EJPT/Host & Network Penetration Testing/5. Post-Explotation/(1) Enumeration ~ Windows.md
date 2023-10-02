@@ -136,6 +136,11 @@ Metapsloit
 - metasploit module enum_patches (post-exploitation module so set session)
 - metasploit module enum_shares (post-exploitation module so set session)
 
+  post/windows/gather/enum_domain_users                                                   normal     No     Windows Gather Enumerate Active Domain Users
+   232  post/windows/gather/enum_domain_group_users                                             normal     No     Windows Gather Enumerate Domain Group
+   233  post/windows/gather/enum_domain_tokens                                                  normal     No     Windows Gather Enumerate Domain Tokens
+   234  post/windows/gather/local_admin_search_enum                                             normal     No     Windows Gather Local Admin Search
+   235  post/windows/gather/enum_logged_on_users   
 
 - WIndows Local Enum script
 	- **JAWS** (Just another Windows Enum script) is a powershell script quickly identify potential privilege escalation vectors on Windows Systems. It is written using Powershell 2.0 so should run on every Windows version Windows 7
