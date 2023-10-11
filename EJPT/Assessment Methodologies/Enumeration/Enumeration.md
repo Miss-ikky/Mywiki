@@ -391,8 +391,6 @@ Een MySQL dictionary-aanval is een aanvalsvector waarbij een aanvaller probeert 
 	- `set username root `
 - Another way to bruteforce login: 
 	- `hydra -l root -P /usr/share/metasploit-framework/data/wordlists/unix_passwords.txt ip mysql `
-	
-
 
 ### MSSQL Nmap scripts 
 
