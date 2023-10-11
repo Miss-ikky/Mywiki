@@ -357,18 +357,18 @@ Linux Password Hashes:
 	- use backdoor module 
 	- `/bin/bash -i`  (to obtain bash session)
 	- id 
-	- cntrl + Z to put this session in the background 
+	- cntl + Z to put this session in the background 
 		- `sessions` 
-		`- sessions -u 1 (upgrade session 1 to meterpreter session)`
+		- sessions -u 1 (upgrade session 1 to meterpreter session)`
 		- session 2 
 		- `sysinfo` 
 		- `getuid`  (uid=0 -> root user )
 		- `cat /etc/shadow` (dump hashes)
-			- put this in the background
-			  
 Andere manier is met hashdump module 
 - `post/linux.gather/hashdump` module 
 - set session 2 (meterpreter session) 
 - give you hashed passwords and save them in a txt for you 
+
+
 
 
